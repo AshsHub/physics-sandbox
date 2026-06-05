@@ -1,4 +1,7 @@
-import type { ISandboxObject } from "../sandbox/SandboxObject";
+import type {
+  ISandboxObject,
+  ISandboxObjectSnapshot,
+} from "../sandbox/SandboxObject";
 import type { Vector2 } from "../maths/Vector2";
 import type { SandboxObjectType } from "../sandbox/SandboxObjectType";
 
@@ -11,6 +14,8 @@ export interface ISandboxEngine {
   destroyAllObjects(): void;
   destroySelectedObjects(): void;
   createObject(position: Vector2, type?: SandboxObjectType): ISandboxObject;
+  createObjectFromSnapshot(snapshot: ISandboxObjectSnapshot): ISandboxObject;
+  createSnapshot(id: string): ISandboxObjectSnapshot | undefined;
 
   startDrag(ids: string[], pos: Vector2): void;
   updateDrag(pos: Vector2): void;

@@ -1,7 +1,17 @@
-import type { Vector2 } from "../maths/Vector2";
+import { Vector2 } from "../maths/Vector2";
 import type { PhysicsWorld } from "../physics/PhysicsWorld";
-import { type ISandboxObject } from "./SandboxObject";
+import {
+  type ISandboxObject,
+  type ISandboxObjectSnapshot,
+} from "./SandboxObject";
 import { SandboxObjectFlags, SandboxObjectType } from "./SandboxObjectType";
+
+export interface CreateSandboxObjectOptions {
+  position: Vector2;
+  type: SandboxObjectType;
+  id?: string;
+  name?: string;
+}
 
 export class SandboxObjectManager {
   private readonly objects = new Map<string, ISandboxObject>();
@@ -9,28 +19,49 @@ export class SandboxObjectManager {
 
   public constructor(private readonly physics: PhysicsWorld) {}
 
-  public create(
-    position: Vector2,
-    type: SandboxObjectType = SandboxObjectType.Box,
-  ): ISandboxObject {
-    const id = crypto.randomUUID();
+  public create(options: CreateSandboxObjectOptions): ISandboxObject {
+    const { position, type, id, name } = options;
+    const objectId = id ?? crypto.randomUUID();
 
     const body = this.physics.createBody(position, type);
 
     const object: ISandboxObject = {
-      id,
+      id: objectId,
       type,
       body,
-      name: `${type.charAt(0).toUpperCase()}${type.slice(1)} ${id.slice(0, 5)}`,
+      name:
+        name ??
+        `${type.charAt(0).toUpperCase()}${type.slice(1)} ${objectId.slice(0, 5)}`,
       flags: body.isStatic
         ? SandboxObjectFlags.Locked
         : SandboxObjectFlags.None,
     };
 
-    this.objects.set(id, object);
-    this.bodyLookup.set(body, id);
+    this.objects.set(objectId, object);
+    this.bodyLookup.set(body, objectId);
 
     return object;
+  }
+
+  public createSnapshot(id: string): ISandboxObjectSnapshot | undefined {
+    const object = this.objects.get(id);
+
+    if (!object) {
+      return;
+    }
+
+    return {
+      id: object.id,
+      name: object.name,
+      type: object.type,
+      position: new Vector2(object.body.position.x, object.body.position.y),
+    };
+  }
+
+  public createObjectFromSnapshot(
+    snapshot: ISandboxObjectSnapshot,
+  ): ISandboxObject {
+    return this.create(snapshot);
   }
 
   public get(id: string): ISandboxObject | undefined {

@@ -15,7 +15,9 @@ export function CreatePanel({ app }: CreatePanelProps) {
         <button
           className="create-button"
           onClick={() =>
-            app.commands.createSandboxObject(SandboxObjectType.Box)
+            app.commands.execute("createObject", {
+              type: SandboxObjectType.Box,
+            })
           }
         >
           Box
@@ -24,7 +26,9 @@ export function CreatePanel({ app }: CreatePanelProps) {
         <button
           className="create-button"
           onClick={() =>
-            app.commands.createSandboxObject(SandboxObjectType.Circle)
+            app.commands.execute("createObject", {
+              type: SandboxObjectType.Circle,
+            })
           }
         >
           Circle

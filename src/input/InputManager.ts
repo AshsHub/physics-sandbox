@@ -4,17 +4,25 @@ import { SandboxObjectFlags } from "../sandbox/SandboxObjectType";
 
 import { useEditorStore } from "../store/editorStore";
 
-type Action = () => void;
+type Action = (modifiers: KeyModifiers) => void;
+
+enum KeyModifiers {
+  None = 0,
+  Control = 1 << 0,
+  Meta = 1 << 1,
+  Shift = 1 << 2,
+  Alt = 1 << 3,
+}
 
 export class InputManager {
   private readonly pressedKeys = new Set<string>();
   private readonly keyActions = new Map<string, Action[]>();
   private readonly handleKeyDown = (e: KeyboardEvent) => {
-    this.keyDown(e.key);
+    this.keyDown(e);
   };
 
   private readonly handleKeyUp = (e: KeyboardEvent) => {
-    this.keyUp(e.key);
+    this.keyUp(e);
   };
 
   public constructor(private readonly app: IApplication) {}
@@ -34,6 +42,15 @@ export class InputManager {
   private registerKeyActions(): void {
     this.registerAction(["delete", "backspace"], () => {
       this.app.engine.destroySelectedObjects();
+    });
+    this.registerAction(["z"], (mods) => {
+      if (this.hasPrimaryModifier(mods)) {
+        if (mods & KeyModifiers.Shift) {
+          this.app.commands.redo();
+        } else {
+          this.app.commands.undo();
+        }
+      }
     });
   }
 
@@ -61,8 +78,8 @@ export class InputManager {
     window.removeEventListener("keyup", this.handleKeyUp);
   }
 
-  public keyDown(key: string): void {
-    const normalizedKey = key.toLowerCase();
+  public keyDown(e: KeyboardEvent): void {
+    const normalizedKey = e.key.toLowerCase();
     this.pressedKeys.add(normalizedKey);
     const actions = this.keyActions.get(normalizedKey);
 
@@ -70,11 +87,20 @@ export class InputManager {
       return;
     }
 
-    actions.forEach((action) => action());
+    actions.forEach((action) => {
+      let modifier = KeyModifiers.None;
+
+      if (e.shiftKey) modifier |= KeyModifiers.Shift;
+      if (e.ctrlKey) modifier |= KeyModifiers.Control;
+      if (e.metaKey) modifier |= KeyModifiers.Meta;
+      if (e.altKey) modifier |= KeyModifiers.Alt;
+
+      action(modifier);
+    });
   }
 
-  public keyUp(key: string): void {
-    this.pressedKeys.delete(key.toLowerCase());
+  public keyUp(e: KeyboardEvent): void {
+    this.pressedKeys.delete(e.key.toLowerCase());
   }
 
   public isKeyPressed(key: string): boolean {
@@ -139,5 +165,9 @@ export class InputManager {
 
   public getSelection() {
     return useEditorStore.getState().selectedIds;
+  }
+
+  private hasPrimaryModifier(mods: KeyModifiers) {
+    return (mods & (KeyModifiers.Control | KeyModifiers.Meta)) !== 0;
   }
 }

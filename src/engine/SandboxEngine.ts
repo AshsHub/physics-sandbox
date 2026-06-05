@@ -5,7 +5,10 @@ import { Vector2 } from "../maths/Vector2";
 
 import { PhysicsWorld } from "../physics/PhysicsWorld";
 
-import { type ISandboxObject } from "../sandbox/SandboxObject";
+import {
+  type ISandboxObject,
+  type ISandboxObjectSnapshot,
+} from "../sandbox/SandboxObject";
 
 import { SandboxObjectManager } from "../sandbox/SandboxObjectManager";
 
@@ -43,7 +46,26 @@ export class SandboxEngine implements ISandboxEngine {
     position: Vector2,
     type: SandboxObjectType = SandboxObjectType.Box,
   ): ISandboxObject {
-    const object = this.objects.create(position, type);
+    const object = this.objects.create({
+      position,
+      type,
+    });
+
+    this.events.emit("sandboxObjectCreated", {
+      id: object.id,
+    });
+
+    return object;
+  }
+
+  public createSnapshot(id: string): ISandboxObjectSnapshot | undefined {
+    return this.objects.createSnapshot(id);
+  }
+
+  public createObjectFromSnapshot(
+    snapshot: ISandboxObjectSnapshot,
+  ): ISandboxObject {
+    const object = this.objects.createObjectFromSnapshot(snapshot);
 
     this.events.emit("sandboxObjectCreated", {
       id: object.id,
