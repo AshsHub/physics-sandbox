@@ -8,10 +8,11 @@ export interface IApplication {
   engine: ISandboxEngine;
   events: IEventBus;
 
-  update(): void;
+  update(width: number, height: number): void;
   render(ctx: CanvasRenderingContext2D, width: number, height: number): void;
   pointerDown(pos: Vector2, button: number): void;
   pointerMove(pos: Vector2): void;
+  pointerWheel(deltaY: number): void;
   pointerUp(button: number): void;
   pointerLeave(): void;
 }

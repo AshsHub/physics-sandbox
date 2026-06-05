@@ -114,6 +114,20 @@ export class PhysicsWorld {
     this.moveToPosition.set(position);
   }
 
+  public rotateDragged(angle: number): void {
+    for (const drag of this.draggedBodies) {
+      Matter.Body.rotate(drag.body, angle);
+
+      if (drag.mode === "exact") {
+        Matter.Body.setVelocity(drag.body, {
+          x: 0,
+          y: 0,
+        });
+        Matter.Body.setAngularVelocity(drag.body, 0);
+      }
+    }
+  }
+
   public endDrag(): void {
     this.draggedBodies.length = 0;
   }

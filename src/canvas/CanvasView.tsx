@@ -88,15 +88,23 @@ export function CanvasView({ app, onObjectContextMenu }: CanvasViewProps) {
       });
     };
 
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      app.pointerWheel(e.deltaY);
+    };
+
     canvas.addEventListener("pointermove", handlePointerMove);
     canvas.addEventListener("pointerleave", handlePointerLeave);
     canvas.addEventListener("pointerup", handlePointerUp);
     canvas.addEventListener("pointercancel", handlePointerUp);
     canvas.addEventListener("pointerdown", handlePointerDown);
     canvas.addEventListener("contextmenu", handleContextMenu);
+    canvas.addEventListener("wheel", handleWheel, {
+      passive: false,
+    });
 
     const loop = () => {
-      app.update();
+      app.update(canvas.width, canvas.height);
       app.render(ctx, canvas.width, canvas.height);
 
       frameId = requestAnimationFrame(loop);
@@ -119,6 +127,7 @@ export function CanvasView({ app, onObjectContextMenu }: CanvasViewProps) {
       canvas.removeEventListener("pointerup", handlePointerUp);
       canvas.removeEventListener("pointercancel", handlePointerUp);
       canvas.removeEventListener("contextmenu", handleContextMenu);
+      canvas.removeEventListener("wheel", handleWheel);
       window.removeEventListener("resize", resizeCanvas);
       cancelAnimationFrame(frameId);
     };

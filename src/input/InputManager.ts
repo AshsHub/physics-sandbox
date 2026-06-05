@@ -13,6 +13,9 @@ enum KeyModifiers {
   Alt = 1 << 3,
 }
 
+const KEY_ROTATION_STEP = Math.PI / 18;
+const WHEEL_ROTATION_STEP = Math.PI / 36;
+
 export class InputManager {
   private readonly pressedKeys = new Set<string>();
   private readonly keyActions = new Map<string, Action[]>();
@@ -51,6 +54,12 @@ export class InputManager {
     });
     this.registerAction(["3"], () => {
       useEditorStore.getState().setInteractionMode(InteractionMode.Play);
+    });
+    this.registerAction(["q"], () => {
+      this.rotateHeldObjects(-KEY_ROTATION_STEP);
+    });
+    this.registerAction(["e"], () => {
+      this.rotateHeldObjects(KEY_ROTATION_STEP);
     });
     this.registerAction(["delete", "backspace"], () => {
       this.app.commands.execute("deleteObject", {
@@ -198,6 +207,14 @@ export class InputManager {
     this.updateHoveredObject(this.screenToWorld(pos));
   }
 
+  public pointerWheel(deltaY: number): void {
+    if (deltaY === 0) {
+      return;
+    }
+
+    this.rotateHeldObjects(Math.sign(deltaY) * WHEEL_ROTATION_STEP);
+  }
+
   public pointerUp(): void {
     this.app.engine.endDrag();
     this.setActivePointerMode(undefined);
@@ -236,6 +253,14 @@ export class InputManager {
 
   private hasPrimaryModifier(mods: KeyModifiers) {
     return (mods & (KeyModifiers.Control | KeyModifiers.Meta)) !== 0;
+  }
+
+  private rotateHeldObjects(angle: number): void {
+    if (this.activePointerMode !== InteractionMode.Play) {
+      return;
+    }
+
+    this.app.engine.rotateDrag(angle);
   }
 
   private getInteractionMode(): InteractionMode {

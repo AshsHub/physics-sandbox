@@ -13,7 +13,7 @@ import {
 import { SandboxObjectManager } from "../sandbox/SandboxObjectManager";
 
 import { useEditorStore } from "../store/editorStore";
-import { SandboxObjectType } from "../sandbox/SandboxObjectType";
+import { SandboxObjectFlags, SandboxObjectType } from "../sandbox/SandboxObjectType";
 
 export class SandboxEngine implements ISandboxEngine {
   private readonly physics = new PhysicsWorld();
@@ -162,7 +162,44 @@ export class SandboxEngine implements ISandboxEngine {
     this.physics.updateDrag(pos);
   }
 
+  public rotateDrag(angle: number): void {
+    this.physics.rotateDragged(angle);
+  }
+
   public endDrag(): void {
     this.physics.endDrag();
+  }
+
+  public cullObjectsOutsideViewport(width: number, height: number): void {
+    if (width <= 0 || height <= 0) {
+      return;
+    }
+
+    const margin = 1200;
+    const cameraOffset = useEditorStore.getState().cameraOffset;
+    const bounds = {
+      left: -cameraOffset.x - margin,
+      right: width - cameraOffset.x + margin,
+      top: -cameraOffset.y - margin,
+      bottom: height - cameraOffset.y + margin,
+    };
+    const idsToCull = this.objects
+      .getAll()
+      .filter((object) => (object.flags & SandboxObjectFlags.Locked) === 0)
+      .filter((object) => {
+        const bodyBounds = object.body.bounds;
+
+        return (
+          bodyBounds.max.x < bounds.left ||
+          bodyBounds.min.x > bounds.right ||
+          bodyBounds.max.y < bounds.top ||
+          bodyBounds.min.y > bounds.bottom
+        );
+      })
+      .map((object) => object.id);
+
+    if (idsToCull.length > 0) {
+      this.destroyObject(idsToCull);
+    }
   }
 }

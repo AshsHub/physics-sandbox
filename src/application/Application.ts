@@ -79,8 +79,9 @@ export class Application implements IApplication {
     );
   }
 
-  update() {
+  update(width: number, height: number) {
     this.engine.update();
+    this.engine.cullObjectsOutsideViewport(width, height);
   }
 
   render(ctx: CanvasRenderingContext2D, width: number, height: number) {
@@ -93,6 +94,10 @@ export class Application implements IApplication {
 
   pointerMove(pos: Vector2) {
     this.inputManager.pointerMove(pos);
+  }
+
+  pointerWheel(deltaY: number) {
+    this.inputManager.pointerWheel(deltaY);
   }
 
   pointerUp() {

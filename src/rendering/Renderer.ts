@@ -30,26 +30,14 @@ export class Renderer {
 
     const body = entity.body;
 
-    ctx.save();
-
-    ctx.translate(body.position.x, body.position.y);
-
-    ctx.rotate(body.angle);
-
     const vertices = body.vertices;
 
     ctx.beginPath();
 
-    ctx.moveTo(
-      vertices[0].x - body.position.x,
-      vertices[0].y - body.position.y,
-    );
+    ctx.moveTo(vertices[0].x, vertices[0].y);
 
     for (let i = 1; i < vertices.length; i++) {
-      ctx.lineTo(
-        vertices[i].x - body.position.x,
-        vertices[i].y - body.position.y,
-      );
+      ctx.lineTo(vertices[i].x, vertices[i].y);
     }
 
     ctx.closePath();
@@ -59,7 +47,5 @@ export class Renderer {
     ctx.fillStyle = selectedIds.has(entity.id) ? "orange" : "#444";
 
     ctx.fill();
-
-    ctx.restore();
   }
 }
