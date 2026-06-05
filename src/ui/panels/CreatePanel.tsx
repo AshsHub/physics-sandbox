@@ -1,7 +1,7 @@
 // CreatePanel.tsx
 
-import type { IApplication } from "../../abstractions/IApplication";
-import { SandboxObjectType } from "../../sandbox/SandboxObject";
+import type { IApplication } from "../../application/IApplication";
+import { SandboxObjectType } from "../../sandbox/SandboxObjectType";
 import { Panel } from "./Panel";
 
 export interface CreatePanelProps {
@@ -14,7 +14,9 @@ export function CreatePanel({ app }: CreatePanelProps) {
       <div className="create-actions">
         <button
           className="create-button"
-          onClick={() => app.commands.createSceneObject(SandboxObjectType.Box)}
+          onClick={() =>
+            app.commands.createSandboxObject(SandboxObjectType.Box)
+          }
         >
           Box
         </button>
@@ -22,7 +24,7 @@ export function CreatePanel({ app }: CreatePanelProps) {
         <button
           className="create-button"
           onClick={() =>
-            app.commands.createSceneObject(SandboxObjectType.Circle)
+            app.commands.createSandboxObject(SandboxObjectType.Circle)
           }
         >
           Circle

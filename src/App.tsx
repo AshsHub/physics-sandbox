@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import { Application } from "./app/Application";
+import { Application } from "./application/Application";
 import { CanvasView } from "./canvas/CanvasView";
 import { useEditorStore } from "./store/editorStore";
-import { Sidebar } from "./ui/panels/Sidebar";
+import { Sidebar } from "./ui/sidebar/Sidebar";
 import { StatusBar } from "./ui/StatusBar";
 import { Toolbar } from "./ui/Toolbar";
 

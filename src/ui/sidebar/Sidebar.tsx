@@ -1,10 +1,8 @@
-// Sidebar.tsx
-
-import type { IApplication } from "../../abstractions/IApplication";
+import type { IApplication } from "../../application/IApplication";
 import { useEditorStore } from "../../store/editorStore";
-import { CreatePanel } from "./CreatePanel";
-import { InspectorPanel } from "./InspectorPanel";
-import { SidebarPanel } from "./SidebarPanel";
+import { CreatePanel } from "../panels/CreatePanel";
+import { InspectorPanel } from "../panels/InspectorPanel";
+import { SidebarPanel } from "../panels/SidebarPanel";
 
 export interface SidebarProps {
   app: IApplication;

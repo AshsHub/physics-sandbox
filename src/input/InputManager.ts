@@ -1,8 +1,6 @@
-// src/input/InputManager.ts
-
-import type { IApplication } from "../abstractions/IApplication";
-import type { Vector2 } from "./Vector2";
-import { SandboxObjectFlags } from "../sandbox/SandboxObject";
+import type { IApplication } from "../application/IApplication";
+import type { Vector2 } from "../maths/Vector2";
+import { SandboxObjectFlags } from "../sandbox/SandboxObjectType";
 
 import { useEditorStore } from "../store/editorStore";
 
@@ -84,9 +82,9 @@ export class InputManager {
   }
 
   public pointerDown(pos: Vector2): void {
-    const sceneObject = this.app.engine.getObjectFromPosition(pos);
+    const sandboxObject = this.app.engine.getObjectFromPosition(pos);
 
-    if (!sceneObject || sceneObject.flags & SandboxObjectFlags.Locked) {
+    if (!sandboxObject || sandboxObject.flags & SandboxObjectFlags.Locked) {
       if (!this.isMultiSelectHeld()) {
         this.clearSelection();
       }
@@ -94,7 +92,7 @@ export class InputManager {
       return;
     }
 
-    const id = sceneObject.id;
+    const id = sandboxObject.id;
 
     if (this.isMultiSelectHeld()) {
       if (this.isSelected(id)) {

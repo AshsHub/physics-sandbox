@@ -1,14 +1,12 @@
-// Application.ts
-
-import type { IApplication } from "../abstractions/IApplication";
-import { Commands } from "./Commands";
-import { InputManager } from "./InputManager";
-import type { Vector2 } from "./Vector2";
+import { Commands } from "../commands/Commands";
+import { InputManager } from "../input/InputManager";
+import type { Vector2 } from "../maths/Vector2";
 import { Renderer } from "../rendering/Renderer";
 import { useEditorStore } from "../store/editorStore";
-import { EventBus } from "./EventBus";
-import { SandboxEngine } from "./SandboxEngine";
-import { SandboxObjectFlags } from "../sandbox/SandboxObject";
+import { EventBus } from "../events/EventBus";
+import { SandboxEngine } from "../engine/SandboxEngine";
+import type { IApplication } from "./IApplication";
+import { SandboxObjectFlags } from "../sandbox/SandboxObjectType";
 
 export class Application implements IApplication {
   public readonly engine: SandboxEngine;

@@ -1,8 +1,8 @@
 // src/canvas/CanvasView.tsx
 
 import { useEffect, useRef } from "react";
-import type { IApplication } from "../abstractions/IApplication";
-import { Vector2 } from "../app/Vector2";
+import { Vector2 } from "../maths/Vector2";
+import type { IApplication } from "../application/IApplication";
 
 export interface CanvasViewProps {
   app: IApplication;

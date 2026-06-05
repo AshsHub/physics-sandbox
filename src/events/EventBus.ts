@@ -1,5 +1,5 @@
-import type { IEventBus } from "../abstractions/IEventBus";
-import type { IEventMap } from "../events/EventMap";
+import type { IEventBus } from "./IEventBus";
+import type { IEventMap } from "./EventMap";
 
 type EventListener<T> = (payload: T) => void;
 

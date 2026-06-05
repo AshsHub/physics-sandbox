@@ -2,8 +2,8 @@
 
 import Matter from "matter-js";
 
-import { Vector2 } from "../app/Vector2";
-import { SandboxObjectType } from "../sandbox/SandboxObject";
+import { Vector2 } from "../maths/Vector2";
+import { SandboxObjectType } from "../sandbox/SandboxObjectType";
 
 interface IDraggedBody {
   body: Matter.Body;

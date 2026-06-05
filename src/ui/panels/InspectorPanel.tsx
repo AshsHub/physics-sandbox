@@ -1,6 +1,4 @@
-// InspectorPanel.tsx
-
-import type { IApplication } from "../../abstractions/IApplication";
+import type { IApplication } from "../../application/IApplication";
 import type { ISandboxObject } from "../../sandbox/SandboxObject";
 
 import { useEditorStore } from "../../store/editorStore";

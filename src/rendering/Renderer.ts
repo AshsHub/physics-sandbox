@@ -1,8 +1,6 @@
-import type { ISandboxEngine } from "../abstractions/ISandboxEngine";
-import {
-  SandboxObjectFlags,
-  type ISandboxObject,
-} from "../sandbox/SandboxObject";
+import type { ISandboxEngine } from "../engine/ISandboxEngine";
+import { type ISandboxObject } from "../sandbox/SandboxObject";
+import { SandboxObjectFlags } from "../sandbox/SandboxObjectType";
 import { useEditorStore } from "../store/editorStore";
 
 export class Renderer {
@@ -14,11 +12,11 @@ export class Renderer {
     const objects = this.engine.getAllObjects();
 
     for (const object of objects) {
-      this.drawSceneObject(ctx, object);
+      this.drawSandboxObject(ctx, object);
     }
   }
 
-  private drawSceneObject(
+  private drawSandboxObject(
     ctx: CanvasRenderingContext2D,
     entity: ISandboxObject,
   ) {

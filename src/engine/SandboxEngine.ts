@@ -1,18 +1,16 @@
-import type { IEventBus } from "../abstractions/IEventBus";
-import type { ISandboxEngine } from "../abstractions/ISandboxEngine";
+import type { IEventBus } from "../events/IEventBus";
+import type { ISandboxEngine } from "./ISandboxEngine";
 
-import { Vector2 } from "./Vector2";
+import { Vector2 } from "../maths/Vector2";
 
 import { PhysicsWorld } from "../physics/PhysicsWorld";
 
-import {
-  SandboxObjectType,
-  type ISandboxObject,
-} from "../sandbox/SandboxObject";
+import { type ISandboxObject } from "../sandbox/SandboxObject";
 
 import { SandboxObjectManager } from "../sandbox/SandboxObjectManager";
 
 import { useEditorStore } from "../store/editorStore";
+import { SandboxObjectType } from "../sandbox/SandboxObjectType";
 
 export class SandboxEngine implements ISandboxEngine {
   private readonly physics = new PhysicsWorld();

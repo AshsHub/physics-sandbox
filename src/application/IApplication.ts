@@ -1,9 +1,7 @@
-// abstractions/IApplication.ts
-
-import type { Vector2 } from "../app/Vector2";
-import type { ICommandBus } from "./ICommands";
-import type { IEventBus } from "./IEventBus";
-import type { ISandboxEngine } from "./ISandboxEngine";
+import type { Vector2 } from "../maths/Vector2";
+import type { IEventBus } from "../events/IEventBus";
+import type { ISandboxEngine } from "../engine/ISandboxEngine";
+import type { ICommandBus } from "../commands/ICommands";
 
 export interface IApplication {
   commands: ICommandBus;

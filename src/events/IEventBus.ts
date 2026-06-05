@@ -1,4 +1,4 @@
-import type { IEventMap } from "../events/EventMap";
+import type { IEventMap } from "./EventMap";
 
 export interface IEventBus {
   emit<K extends keyof IEventMap>(event: K, payload: IEventMap[K]): void;

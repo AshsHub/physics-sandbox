@@ -1,10 +1,7 @@
-import type { Vector2 } from "../app/Vector2";
+import type { Vector2 } from "../maths/Vector2";
 import type { PhysicsWorld } from "../physics/PhysicsWorld";
-import {
-  type ISandboxObject,
-  SandboxObjectType,
-  SandboxObjectFlags,
-} from "./SandboxObject";
+import { type ISandboxObject } from "./SandboxObject";
+import { SandboxObjectFlags, SandboxObjectType } from "./SandboxObjectType";
 
 export class SandboxObjectManager {
   private readonly objects = new Map<string, ISandboxObject>();
