@@ -1,0 +1,130 @@
+import type { IEventBus } from "../abstractions/IEventBus";
+import type { ISandboxEngine } from "../abstractions/ISandboxEngine";
+
+import { Vector2 } from "./Vector2";
+
+import { PhysicsWorld } from "../physics/PhysicsWorld";
+
+import {
+  SandboxObjectType,
+  type ISandboxObject,
+} from "../sandbox/SandboxObject";
+
+import { SandboxObjectManager } from "../sandbox/SandboxObjectManager";
+
+import { useEditorStore } from "../store/editorStore";
+
+export class SandboxEngine implements ISandboxEngine {
+  private readonly physics = new PhysicsWorld();
+
+  private readonly objects = new SandboxObjectManager(this.physics);
+
+  private readonly events: IEventBus;
+
+  public constructor(events: IEventBus) {
+    this.events = events;
+  }
+
+  public init(): void {
+    this.physics.init();
+
+    this.createObject(new Vector2(400, 580), SandboxObjectType.Ground);
+  }
+
+  public destroy(): void {
+    this.destroyAllObjects();
+
+    this.physics.destroy();
+  }
+
+  public update(): void {
+    this.physics.update();
+  }
+
+  public createObject(
+    position: Vector2,
+    type: SandboxObjectType = SandboxObjectType.Box,
+  ): ISandboxObject {
+    const object = this.objects.create(position, type);
+
+    this.events.emit("sandboxObjectCreated", {
+      id: object.id,
+    });
+
+    return object;
+  }
+
+  public destroyObject(id: string | string[]): void {
+    const ids = Array.isArray(id) ? id : [id];
+
+    for (const objectId of ids) {
+      this.objects.destroy(objectId);
+
+      this.events.emit("sandboxObjectDestroyed", {
+        id: objectId,
+      });
+    }
+  }
+
+  public destroyAllObjects(): void {
+    const ids = this.objects.getAll().map((o) => o.id);
+
+    this.objects.destroyAll();
+
+    for (const id of ids) {
+      this.events.emit("sandboxObjectDestroyed", {
+        id,
+      });
+    }
+  }
+
+  public destroySelectedObjects(): void {
+    const selected = Array.from(useEditorStore.getState().selectedIds);
+    this.destroyObject(selected);
+  }
+
+  public getObject(id: string): ISandboxObject | undefined {
+    return this.objects.get(id);
+  }
+
+  public getAllObjects(): ISandboxObject[] {
+    return this.objects.getAll();
+  }
+
+  public getObjectPosition(id: string): Vector2 | undefined {
+    const object = this.objects.get(id);
+
+    if (!object) {
+      return;
+    }
+
+    return new Vector2(object.body.position.x, object.body.position.y);
+  }
+
+  public getObjectFromPosition(vector: Vector2): ISandboxObject | undefined {
+    const body = this.physics.pickBody(vector.x, vector.y);
+
+    if (!body) {
+      return;
+    }
+
+    return this.objects.getByBody(body);
+  }
+
+  public startDrag(ids: string[], pos: Vector2): void {
+    const bodies = ids
+      .map((id) => this.objects.get(id))
+      .filter((object): object is ISandboxObject => object !== undefined)
+      .map((object) => object.body);
+
+    this.physics.startDrag(bodies, pos);
+  }
+
+  public updateDrag(pos: Vector2): void {
+    this.physics.updateDrag(pos);
+  }
+
+  public endDrag(): void {
+    this.physics.endDrag();
+  }
+}

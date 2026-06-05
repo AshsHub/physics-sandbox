@@ -1,0 +1,61 @@
+import type { ISandboxEngine } from "../abstractions/ISandboxEngine";
+import {
+  SandboxObjectFlags,
+  type ISandboxObject,
+} from "../sandbox/SandboxObject";
+import { useEditorStore } from "../store/editorStore";
+
+export class Renderer {
+  constructor(private engine: ISandboxEngine) {}
+
+  render(ctx: CanvasRenderingContext2D, width: number, height: number) {
+    ctx.clearRect(0, 0, width, height);
+
+    const objects = this.engine.getAllObjects();
+
+    for (const object of objects) {
+      this.drawSceneObject(ctx, object);
+    }
+  }
+
+  private drawSceneObject(
+    ctx: CanvasRenderingContext2D,
+    entity: ISandboxObject,
+  ) {
+    if (entity.flags & SandboxObjectFlags.Hidden) return;
+
+    const body = entity.body;
+
+    ctx.save();
+
+    ctx.translate(body.position.x, body.position.y);
+
+    ctx.rotate(body.angle);
+
+    const vertices = body.vertices;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      vertices[0].x - body.position.x,
+      vertices[0].y - body.position.y,
+    );
+
+    for (let i = 1; i < vertices.length; i++) {
+      ctx.lineTo(
+        vertices[i].x - body.position.x,
+        vertices[i].y - body.position.y,
+      );
+    }
+
+    ctx.closePath();
+
+    const selectedIds = useEditorStore.getState().selectedIds;
+
+    ctx.fillStyle = selectedIds.has(entity.id) ? "orange" : "#444";
+
+    ctx.fill();
+
+    ctx.restore();
+  }
+}
