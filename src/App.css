@@ -62,12 +62,16 @@ body {
 .viewport {
   display: flex;
 
+  position: relative;
+
   flex: 1;
 
   justify-content: center;
   align-items: center;
 
   background: #181818;
+
+  overflow: hidden;
 }
 
 button {
@@ -172,6 +176,22 @@ button:hover {
   gap: 12px;
 }
 
+.inspector-filters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-sm);
+}
+
+.inspector-filter-button {
+  min-width: 0;
+  padding: 6px 8px;
+}
+
+.inspector-filter-button.selected {
+  background: #4f8cff;
+  border-color: #6a9fff;
+}
+
 .inspector-list-item {
   padding: var(--space-sm);
   border-radius: 10px;
@@ -199,6 +219,34 @@ button:hover {
   text-overflow: ellipsis;
 }
 
+.inspector-item-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding-top: var(--space-md);
+}
+
+.entity-meta-row {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.entity-meta-label {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.entity-state-badge {
+  justify-self: start;
+  padding: 2px 6px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-primary);
+  font-size: 12px;
+}
+
 /* Chrome / Edge / Safari */
 .inspector::-webkit-scrollbar {
   width: 10px;
@@ -222,23 +270,29 @@ button:hover {
   background: #252525;
 }
 
-.toolbar {
+.headerbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.toolbar-title {
+.headerbar-title {
   margin: 0;
   padding: 12px 16px;
   font-size: 18px;
   color: white;
 }
 
+.toolbar {
+  position: absolute;
+  top: var(--space-md);
+  left: var(--space-md);
+  z-index: 2;
+}
+
 .interaction-mode-controls {
   display: flex;
   gap: var(--space-sm);
-  padding-right: 140px;
 }
 
 .interaction-mode-button {

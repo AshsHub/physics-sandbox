@@ -1,17 +1,28 @@
 import { useRef, useState } from "react";
+import type { MouseEvent } from "react";
 import type { ICommandBus } from "../../commands/ICommands";
 import type { ISandboxObject } from "../../sandbox/SandboxObject";
+import { SandboxObjectFlags } from "../../sandbox/SandboxObjectType";
 
 export interface InspectorListItemProps {
   commands: ICommandBus;
   entity: ISandboxObject;
+  isSelected: boolean;
+  onSelect: (event: MouseEvent) => void;
 }
 
-export function InspectorListItem({ commands, entity }: InspectorListItemProps) {
+export function InspectorListItem({
+  commands,
+  entity,
+  isSelected,
+  onSelect,
+}: InspectorListItemProps) {
   const [isOpen, setIsOpen] = useState(true);
   const [isEditingName, setIsEditingName] = useState(false);
   const [draftName, setDraftName] = useState(entity.name);
   const shouldCancelCommit = useRef(false);
+  const isStatic = (entity.flags & SandboxObjectFlags.Locked) !== 0;
+  const isHidden = (entity.flags & SandboxObjectFlags.Hidden) !== 0;
 
   const startEditingName = () => {
     shouldCancelCommit.current = false;
@@ -42,7 +53,12 @@ export function InspectorListItem({ commands, entity }: InspectorListItemProps) 
   };
 
   return (
-    <div className="inspector-list-item">
+    <div
+      className={
+        isSelected ? "inspector-list-item selected" : "inspector-list-item"
+      }
+      onClick={onSelect}
+    >
       <div className="header" onClick={() => setIsOpen(!isOpen)}>
         {isEditingName ? (
           <input
@@ -84,14 +100,42 @@ export function InspectorListItem({ commands, entity }: InspectorListItemProps) 
             transform: isOpen ? "rotate(0deg)" : "rotate(180deg)",
           }}
         >
-          ▼
+          v
         </span>
       </div>
 
       {isOpen && (
-        <div className="content">
-          <div className="entity-inspector-info">{entity.type}</div>
-          <div className="entity-inspector-info">{entity.id}</div>
+        <div className="inspector-item-content">
+          <div className="entity-meta-row">
+            <span className="entity-meta-label">State</span>
+            <span className="entity-state-badge">
+              {isStatic ? "Static" : "Dynamic"}
+            </span>
+          </div>
+
+          <div className="entity-meta-row">
+            <span className="entity-meta-label">Type</span>
+            <span className="entity-inspector-info">{entity.type}</span>
+          </div>
+
+          <div className="entity-meta-row">
+            <span className="entity-meta-label">Visible</span>
+            <span className="entity-inspector-info">
+              {isHidden ? "Hidden" : "Visible"}
+            </span>
+          </div>
+
+          <div className="entity-meta-row">
+            <span className="entity-meta-label">Selected</span>
+            <span className="entity-inspector-info">
+              {isSelected ? "Yes" : "No"}
+            </span>
+          </div>
+
+          <div className="entity-meta-row">
+            <span className="entity-meta-label">ID</span>
+            <span className="entity-inspector-info">{entity.id}</span>
+          </div>
         </div>
       )}
     </div>

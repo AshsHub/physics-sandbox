@@ -55,6 +55,7 @@ export class Application implements IApplication {
     this.unsubscribers.push(
       this.events.subscribe("sandboxObjectCreated", () => {
         updateCounts();
+        useEditorStore.getState().bumpObjectRevision();
       }),
     );
 
@@ -67,6 +68,7 @@ export class Application implements IApplication {
         }
 
         updateCounts();
+        useEditorStore.getState().bumpObjectRevision();
       }),
     );
 

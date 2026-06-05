@@ -24,8 +24,8 @@ export default function App() {
 
   return (
     <div className="app">
-      <header className="toolbar">
-        <Toolbar />
+      <header className="headerbar">
+        <h1 className="headerbar-title">Physics Sandbox</h1>
 
         <StatusBar
           staticObjectCount={staticObjectCount}
@@ -38,6 +38,7 @@ export default function App() {
         <Sidebar app={app} />
 
         <main className="viewport">
+          <Toolbar />
           <CanvasView app={app} />
         </main>
       </div>
