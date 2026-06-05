@@ -6,11 +6,12 @@ import { Panel } from "./Panel";
 
 export interface CreatePanelProps {
   app: IApplication;
+  onClose?: () => void;
 }
 
-export function CreatePanel({ app }: CreatePanelProps) {
+export function CreatePanel({ app, onClose }: CreatePanelProps) {
   return (
-    <Panel title="Create">
+    <Panel title="Create" onClose={onClose}>
       <div className="create-actions">
         <button
           className="create-button"

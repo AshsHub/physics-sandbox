@@ -16,7 +16,7 @@ export interface IEditorStore {
   cameraOffset: CameraOffset;
   hoveredObjectId?: string;
   selectedIds: Set<string>;
-  activePanel: SidebarPanel;
+  activePanel?: SidebarPanel;
 
   select(id: string): void;
   deselect(id: string): void;
@@ -24,7 +24,7 @@ export interface IEditorStore {
   setSelection(ids: Iterable<string>): void;
   isSelected(id: string): boolean;
 
-  setActivePanel(panel: SidebarPanel): void;
+  setActivePanel(panel?: SidebarPanel): void;
   setObjectCounts(staticCount: number, dynamicCount: number): void;
   bumpObjectRevision(): void;
   setInteractionMode(mode: InteractionMode): void;
@@ -81,7 +81,7 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
     return get().selectedIds.has(id);
   },
 
-  setActivePanel(panel: SidebarPanel) {
+  setActivePanel(panel?: SidebarPanel) {
     set({
       activePanel: panel,
     });

@@ -11,9 +11,11 @@ export interface SidebarProps {
 export function Sidebar({ app }: SidebarProps) {
   const activePanel = useEditorStore((s) => s.activePanel);
   const setActivePanel = useEditorStore((s) => s.setActivePanel);
+  const closePanel = () => setActivePanel(undefined);
+  const hasActivePanel = activePanel !== undefined;
 
   return (
-    <aside className="sidebar">
+    <aside className={hasActivePanel ? "sidebar" : "sidebar collapsed"}>
       <div className="sidebar-nav">
         <button
           className={
@@ -38,10 +40,16 @@ export function Sidebar({ app }: SidebarProps) {
         </button>
       </div>
 
-      <div className="sidebar-content">
-        {activePanel === SidebarPanel.Create && <CreatePanel app={app} />}
-        {activePanel === SidebarPanel.Inspector && <InspectorPanel app={app} />}
-      </div>
+      {hasActivePanel && (
+        <div className="sidebar-content">
+          {activePanel === SidebarPanel.Create && (
+            <CreatePanel app={app} onClose={closePanel} />
+          )}
+          {activePanel === SidebarPanel.Inspector && (
+            <InspectorPanel app={app} onClose={closePanel} />
+          )}
+        </div>
+      )}
     </aside>
   );
 }

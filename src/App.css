@@ -166,12 +166,6 @@ button:hover {
   scrollbar-color: #555 #252525; /* Firefox */
 }
 
-.inspector-panel h2 {
-  margin-top: 0;
-
-  font-size: 18px;
-}
-
 .inspector-list {
   display: flex;
   flex-direction: column;
@@ -298,6 +292,10 @@ button:hover {
   padding: 0px;
 }
 
+.sidebar.collapsed {
+  width: auto;
+}
+
 .sidebar-nav {
   display: flex;
   flex-direction: column;
@@ -336,11 +334,26 @@ button:hover {
   gap: var(--space-lg);
 }
 
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
 .panel-title {
   margin: 0;
 
   font-size: 20px;
   font-weight: 600;
+}
+
+.panel-close-button {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 6px;
+  line-height: 1;
 }
 
 .create-actions {
