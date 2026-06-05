@@ -41,7 +41,9 @@ export class InputManager {
 
   private registerKeyActions(): void {
     this.registerAction(["delete", "backspace"], () => {
-      this.app.engine.destroySelectedObjects();
+      this.app.commands.execute("deleteObject", {
+        ids: Array.from(useEditorStore.getState().selectedIds),
+      });
     });
     this.registerAction(["z"], (mods) => {
       if (this.hasPrimaryModifier(mods)) {

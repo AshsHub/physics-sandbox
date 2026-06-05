@@ -4,6 +4,7 @@ import { SidebarPanel } from "../ui/panels/SidebarPanel";
 export interface IEditorStore {
   staticObjectCount: number;
   dynamicObjectCount: number;
+  objectRevision: number;
   selectedIds: Set<string>;
   activePanel: SidebarPanel;
 
@@ -15,11 +16,13 @@ export interface IEditorStore {
 
   setActivePanel(panel: SidebarPanel): void;
   setObjectCounts(staticCount: number, dynamicCount: number): void;
+  bumpObjectRevision(): void;
 }
 
 export const useEditorStore = create<IEditorStore>((set, get) => ({
   staticObjectCount: 0,
   dynamicObjectCount: 0,
+  objectRevision: 0,
   selectedIds: new Set<string>(),
   activePanel: SidebarPanel.Create,
 
@@ -68,5 +71,11 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
       staticObjectCount: staticCount,
       dynamicObjectCount: dynamicCount,
     });
+  },
+
+  bumpObjectRevision() {
+    set((state) => ({
+      objectRevision: state.objectRevision + 1,
+    }));
   },
 }));

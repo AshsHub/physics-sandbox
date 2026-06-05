@@ -10,6 +10,7 @@ export interface InspectorPanelProps {
 
 export function InspectorPanel({ app }: InspectorPanelProps) {
   const selected = [...useEditorStore((s) => s.selectedIds)];
+  useEditorStore((s) => s.objectRevision);
 
   if (selected.length === 0) {
     return (
@@ -26,6 +27,7 @@ export function InspectorPanel({ app }: InspectorPanelProps) {
       <h2>Inspector</h2>
 
       <InspectorList
+        commands={app.commands}
         objects={selected
           .map((id) => app.engine.getObject(id))
           .filter((v): v is ISandboxObject => !!v)}

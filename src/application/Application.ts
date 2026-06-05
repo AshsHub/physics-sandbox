@@ -69,6 +69,12 @@ export class Application implements IApplication {
         updateCounts();
       }),
     );
+
+    this.unsubscribers.push(
+      this.events.subscribe("sandboxObjectChanged", () => {
+        useEditorStore.getState().bumpObjectRevision();
+      }),
+    );
   }
 
   update() {

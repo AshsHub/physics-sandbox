@@ -103,8 +103,38 @@ button:hover {
   gap: var(--space-md);
 }
 
-.object-name {
+.object-name,
+.entity-name {
   font-weight: 600;
+}
+
+.entity-name {
+  min-width: 0;
+  flex: 1;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-primary);
+  font: inherit;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.entity-name:hover {
+  background: transparent;
+  text-decoration: underline;
+}
+
+.entity-name-input {
+  min-width: 0;
+  flex: 1;
+  padding: 4px 6px;
+  border: 1px solid #4f8cff;
+  border-radius: 4px;
+  background: #1f1f1f;
+  color: var(--text-primary);
+  font: inherit;
 }
 
 .chevron {
@@ -166,7 +196,8 @@ button:hover {
   border-color: #4f8cff;
 }
 
-.object-inspector-info {
+.object-inspector-info,
+.entity-inspector-info {
   font-size: 14px;
   color: #aaa;
   white-space: nowrap;

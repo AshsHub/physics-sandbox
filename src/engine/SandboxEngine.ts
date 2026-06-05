@@ -103,6 +103,18 @@ export class SandboxEngine implements ISandboxEngine {
     this.destroyObject(selected);
   }
 
+  public renameObject(id: string, name: string): void {
+    if (!this.objects.get(id)) {
+      return;
+    }
+
+    this.objects.rename(id, name);
+
+    this.events.emit("sandboxObjectChanged", {
+      id,
+    });
+  }
+
   public getObject(id: string): ISandboxObject | undefined {
     return this.objects.get(id);
   }

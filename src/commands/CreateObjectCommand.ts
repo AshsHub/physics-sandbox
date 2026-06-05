@@ -2,7 +2,7 @@ import type { ISandboxEngine } from "../engine/ISandboxEngine";
 import { Vector2 } from "../maths/Vector2";
 import type { ISandboxObjectSnapshot } from "../sandbox/SandboxObject";
 import type { SandboxObjectType } from "../sandbox/SandboxObjectType";
-import type { ICommand } from "./ICommands";
+import type { ICommand, ICommandResult } from "./ICommands";
 
 export interface CreateObjectCommandOptions {
   type: SandboxObjectType;
@@ -17,34 +17,55 @@ export class CreateObjectCommand implements ICommand {
     private readonly options: CreateObjectCommandOptions,
   ) {}
 
-  public execute(): void {
+  public execute(): ICommandResult {
     if (this.snapshot) {
       this.engine.createObjectFromSnapshot(this.snapshot);
-      return;
+      return {
+        success: true,
+      };
     }
 
     const object = this.engine.createObject(
       this.options.position ?? new Vector2(200 + Math.random() * 200, 100),
       this.options.type,
     );
+    const position = this.engine.getObjectPosition(object.id);
+
+    if (!position) {
+      return {
+        success: false,
+        message: "Object was created but its position could not be resolved.",
+      };
+    }
 
     this.snapshot = {
       id: object.id,
       name: object.name,
       type: object.type,
-      position: this.engine.getObjectPosition(object.id)!,
+      position,
+    };
+
+    return {
+      success: true,
     };
   }
 
-  public undo(): void {
+  public undo(): ICommandResult {
     if (!this.snapshot) {
-      return;
+      return {
+        success: false,
+        message: "Cannot undo object creation before the object exists.",
+      };
     }
 
     this.engine.destroyObject(this.snapshot.id);
+
+    return {
+      success: true,
+    };
   }
 
-  public redo(): void {
-    this.execute();
+  public redo(): ICommandResult {
+    return this.execute();
   }
 }
