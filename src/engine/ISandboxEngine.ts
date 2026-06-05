@@ -1,8 +1,6 @@
-import type {
-  ISandboxObject,
-  SandboxObjectType,
-} from "../sandbox/SandboxObject";
+import type { ISandboxObject } from "../sandbox/SandboxObject";
 import type { Vector2 } from "../maths/Vector2";
+import type { SandboxObjectType } from "../sandbox/SandboxObjectType";
 
 export interface ISandboxEngine {
   getObject(id: string): ISandboxObject | undefined;
