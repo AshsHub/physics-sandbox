@@ -241,6 +241,36 @@ button:hover {
   color: white;
 }
 
+.interaction-mode-controls {
+  display: flex;
+  gap: var(--space-sm);
+  padding-right: 140px;
+}
+
+.interaction-mode-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 6px 10px;
+  min-width: 82px;
+}
+
+.interaction-mode-button.selected {
+  background: #4f8cff;
+  border-color: #6a9fff;
+}
+
+.interaction-mode-key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.22);
+  font-size: 12px;
+}
+
 .status-bar {
   display: flex;
   justify-content: space-between;

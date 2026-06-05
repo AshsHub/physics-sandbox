@@ -85,8 +85,8 @@ export class Application implements IApplication {
     this.renderer.render(ctx, width, height);
   }
 
-  pointerDown(pos: Vector2) {
-    this.inputManager.pointerDown(pos);
+  pointerDown(pos: Vector2, button: number) {
+    this.inputManager.pointerDown(pos, button);
   }
 
   pointerMove(pos: Vector2) {
@@ -95,5 +95,9 @@ export class Application implements IApplication {
 
   pointerUp() {
     this.inputManager.pointerUp();
+  }
+
+  pointerLeave() {
+    this.inputManager.pointerLeave();
   }
 }

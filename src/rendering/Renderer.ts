@@ -10,10 +10,16 @@ export class Renderer {
     ctx.clearRect(0, 0, width, height);
 
     const objects = this.engine.getAllObjects();
+    const cameraOffset = useEditorStore.getState().cameraOffset;
+
+    ctx.save();
+    ctx.translate(cameraOffset.x, cameraOffset.y);
 
     for (const object of objects) {
       this.drawSandboxObject(ctx, object);
     }
+
+    ctx.restore();
   }
 
   private drawSandboxObject(
