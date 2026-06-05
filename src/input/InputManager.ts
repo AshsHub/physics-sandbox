@@ -130,7 +130,10 @@ export class InputManager {
   public pointerDown(pos: Vector2, button: number): void {
     this.lastPointerPosition = pos.clone();
 
-    if (button === 1 || this.getInteractionMode() === InteractionMode.Camera) {
+    if (
+      button === 1 ||
+      (button === 0 && this.getInteractionMode() === InteractionMode.Camera)
+    ) {
       this.setActivePointerMode(InteractionMode.Camera);
       return;
     }

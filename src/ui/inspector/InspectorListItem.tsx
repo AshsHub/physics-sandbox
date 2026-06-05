@@ -9,6 +9,7 @@ export interface InspectorListItemProps {
   entity: ISandboxObject;
   isSelected: boolean;
   onSelect: (event: MouseEvent) => void;
+  onContextMenu: (event: MouseEvent) => void;
 }
 
 export function InspectorListItem({
@@ -16,6 +17,7 @@ export function InspectorListItem({
   entity,
   isSelected,
   onSelect,
+  onContextMenu,
 }: InspectorListItemProps) {
   const [isOpen, setIsOpen] = useState(true);
   const [isEditingName, setIsEditingName] = useState(false);
@@ -41,9 +43,10 @@ export function InspectorListItem({
     const nextName = draftName.trim();
 
     if (nextName.length > 0 && nextName !== entity.name) {
-      commands.execute("renameObject", {
-        objectId: entity.id,
-        name: nextName,
+      commands.execute("updateObjectProperties", {
+        objectIds: [entity.id],
+        property: "name",
+        value: nextName,
       });
     } else {
       setDraftName(entity.name);
@@ -58,6 +61,7 @@ export function InspectorListItem({
         isSelected ? "inspector-list-item selected" : "inspector-list-item"
       }
       onClick={onSelect}
+      onContextMenu={onContextMenu}
     >
       <div className="header" onClick={() => setIsOpen(!isOpen)}>
         {isEditingName ? (

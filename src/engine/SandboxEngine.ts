@@ -103,12 +103,18 @@ export class SandboxEngine implements ISandboxEngine {
     this.destroyObject(selected);
   }
 
-  public renameObject(id: string, name: string): void {
-    if (!this.objects.get(id)) {
+  public updateObjectProperty<T extends keyof ISandboxObject>(
+    id: string,
+    property: T,
+    value: ISandboxObject[T],
+  ): void {
+    const object = this.objects.get(id);
+
+    if (!object) {
       return;
     }
 
-    this.objects.rename(id, name);
+    object[property] = value;
 
     this.events.emit("sandboxObjectChanged", {
       id,

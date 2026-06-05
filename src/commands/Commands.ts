@@ -9,7 +9,6 @@ import type {
   ICommandMap,
   ICommandResult,
 } from "./ICommands";
-import { RenameObjectCommand } from "./RenameObjectCommand";
 import { UpdateObjectPropertiesCommand } from "./UpdateObjectPropertiesCommand";
 
 type CommandFactoryMap = {
@@ -34,7 +33,6 @@ export class Commands implements ICommandBus {
       new UpdateObjectPropertiesCommand(this.engine, options),
     createObject: (options) => new CreateObjectCommand(this.engine, options),
     deleteObject: (options) => new DeleteObjectCommand(this.engine, options),
-    renameObject: (options) => new RenameObjectCommand(this.engine, options),
   };
 
   public constructor(private readonly engine: SandboxEngine) {}

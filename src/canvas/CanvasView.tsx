@@ -8,13 +8,18 @@ import { useEditorStore } from "../store/editorStore";
 
 export interface CanvasViewProps {
   app: IApplication;
+  onObjectContextMenu: (
+    objectId: string,
+    position: { x: number; y: number },
+  ) => void;
 }
 
-export function CanvasView({ app }: CanvasViewProps) {
+export function CanvasView({ app, onObjectContextMenu }: CanvasViewProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const interactionMode = useEditorStore((s) => s.interactionMode);
   const activePointerMode = useEditorStore((s) => s.activePointerMode);
   const hoveredObjectId = useEditorStore((s) => s.hoveredObjectId);
+  const cameraOffset = useEditorStore((s) => s.cameraOffset);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -32,7 +37,9 @@ export function CanvasView({ app }: CanvasViewProps) {
         e.preventDefault();
       }
 
-      canvas.setPointerCapture(e.pointerId);
+      if (e.button === 0 || e.button === 1) {
+        canvas.setPointerCapture(e.pointerId);
+      }
 
       const rect = canvas.getBoundingClientRect();
       const position = new Vector2(e.clientX - rect.left, e.clientY - rect.top);
@@ -57,11 +64,36 @@ export function CanvasView({ app }: CanvasViewProps) {
       app.pointerLeave();
     };
 
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+
+      const rect = canvas.getBoundingClientRect();
+      const canvasPosition = new Vector2(
+        e.clientX - rect.left,
+        e.clientY - rect.top,
+      );
+      const worldPosition = new Vector2(
+        canvasPosition.x - cameraOffset.x,
+        canvasPosition.y - cameraOffset.y,
+      );
+      const object = app.engine.getObjectFromPosition(worldPosition);
+
+      if (!object) {
+        return;
+      }
+
+      onObjectContextMenu(object.id, {
+        x: e.clientX,
+        y: e.clientY,
+      });
+    };
+
     canvas.addEventListener("pointermove", handlePointerMove);
     canvas.addEventListener("pointerleave", handlePointerLeave);
     canvas.addEventListener("pointerup", handlePointerUp);
     canvas.addEventListener("pointercancel", handlePointerUp);
     canvas.addEventListener("pointerdown", handlePointerDown);
+    canvas.addEventListener("contextmenu", handleContextMenu);
 
     const loop = () => {
       app.update();
@@ -86,10 +118,11 @@ export function CanvasView({ app }: CanvasViewProps) {
       canvas.removeEventListener("pointerleave", handlePointerLeave);
       canvas.removeEventListener("pointerup", handlePointerUp);
       canvas.removeEventListener("pointercancel", handlePointerUp);
+      canvas.removeEventListener("contextmenu", handleContextMenu);
       window.removeEventListener("resize", resizeCanvas);
       cancelAnimationFrame(frameId);
     };
-  }, [app]);
+  }, [app, cameraOffset.x, cameraOffset.y, onObjectContextMenu]);
 
   return (
     <canvas

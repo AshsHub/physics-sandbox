@@ -13,7 +13,11 @@ export interface ISandboxEngine {
   destroyObject(id: string | string[]): void;
   destroyAllObjects(): void;
   destroySelectedObjects(): void;
-  renameObject(id: string, name: string): void;
+  updateObjectProperty<T extends keyof ISandboxObject>(
+    id: string,
+    property: T,
+    value: ISandboxObject[T],
+  ): void;
   createObject(position: Vector2, type?: SandboxObjectType): ISandboxObject;
   createObjectFromSnapshot(snapshot: ISandboxObjectSnapshot): ISandboxObject;
   createSnapshot(id: string): ISandboxObjectSnapshot | undefined;

@@ -7,12 +7,14 @@ export interface InspectorListProps {
   commands: ICommandBus;
   objects: ISandboxObject[];
   selectedIds: Set<string>;
+  onObjectContextMenu: (objectId: string, position: { x: number; y: number }) => void;
 }
 
 export function InspectorList({
   commands,
   objects,
   selectedIds,
+  onObjectContextMenu,
 }: InspectorListProps) {
   const select = useEditorStore((s) => s.select);
   const deselect = useEditorStore((s) => s.deselect);
@@ -43,6 +45,14 @@ export function InspectorList({
           onSelect={(event) =>
             selectObject(object.id, event.ctrlKey || event.metaKey || event.shiftKey)
           }
+          onContextMenu={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            onObjectContextMenu(object.id, {
+              x: event.clientX,
+              y: event.clientY,
+            });
+          }}
         />
       ))}
     </div>

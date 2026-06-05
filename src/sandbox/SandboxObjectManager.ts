@@ -107,14 +107,4 @@ export class SandboxObjectManager {
 
     this.objects.clear();
   }
-
-  public rename(id: string, name: string): void {
-    const object = this.objects.get(id);
-
-    if (!object) {
-      return;
-    }
-
-    object.name = name;
-  }
 }

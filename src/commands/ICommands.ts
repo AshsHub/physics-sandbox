@@ -1,6 +1,5 @@
 import type { CreateObjectCommandOptions } from "./CreateObjectCommand";
 import type { DeleteObjectCommandOptions } from "./DeleteObjectCommand";
-import type { RenameObjectCommandOptions } from "./RenameObjectCommand";
 import type { UpdateObjectPropertiesCommandOptions } from "./UpdateObjectPropertiesCommand";
 
 export interface ICommandBus {
@@ -23,7 +22,6 @@ export interface ICommandMap {
   updateObjectProperties: UpdateObjectPropertiesCommandOptions;
   createObject: CreateObjectCommandOptions;
   deleteObject: DeleteObjectCommandOptions;
-  renameObject: RenameObjectCommandOptions;
 }
 
 export type CommandAction = "execute" | "undo" | "redo";

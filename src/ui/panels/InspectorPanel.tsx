@@ -10,6 +10,10 @@ import { Panel } from "./Panel";
 export interface InspectorPanelProps {
   app: IApplication;
   onClose?: () => void;
+  onObjectContextMenu: (
+    objectId: string,
+    position: { x: number; y: number },
+  ) => void;
 }
 
 type InspectorFilter = "all" | "dynamic" | "static" | "selected";
@@ -33,7 +37,11 @@ const filters: { label: string; value: InspectorFilter }[] = [
   },
 ];
 
-export function InspectorPanel({ app, onClose }: InspectorPanelProps) {
+export function InspectorPanel({
+  app,
+  onClose,
+  onObjectContextMenu,
+}: InspectorPanelProps) {
   const [filter, setFilter] = useState<InspectorFilter>("all");
   const selectedIds = useEditorStore((s) => s.selectedIds);
   useEditorStore((s) => s.objectRevision);
@@ -70,6 +78,7 @@ export function InspectorPanel({ app, onClose }: InspectorPanelProps) {
       <InspectorList
         commands={app.commands}
         objects={visibleObjects}
+        onObjectContextMenu={onObjectContextMenu}
         selectedIds={selectedIds}
       />
     </Panel>

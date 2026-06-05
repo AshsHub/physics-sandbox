@@ -6,9 +6,13 @@ import { SidebarPanel } from "../panels/SidebarPanel";
 
 export interface SidebarProps {
   app: IApplication;
+  onObjectContextMenu: (
+    objectId: string,
+    position: { x: number; y: number },
+  ) => void;
 }
 
-export function Sidebar({ app }: SidebarProps) {
+export function Sidebar({ app, onObjectContextMenu }: SidebarProps) {
   const activePanel = useEditorStore((s) => s.activePanel);
   const setActivePanel = useEditorStore((s) => s.setActivePanel);
   const closePanel = () => setActivePanel(undefined);
@@ -46,7 +50,11 @@ export function Sidebar({ app }: SidebarProps) {
             <CreatePanel app={app} onClose={closePanel} />
           )}
           {activePanel === SidebarPanel.Inspector && (
-            <InspectorPanel app={app} onClose={closePanel} />
+            <InspectorPanel
+              app={app}
+              onClose={closePanel}
+              onObjectContextMenu={onObjectContextMenu}
+            />
           )}
         </div>
       )}
