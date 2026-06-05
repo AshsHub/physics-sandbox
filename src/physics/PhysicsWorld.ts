@@ -7,6 +7,8 @@ import { SandboxObjectType } from "../sandbox/SandboxObjectType";
 
 interface IDraggedBody {
   body: Matter.Body;
+  mode: "exact" | "soft";
+  offset: Vector2;
 }
 
 export class PhysicsWorld {
@@ -99,6 +101,11 @@ export class PhysicsWorld {
     for (const body of bodies) {
       this.draggedBodies.push({
         body,
+        mode: body.isStatic ? "exact" : "soft",
+        offset: new Vector2(
+          body.position.x - position.x,
+          body.position.y - position.y,
+        ),
       });
     }
   }
@@ -120,6 +127,19 @@ export class PhysicsWorld {
       const strength = 0.25;
 
       for (const drag of this.draggedBodies) {
+        if (drag.mode === "exact") {
+          Matter.Body.setPosition(drag.body, {
+            x: this.moveToPosition.x + drag.offset.x,
+            y: this.moveToPosition.y + drag.offset.y,
+          });
+          Matter.Body.setVelocity(drag.body, {
+            x: 0,
+            y: 0,
+          });
+          Matter.Body.setAngularVelocity(drag.body, 0);
+          continue;
+        }
+
         const dx = this.moveToPosition.x - drag.body.position.x;
 
         const dy = this.moveToPosition.y - drag.body.position.y;

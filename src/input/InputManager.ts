@@ -1,7 +1,5 @@
 import type { IApplication } from "../application/IApplication";
 import { Vector2 } from "../maths/Vector2";
-import { SandboxObjectFlags } from "../sandbox/SandboxObjectType";
-
 import { useEditorStore } from "../store/editorStore";
 import { InteractionMode } from "./InteractionMode";
 
@@ -146,7 +144,7 @@ export class InputManager {
     const sandboxObject = this.app.engine.getObjectFromPosition(worldPos);
     this.updateHoveredObject(worldPos);
 
-    if (!sandboxObject || sandboxObject.flags & SandboxObjectFlags.Locked) {
+    if (!sandboxObject) {
       if (!this.isMultiSelectHeld()) {
         this.clearSelection();
       }
@@ -257,10 +255,7 @@ export class InputManager {
 
   private updateHoveredObject(pos: Vector2): void {
     const object = this.app.engine.getObjectFromPosition(pos);
-    const hoveredObjectId =
-      object && !(object.flags & SandboxObjectFlags.Locked)
-        ? object.id
-        : undefined;
+    const hoveredObjectId = object ? object.id : undefined;
 
     useEditorStore.getState().setHoveredObject(hoveredObjectId);
   }
