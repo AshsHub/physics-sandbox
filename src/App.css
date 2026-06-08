@@ -247,6 +247,20 @@ button:hover {
   font-size: 12px;
 }
 
+.color-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.color-swatch {
+  flex: 0 0 auto;
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+}
+
 .object-context-menu {
   position: fixed;
   z-index: 20;

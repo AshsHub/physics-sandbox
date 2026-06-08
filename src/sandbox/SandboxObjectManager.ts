@@ -1,6 +1,7 @@
 import { Vector2 } from "../maths/Vector2";
 import type { PhysicsWorld } from "../physics/PhysicsWorld";
 import {
+  type ISandboxObjectMetadata,
   type ISandboxObject,
   type ISandboxObjectSnapshot,
 } from "./SandboxObject";
@@ -11,6 +12,7 @@ export interface CreateSandboxObjectOptions {
   type: SandboxObjectType;
   id?: string;
   name?: string;
+  metadata?: ISandboxObjectMetadata;
 }
 
 export class SandboxObjectManager {
@@ -32,6 +34,10 @@ export class SandboxObjectManager {
       name:
         name ??
         `${type.charAt(0).toUpperCase()}${type.slice(1)} ${objectId.slice(0, 5)}`,
+      metadata: {
+        ...createDefaultMetadata(type),
+        ...options.metadata,
+      },
       flags: body.isStatic
         ? SandboxObjectFlags.Locked
         : SandboxObjectFlags.None,
@@ -55,6 +61,9 @@ export class SandboxObjectManager {
       name: object.name,
       type: object.type,
       position: new Vector2(object.body.position.x, object.body.position.y),
+      metadata: {
+        ...object.metadata,
+      },
     };
   }
 
@@ -106,5 +115,47 @@ export class SandboxObjectManager {
     }
 
     this.objects.clear();
+  }
+}
+
+function createDefaultMetadata(type: SandboxObjectType): ISandboxObjectMetadata {
+  switch (type) {
+    case SandboxObjectType.Ground:
+      return {
+        width: 800,
+        height: 40,
+        color: "#505050",
+        opacity: 1,
+        borderColor: "#777777",
+        borderWidth: 1,
+        borderStyle: "solid",
+        label: "Ground",
+        description: "Static ground body",
+      };
+    case SandboxObjectType.Circle:
+      return {
+        width: 50,
+        height: 50,
+        color: "#4f8cff",
+        opacity: 1,
+        borderColor: "#b8d0ff",
+        borderWidth: 1,
+        borderStyle: "solid",
+        label: "Circle",
+        description: "Dynamic circular body",
+      };
+    case SandboxObjectType.Box:
+    default:
+      return {
+        width: 50,
+        height: 50,
+        color: "#7cce83",
+        opacity: 1,
+        borderColor: "#d6ffd9",
+        borderWidth: 1,
+        borderStyle: "solid",
+        label: "Box",
+        description: "Dynamic rectangular body",
+      };
   }
 }

@@ -25,6 +25,7 @@ export function InspectorListItem({
   const shouldCancelCommit = useRef(false);
   const isStatic = (entity.flags & SandboxObjectFlags.Locked) !== 0;
   const isHidden = (entity.flags & SandboxObjectFlags.Hidden) !== 0;
+  const metadata = entity.metadata;
 
   const startEditingName = () => {
     shouldCancelCommit.current = false;
@@ -120,6 +121,46 @@ export function InspectorListItem({
           <div className="entity-meta-row">
             <span className="entity-meta-label">Type</span>
             <span className="entity-inspector-info">{entity.type}</span>
+          </div>
+
+          <div className="entity-meta-row">
+            <span className="entity-meta-label">Size</span>
+            <span className="entity-inspector-info">
+              {metadata.width} x {metadata.height}
+            </span>
+          </div>
+
+          <div className="entity-meta-row">
+            <span className="entity-meta-label">Fill</span>
+            <span className="entity-inspector-info color-meta">
+              <span
+                className="color-swatch"
+                style={{
+                  background: metadata.color,
+                }}
+              />
+              {metadata.color}
+            </span>
+          </div>
+
+          <div className="entity-meta-row">
+            <span className="entity-meta-label">Border</span>
+            <span className="entity-inspector-info color-meta">
+              <span
+                className="color-swatch"
+                style={{
+                  background: metadata.borderColor,
+                }}
+              />
+              {metadata.borderStyle}, {metadata.borderWidth}px
+            </span>
+          </div>
+
+          <div className="entity-meta-row">
+            <span className="entity-meta-label">Opacity</span>
+            <span className="entity-inspector-info">
+              {Math.round(metadata.opacity * 100)}%
+            </span>
           </div>
 
           <div className="entity-meta-row">

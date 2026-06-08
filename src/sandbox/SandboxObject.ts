@@ -5,11 +5,26 @@ import type {
 } from "./SandboxObjectType";
 import type { Vector2 } from "../maths/Vector2";
 
+export type SandboxObjectBorderStyle = "none" | "solid" | "dashed" | "dotted";
+
+export interface ISandboxObjectMetadata {
+  width: number;
+  height: number;
+  color: string;
+  opacity: number;
+  borderColor: string;
+  borderWidth: number;
+  borderStyle: SandboxObjectBorderStyle;
+  label: string;
+  description: string;
+}
+
 export interface ISandboxObjectSnapshot {
   id: string;
   name: string;
   type: SandboxObjectType;
   position: Vector2;
+  metadata: ISandboxObjectMetadata;
 }
 
 export interface ISandboxObject {
@@ -17,6 +32,7 @@ export interface ISandboxObject {
   name: string;
   type: SandboxObjectType;
   body: Matter.Body;
+  metadata: ISandboxObjectMetadata;
 
   flags: SandboxObjectFlags;
 }

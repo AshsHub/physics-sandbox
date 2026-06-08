@@ -46,9 +46,37 @@ export class Renderer {
     ctx.closePath();
 
     const selectedIds = useEditorStore.getState().selectedIds;
+    const metadata = entity.metadata;
 
-    ctx.fillStyle = selectedIds.has(entity.id) ? "orange" : "#444";
+    ctx.save();
+    ctx.globalAlpha = metadata.opacity;
+    ctx.fillStyle = metadata.color;
 
     ctx.fill();
+
+    if (metadata.borderStyle !== "none" && metadata.borderWidth > 0) {
+      ctx.strokeStyle = selectedIds.has(entity.id)
+        ? "orange"
+        : metadata.borderColor;
+      ctx.lineWidth = metadata.borderWidth;
+      ctx.setLineDash(getLineDash(metadata.borderStyle, metadata.borderWidth));
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    ctx.restore();
+  }
+}
+
+function getLineDash(style: string, width: number): number[] {
+  switch (style) {
+    case "dashed":
+      return [width * 6, width * 4];
+    case "dotted":
+      return [width, width * 3];
+    case "solid":
+    case "none":
+    default:
+      return [];
   }
 }

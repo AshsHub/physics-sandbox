@@ -43,6 +43,9 @@ export class CreateObjectCommand implements ICommand {
       name: object.name,
       type: object.type,
       position,
+      metadata: {
+        ...object.metadata,
+      },
     };
 
     return {

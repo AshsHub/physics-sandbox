@@ -37,7 +37,10 @@ export class UpdateObjectPropertiesCommand implements ICommand {
 
     for (const object of objects) {
       if (!this.previousValues.has(object.id)) {
-        this.previousValues.set(object.id, object[this.options.property]);
+        this.previousValues.set(
+          object.id,
+          clonePropertyValue(object[this.options.property]),
+        );
       }
 
       this.engine.updateObjectProperty(
@@ -76,4 +79,18 @@ export class UpdateObjectPropertiesCommand implements ICommand {
   public redo(): ICommandResult {
     return this.execute();
   }
+}
+
+function clonePropertyValue(value: unknown): unknown {
+  if (Array.isArray(value)) {
+    return [...value];
+  }
+
+  if (value && typeof value === "object") {
+    return {
+      ...value,
+    };
+  }
+
+  return value;
 }
