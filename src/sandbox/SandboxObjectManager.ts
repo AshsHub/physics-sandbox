@@ -131,6 +131,7 @@ function createDefaultMetadata(type: SandboxObjectType): ISandboxObjectMetadata 
         borderStyle: "solid",
         label: "Ground",
         description: "Static ground body",
+        mass: 0,
       };
     case SandboxObjectType.Platform:
       return {
@@ -143,6 +144,7 @@ function createDefaultMetadata(type: SandboxObjectType): ISandboxObjectMetadata 
         borderStyle: "solid",
         label: "Platform",
         description: "Static platform body",
+        mass: 0,
       };
     case SandboxObjectType.Wall:
       return {
@@ -155,6 +157,7 @@ function createDefaultMetadata(type: SandboxObjectType): ISandboxObjectMetadata 
         borderStyle: "solid",
         label: "Wall",
         description: "Static vertical wall body",
+        mass: 0,
       };
     case SandboxObjectType.Ramp:
       return {
@@ -167,6 +170,7 @@ function createDefaultMetadata(type: SandboxObjectType): ISandboxObjectMetadata 
         borderStyle: "solid",
         label: "Ramp",
         description: "Static angled ramp body",
+        mass: 0,
       };
     case SandboxObjectType.Circle:
       return {
@@ -179,6 +183,7 @@ function createDefaultMetadata(type: SandboxObjectType): ISandboxObjectMetadata 
         borderStyle: "solid",
         label: "Circle",
         description: "Dynamic circular body",
+        mass: 8,
       };
     case SandboxObjectType.Triangle:
       return {
@@ -191,6 +196,7 @@ function createDefaultMetadata(type: SandboxObjectType): ISandboxObjectMetadata 
         borderStyle: "solid",
         label: "Triangle",
         description: "Dynamic triangular body",
+        mass: 8,
       };
     case SandboxObjectType.Pentagon:
       return {
@@ -203,6 +209,7 @@ function createDefaultMetadata(type: SandboxObjectType): ISandboxObjectMetadata 
         borderStyle: "solid",
         label: "Pentagon",
         description: "Dynamic pentagonal body",
+        mass: 10,
       };
     case SandboxObjectType.Box:
     default:
@@ -216,6 +223,7 @@ function createDefaultMetadata(type: SandboxObjectType): ISandboxObjectMetadata 
         borderStyle: "solid",
         label: "Box",
         description: "Dynamic rectangular body",
+        mass: 10,
       };
   }
 }

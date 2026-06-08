@@ -164,6 +164,11 @@ export function InspectorListItem({
           </div>
 
           <div className="entity-meta-row">
+            <span className="entity-meta-label">Mass</span>
+            <span className="entity-inspector-info">{metadata.mass}</span>
+          </div>
+
+          <div className="entity-meta-row">
             <span className="entity-meta-label">Visible</span>
             <span className="entity-inspector-info">
               {isHidden ? "Hidden" : "Visible"}

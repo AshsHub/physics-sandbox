@@ -7,18 +7,18 @@ export interface ToolbarProps {
 
 const modes = [
   {
+    label: "Play",
+    mode: InteractionMode.Play,
+    input: 1,
+  },
+  {
     label: "Select",
     mode: InteractionMode.Selection,
-    input: 1,
+    input: 2,
   },
   {
     label: "Camera",
     mode: InteractionMode.Camera,
-    input: 2,
-  },
-  {
-    label: "Play",
-    mode: InteractionMode.Play,
     input: 3,
   },
 ];
@@ -73,7 +73,7 @@ export function Toolbar({ onFitView }: ToolbarProps) {
         <button
           aria-pressed={isSimulationRunning}
           className="simulation-control-button"
-          onClick={() => setSimulationRunning(false)}
+          onClick={() => setSimulationRunning(!isSimulationRunning)}
           title="Pause simulation"
           type="button"
         >
@@ -83,7 +83,7 @@ export function Toolbar({ onFitView }: ToolbarProps) {
         <button
           aria-pressed={!isSimulationRunning}
           className="simulation-control-button"
-          onClick={() => setSimulationRunning(true)}
+          onClick={() => setSimulationRunning(!isSimulationRunning)}
           title="Play simulation"
           type="button"
         >

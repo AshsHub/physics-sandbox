@@ -3,6 +3,7 @@ import { useEditorStore } from "../../store/editorStore";
 import { CreatePanel } from "../panels/CreatePanel";
 import { InspectorPanel } from "../panels/InspectorPanel";
 import { SidebarPanel } from "../panels/SidebarPanel";
+import { SimluationPanel } from "../panels/SimulationPanel";
 
 export interface SidebarProps {
   app: IApplication;
@@ -42,6 +43,17 @@ export function Sidebar({ app, onObjectContextMenu }: SidebarProps) {
         >
           I
         </button>
+
+        <button
+          className={
+            activePanel === SidebarPanel.Simulation
+              ? "sidebar-button selected"
+              : "sidebar-button"
+          }
+          onClick={() => setActivePanel(SidebarPanel.Simulation)}
+        >
+          S
+        </button>
       </div>
 
       {hasActivePanel && (
@@ -55,6 +67,9 @@ export function Sidebar({ app, onObjectContextMenu }: SidebarProps) {
               onClose={closePanel}
               onObjectContextMenu={onObjectContextMenu}
             />
+          )}
+          {activePanel === SidebarPanel.Simulation && (
+            <SimluationPanel onClose={closePanel} />
           )}
         </div>
       )}

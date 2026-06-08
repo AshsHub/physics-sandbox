@@ -1,8 +1,8 @@
+import type { Vector2 } from "../maths/Vector2";
 import type {
   ISandboxObject,
   ISandboxObjectSnapshot,
 } from "../sandbox/SandboxObject";
-import type { Vector2 } from "../maths/Vector2";
 import type { SandboxObjectType } from "../sandbox/SandboxObjectType";
 
 export interface ISandboxEngine {
@@ -28,5 +28,5 @@ export interface ISandboxEngine {
   endDrag(): void;
   cullObjectsOutsideViewport(width: number, height: number): void;
 
-  update(shouldSimulate: boolean): void;
+  update(): void;
 }

@@ -80,7 +80,7 @@ export class Application implements IApplication {
   }
 
   update(width: number, height: number) {
-    this.engine.update(useEditorStore.getState().isSimulationRunning);
+    this.engine.update();
     this.engine.cullObjectsOutsideViewport(width, height);
   }
 

@@ -4,6 +4,8 @@ import Matter from "matter-js";
 
 import { Vector2 } from "../maths/Vector2";
 import { SandboxObjectType } from "../sandbox/SandboxObjectType";
+import { useEditorStore } from "../store/editorStore";
+import { getGravityMultiplier } from "./SandboxSimulation";
 
 interface IDraggedBody {
   body: Matter.Body;
@@ -154,9 +156,20 @@ export class PhysicsWorld {
     this.draggedBodies.length = 0;
   }
 
-  public update(shouldSimulate: boolean): void {
+  public update(): void {
     if (!this._engine) {
       return;
+    }
+
+    const editorState = useEditorStore.getState();
+    const { activeGravitySimulation, isSimulationRunning, windForce } =
+      editorState;
+
+    this._engine.gravity.y = getGravityMultiplier(activeGravitySimulation);
+    this._engine.gravity.x = 0;
+
+    if (isSimulationRunning && windForce !== 0) {
+      this.applyWind(windForce);
     }
 
     if (this.draggedBodies.length > 0) {
@@ -187,8 +200,27 @@ export class PhysicsWorld {
       }
     }
 
-    if (shouldSimulate || this.draggedBodies.length > 0) {
+    if (isSimulationRunning || this.draggedBodies.length > 0) {
       Matter.Engine.update(this._engine, 1000 / 60);
+    }
+  }
+
+  private applyWind(force: number): void {
+    if (!this._world) {
+      return;
+    }
+
+    const bodies = Matter.Composite.allBodies(this._world);
+
+    for (const body of bodies) {
+      if (body.isStatic) {
+        continue;
+      }
+
+      Matter.Body.applyForce(body, body.position, {
+        x: force * body.mass,
+        y: 0,
+      });
     }
   }
 }

@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { InteractionMode } from "../input/InteractionMode";
+import { GravitySimulationType } from "../physics/SandboxSimulation";
 import { SidebarPanel } from "../ui/panels/SidebarPanel";
 
 export interface CameraOffset {
@@ -22,6 +23,8 @@ export interface IEditorStore {
   hoveredObjectId?: string;
   selectedIds: Set<string>;
   activePanel?: SidebarPanel;
+  activeGravitySimulation?: GravitySimulationType;
+  windForce: number;
 
   select(id: string): void;
   deselect(id: string): void;
@@ -33,6 +36,9 @@ export interface IEditorStore {
   setObjectCounts(staticCount: number, dynamicCount: number): void;
   bumpObjectRevision(): void;
   setSimulationRunning(isRunning: boolean): void;
+  setGravitySimulation(sim?: GravitySimulationType): void;
+  setWindForce(force: number): void;
+  clearSimulations(): void;
   setInteractionMode(mode: InteractionMode): void;
   setActivePointerMode(mode?: InteractionMode): void;
   setHoveredObject(id?: string): void;
@@ -46,7 +52,7 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
   dynamicObjectCount: 0,
   objectRevision: 0,
   isSimulationRunning: true,
-  interactionMode: InteractionMode.Selection,
+  interactionMode: InteractionMode.Play,
   activePointerMode: undefined,
   cameraOffset: {
     x: 0,
@@ -56,6 +62,8 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
   hoveredObjectId: undefined,
   selectedIds: new Set<string>(),
   activePanel: SidebarPanel.Create,
+  activeGravitySimulation: GravitySimulationType.Earth,
+  windForce: 0,
 
   select(id: string) {
     set((state) => ({
@@ -193,6 +201,25 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
     set({
       cameraOffset: offset,
       cameraZoom: clamp(zoom, MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM),
+    });
+  },
+
+  setGravitySimulation(sim) {
+    set({
+      activeGravitySimulation: sim,
+    });
+  },
+
+  setWindForce(force) {
+    set({
+      windForce: force,
+    });
+  },
+
+  clearSimulations() {
+    set({
+      activeGravitySimulation: undefined,
+      windForce: 0,
     });
   },
 }));

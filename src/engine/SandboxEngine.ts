@@ -12,8 +12,11 @@ import {
 
 import { SandboxObjectManager } from "../sandbox/SandboxObjectManager";
 
+import {
+  SandboxObjectFlags,
+  SandboxObjectType,
+} from "../sandbox/SandboxObjectType";
 import { useEditorStore } from "../store/editorStore";
-import { SandboxObjectFlags, SandboxObjectType } from "../sandbox/SandboxObjectType";
 
 export class SandboxEngine implements ISandboxEngine {
   private readonly physics = new PhysicsWorld();
@@ -38,8 +41,8 @@ export class SandboxEngine implements ISandboxEngine {
     this.physics.destroy();
   }
 
-  public update(shouldSimulate: boolean): void {
-    this.physics.update(shouldSimulate);
+  public update(): void {
+    this.physics.update();
   }
 
   public createObject(

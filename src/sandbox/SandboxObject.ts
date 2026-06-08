@@ -17,6 +17,7 @@ export interface ISandboxObjectMetadata {
   borderStyle: SandboxObjectBorderStyle;
   label: string;
   description: string;
+  mass: number;
 }
 
 export interface ISandboxObjectSnapshot {
