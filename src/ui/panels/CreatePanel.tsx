@@ -40,11 +40,6 @@ const dynamicShapes: ShapeAction[] = [
 
 const staticShapes: ShapeAction[] = [
   {
-    label: "Ground",
-    type: SandboxObjectType.Ground,
-    preview: "ground",
-  },
-  {
     label: "Platform",
     type: SandboxObjectType.Platform,
     preview: "platform",
@@ -76,7 +71,11 @@ export function CreatePanel({ app, onClose }: CreatePanelProps) {
         onCreate={createObject}
       />
 
-      <CreateGroup label="Static" shapes={staticShapes} onCreate={createObject} />
+      <CreateGroup
+        label="Static"
+        shapes={staticShapes}
+        onCreate={createObject}
+      />
     </Panel>
   );
 }

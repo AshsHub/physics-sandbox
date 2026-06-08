@@ -3,7 +3,6 @@ export enum SandboxObjectType {
   Circle = "circle",
   Triangle = "triangle",
   Pentagon = "pentagon",
-  Ground = "ground",
   Platform = "platform",
   Wall = "wall",
   Ramp = "ramp",

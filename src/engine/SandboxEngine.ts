@@ -32,7 +32,7 @@ export class SandboxEngine implements ISandboxEngine {
   public init(): void {
     this.physics.init();
 
-    this.createObject(new Vector2(400, 580), SandboxObjectType.Ground);
+    this.createObject(new Vector2(0, 580), SandboxObjectType.Platform);
   }
 
   public destroy(): void {

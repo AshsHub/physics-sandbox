@@ -118,21 +118,10 @@ export class SandboxObjectManager {
   }
 }
 
-function createDefaultMetadata(type: SandboxObjectType): ISandboxObjectMetadata {
+function createDefaultMetadata(
+  type: SandboxObjectType,
+): ISandboxObjectMetadata {
   switch (type) {
-    case SandboxObjectType.Ground:
-      return {
-        width: 800,
-        height: 40,
-        color: "#505050",
-        opacity: 1,
-        borderColor: "#777777",
-        borderWidth: 1,
-        borderStyle: "solid",
-        label: "Ground",
-        description: "Static ground body",
-        mass: 0,
-      };
     case SandboxObjectType.Platform:
       return {
         width: 240,
