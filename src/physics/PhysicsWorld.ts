@@ -52,10 +52,32 @@ export class PhysicsWorld {
       case SandboxObjectType.Circle:
         body = Matter.Bodies.circle(position.x, position.y, 25);
         break;
+      case SandboxObjectType.Triangle:
+        body = Matter.Bodies.polygon(position.x, position.y, 3, 32);
+        break;
+      case SandboxObjectType.Pentagon:
+        body = Matter.Bodies.polygon(position.x, position.y, 5, 30);
+        break;
       case SandboxObjectType.Ground:
         body = Matter.Bodies.rectangle(position.x, position.y, 800, 40, {
           isStatic: true,
         });
+        break;
+      case SandboxObjectType.Platform:
+        body = Matter.Bodies.rectangle(position.x, position.y, 240, 28, {
+          isStatic: true,
+        });
+        break;
+      case SandboxObjectType.Wall:
+        body = Matter.Bodies.rectangle(position.x, position.y, 36, 220, {
+          isStatic: true,
+        });
+        break;
+      case SandboxObjectType.Ramp:
+        body = Matter.Bodies.rectangle(position.x, position.y, 220, 28, {
+          isStatic: true,
+        });
+        Matter.Body.rotate(body, -Math.PI / 8);
         break;
       case SandboxObjectType.Box:
       default:

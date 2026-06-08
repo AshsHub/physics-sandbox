@@ -132,6 +132,42 @@ function createDefaultMetadata(type: SandboxObjectType): ISandboxObjectMetadata 
         label: "Ground",
         description: "Static ground body",
       };
+    case SandboxObjectType.Platform:
+      return {
+        width: 240,
+        height: 28,
+        color: "#565656",
+        opacity: 1,
+        borderColor: "#8a8a8a",
+        borderWidth: 1,
+        borderStyle: "solid",
+        label: "Platform",
+        description: "Static platform body",
+      };
+    case SandboxObjectType.Wall:
+      return {
+        width: 36,
+        height: 220,
+        color: "#5c5c5c",
+        opacity: 1,
+        borderColor: "#929292",
+        borderWidth: 1,
+        borderStyle: "solid",
+        label: "Wall",
+        description: "Static vertical wall body",
+      };
+    case SandboxObjectType.Ramp:
+      return {
+        width: 220,
+        height: 28,
+        color: "#686868",
+        opacity: 1,
+        borderColor: "#a0a0a0",
+        borderWidth: 1,
+        borderStyle: "solid",
+        label: "Ramp",
+        description: "Static angled ramp body",
+      };
     case SandboxObjectType.Circle:
       return {
         width: 50,
@@ -143,6 +179,30 @@ function createDefaultMetadata(type: SandboxObjectType): ISandboxObjectMetadata 
         borderStyle: "solid",
         label: "Circle",
         description: "Dynamic circular body",
+      };
+    case SandboxObjectType.Triangle:
+      return {
+        width: 64,
+        height: 64,
+        color: "#f2b84b",
+        opacity: 1,
+        borderColor: "#ffe1a0",
+        borderWidth: 1,
+        borderStyle: "solid",
+        label: "Triangle",
+        description: "Dynamic triangular body",
+      };
+    case SandboxObjectType.Pentagon:
+      return {
+        width: 60,
+        height: 60,
+        color: "#c17cff",
+        opacity: 1,
+        borderColor: "#e4c2ff",
+        borderWidth: 1,
+        borderStyle: "solid",
+        label: "Pentagon",
+        description: "Dynamic pentagonal body",
       };
     case SandboxObjectType.Box:
     default:
