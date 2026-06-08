@@ -38,8 +38,8 @@ export class SandboxEngine implements ISandboxEngine {
     this.physics.destroy();
   }
 
-  public update(): void {
-    this.physics.update();
+  public update(shouldSimulate: boolean): void {
+    this.physics.update(shouldSimulate);
   }
 
   public createObject(

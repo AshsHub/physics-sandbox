@@ -28,5 +28,5 @@ export interface ISandboxEngine {
   endDrag(): void;
   cullObjectsOutsideViewport(width: number, height: number): void;
 
-  update(): void;
+  update(shouldSimulate: boolean): void;
 }

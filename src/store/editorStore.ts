@@ -14,6 +14,7 @@ export interface IEditorStore {
   staticObjectCount: number;
   dynamicObjectCount: number;
   objectRevision: number;
+  isSimulationRunning: boolean;
   interactionMode: InteractionMode;
   activePointerMode?: InteractionMode;
   cameraOffset: CameraOffset;
@@ -31,6 +32,7 @@ export interface IEditorStore {
   setActivePanel(panel?: SidebarPanel): void;
   setObjectCounts(staticCount: number, dynamicCount: number): void;
   bumpObjectRevision(): void;
+  setSimulationRunning(isRunning: boolean): void;
   setInteractionMode(mode: InteractionMode): void;
   setActivePointerMode(mode?: InteractionMode): void;
   setHoveredObject(id?: string): void;
@@ -43,6 +45,7 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
   staticObjectCount: 0,
   dynamicObjectCount: 0,
   objectRevision: 0,
+  isSimulationRunning: true,
   interactionMode: InteractionMode.Selection,
   activePointerMode: undefined,
   cameraOffset: {
@@ -105,6 +108,12 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
     set((state) => ({
       objectRevision: state.objectRevision + 1,
     }));
+  },
+
+  setSimulationRunning(isRunning: boolean) {
+    set({
+      isSimulationRunning: isRunning,
+    });
   },
 
   setInteractionMode(mode: InteractionMode) {

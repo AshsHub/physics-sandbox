@@ -370,6 +370,54 @@ button:hover {
   padding: 6px 10px;
 }
 
+.simulation-controls {
+  position: relative;
+  display: flex;
+  width: 72px;
+  height: 32px;
+  padding: 2px;
+  border: 1px solid #444;
+  border-radius: 6px;
+  background: #3a3a3a;
+  overflow: hidden;
+}
+
+.simulation-control-button {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: white;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.simulation-control-button:hover {
+  background: transparent;
+}
+
+.simulation-control-indicator {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  width: calc(50% - 2px);
+  border-radius: 4px;
+  background: #4f8cff;
+  transition: transform 0.18s ease;
+}
+
+.simulation-control-indicator.left {
+  transform: translateX(0);
+}
+
+.simulation-control-indicator.right {
+  transform: translateX(100%);
+}
+
 .status-bar {
   display: flex;
   justify-content: space-between;

@@ -132,7 +132,7 @@ export class PhysicsWorld {
     this.draggedBodies.length = 0;
   }
 
-  public update(): void {
+  public update(shouldSimulate: boolean): void {
     if (!this._engine) {
       return;
     }
@@ -165,6 +165,8 @@ export class PhysicsWorld {
       }
     }
 
-    Matter.Engine.update(this._engine, 1000 / 60);
+    if (shouldSimulate || this.draggedBodies.length > 0) {
+      Matter.Engine.update(this._engine, 1000 / 60);
+    }
   }
 }

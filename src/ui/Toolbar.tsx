@@ -27,6 +27,8 @@ export function Toolbar({ onFitView }: ToolbarProps) {
   const interactionMode = useEditorStore((s) => s.interactionMode);
   const setInteractionMode = useEditorStore((s) => s.setInteractionMode);
   const cameraZoom = useEditorStore((s) => s.cameraZoom);
+  const isSimulationRunning = useEditorStore((s) => s.isSimulationRunning);
+  const setSimulationRunning = useEditorStore((s) => s.setSimulationRunning);
 
   return (
     <header className="toolbar">
@@ -58,6 +60,36 @@ export function Toolbar({ onFitView }: ToolbarProps) {
       >
         Fit {Math.round(cameraZoom * 100)}%
       </button>
+
+      <div className="simulation-controls" aria-label="Simulation controls">
+        <span
+          className={
+            isSimulationRunning
+              ? "simulation-control-indicator right"
+              : "simulation-control-indicator left"
+          }
+        />
+
+        <button
+          aria-pressed={isSimulationRunning}
+          className="simulation-control-button"
+          onClick={() => setSimulationRunning(false)}
+          title="Pause simulation"
+          type="button"
+        >
+          ||
+        </button>
+
+        <button
+          aria-pressed={!isSimulationRunning}
+          className="simulation-control-button"
+          onClick={() => setSimulationRunning(true)}
+          title="Play simulation"
+          type="button"
+        >
+          {">"}
+        </button>
+      </div>
     </header>
   );
 }
