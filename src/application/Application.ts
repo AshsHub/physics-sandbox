@@ -96,8 +96,8 @@ export class Application implements IApplication {
     this.inputManager.pointerMove(pos);
   }
 
-  pointerWheel(deltaY: number) {
-    this.inputManager.pointerWheel(deltaY);
+  pointerWheel(deltaY: number, pos: Vector2) {
+    this.inputManager.pointerWheel(deltaY, pos);
   }
 
   pointerUp() {

@@ -20,6 +20,7 @@ export function CanvasView({ app, onObjectContextMenu }: CanvasViewProps) {
   const activePointerMode = useEditorStore((s) => s.activePointerMode);
   const hoveredObjectId = useEditorStore((s) => s.hoveredObjectId);
   const cameraOffset = useEditorStore((s) => s.cameraOffset);
+  const cameraZoom = useEditorStore((s) => s.cameraZoom);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -73,8 +74,8 @@ export function CanvasView({ app, onObjectContextMenu }: CanvasViewProps) {
         e.clientY - rect.top,
       );
       const worldPosition = new Vector2(
-        canvasPosition.x - cameraOffset.x,
-        canvasPosition.y - cameraOffset.y,
+        (canvasPosition.x - cameraOffset.x) / cameraZoom,
+        (canvasPosition.y - cameraOffset.y) / cameraZoom,
       );
       const object = app.engine.getObjectFromPosition(worldPosition);
 
@@ -90,7 +91,11 @@ export function CanvasView({ app, onObjectContextMenu }: CanvasViewProps) {
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
-      app.pointerWheel(e.deltaY);
+      const rect = canvas.getBoundingClientRect();
+      app.pointerWheel(
+        e.deltaY,
+        new Vector2(e.clientX - rect.left, e.clientY - rect.top),
+      );
     };
 
     canvas.addEventListener("pointermove", handlePointerMove);
@@ -131,7 +136,13 @@ export function CanvasView({ app, onObjectContextMenu }: CanvasViewProps) {
       window.removeEventListener("resize", resizeCanvas);
       cancelAnimationFrame(frameId);
     };
-  }, [app, cameraOffset.x, cameraOffset.y, onObjectContextMenu]);
+  }, [
+    app,
+    cameraOffset.x,
+    cameraOffset.y,
+    cameraZoom,
+    onObjectContextMenu,
+  ]);
 
   return (
     <canvas

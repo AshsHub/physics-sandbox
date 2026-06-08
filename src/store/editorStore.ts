@@ -7,6 +7,9 @@ export interface CameraOffset {
   y: number;
 }
 
+const MIN_CAMERA_ZOOM = 0.2;
+const MAX_CAMERA_ZOOM = 4;
+
 export interface IEditorStore {
   staticObjectCount: number;
   dynamicObjectCount: number;
@@ -14,6 +17,7 @@ export interface IEditorStore {
   interactionMode: InteractionMode;
   activePointerMode?: InteractionMode;
   cameraOffset: CameraOffset;
+  cameraZoom: number;
   hoveredObjectId?: string;
   selectedIds: Set<string>;
   activePanel?: SidebarPanel;
@@ -31,6 +35,8 @@ export interface IEditorStore {
   setActivePointerMode(mode?: InteractionMode): void;
   setHoveredObject(id?: string): void;
   panCamera(delta: CameraOffset): void;
+  zoomCameraAt(screenPosition: CameraOffset, zoomFactor: number): void;
+  setCameraView(offset: CameraOffset, zoom: number): void;
 }
 
 export const useEditorStore = create<IEditorStore>((set, get) => ({
@@ -43,6 +49,7 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
     x: 0,
     y: 0,
   },
+  cameraZoom: 1,
   hoveredObjectId: undefined,
   selectedIds: new Set<string>(),
   activePanel: SidebarPanel.Create,
@@ -145,4 +152,42 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
       },
     }));
   },
+
+  zoomCameraAt(screenPosition: CameraOffset, zoomFactor: number) {
+    set((state) => {
+      const nextZoom = clamp(
+        state.cameraZoom * zoomFactor,
+        MIN_CAMERA_ZOOM,
+        MAX_CAMERA_ZOOM,
+      );
+
+      if (nextZoom === state.cameraZoom) {
+        return state;
+      }
+
+      const worldX =
+        (screenPosition.x - state.cameraOffset.x) / state.cameraZoom;
+      const worldY =
+        (screenPosition.y - state.cameraOffset.y) / state.cameraZoom;
+
+      return {
+        cameraZoom: nextZoom,
+        cameraOffset: {
+          x: screenPosition.x - worldX * nextZoom,
+          y: screenPosition.y - worldY * nextZoom,
+        },
+      };
+    });
+  },
+
+  setCameraView(offset: CameraOffset, zoom: number) {
+    set({
+      cameraOffset: offset,
+      cameraZoom: clamp(zoom, MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM),
+    });
+  },
 }));
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
+}

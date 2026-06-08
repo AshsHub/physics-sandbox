@@ -1,6 +1,10 @@
 import { InteractionMode } from "../input/InteractionMode";
 import { useEditorStore } from "../store/editorStore";
 
+export interface ToolbarProps {
+  onFitView: () => void;
+}
+
 const modes = [
   {
     label: "Select",
@@ -19,9 +23,10 @@ const modes = [
   },
 ];
 
-export function Toolbar() {
+export function Toolbar({ onFitView }: ToolbarProps) {
   const interactionMode = useEditorStore((s) => s.interactionMode);
   const setInteractionMode = useEditorStore((s) => s.setInteractionMode);
+  const cameraZoom = useEditorStore((s) => s.cameraZoom);
 
   return (
     <header className="toolbar">
@@ -36,7 +41,7 @@ export function Toolbar() {
             }
             key={mode}
             onClick={() => setInteractionMode(mode)}
-            title={`${label} (input)`}
+            title={`${label} (${input})`}
             type="button"
           >
             <span className="interaction-mode-key">{input}</span>
@@ -44,6 +49,15 @@ export function Toolbar() {
           </button>
         ))}
       </div>
+
+      <button
+        className="fit-view-button"
+        onClick={onFitView}
+        title="Fit objects to view"
+        type="button"
+      >
+        Fit {Math.round(cameraZoom * 100)}%
+      </button>
     </header>
   );
 }

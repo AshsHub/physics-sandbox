@@ -176,12 +176,14 @@ export class SandboxEngine implements ISandboxEngine {
     }
 
     const margin = 1200;
-    const cameraOffset = useEditorStore.getState().cameraOffset;
+    const editorState = useEditorStore.getState();
+    const cameraOffset = editorState.cameraOffset;
+    const cameraZoom = editorState.cameraZoom;
     const bounds = {
-      left: -cameraOffset.x - margin,
-      right: width - cameraOffset.x + margin,
-      top: -cameraOffset.y - margin,
-      bottom: height - cameraOffset.y + margin,
+      left: -cameraOffset.x / cameraZoom - margin,
+      right: (width - cameraOffset.x) / cameraZoom + margin,
+      top: -cameraOffset.y / cameraZoom - margin,
+      bottom: (height - cameraOffset.y) / cameraZoom + margin,
     };
     const idsToCull = this.objects
       .getAll()

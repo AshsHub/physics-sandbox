@@ -318,6 +318,9 @@ button:hover {
   top: var(--space-md);
   left: var(--space-md);
   z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
 }
 
 .interaction-mode-controls {
@@ -347,6 +350,10 @@ button:hover {
   border-radius: 4px;
   background: rgba(0, 0, 0, 0.22);
   font-size: 12px;
+}
+
+.fit-view-button {
+  padding: 6px 10px;
 }
 
 .status-bar {

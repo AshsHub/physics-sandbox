@@ -207,8 +207,13 @@ export class InputManager {
     this.updateHoveredObject(this.screenToWorld(pos));
   }
 
-  public pointerWheel(deltaY: number): void {
+  public pointerWheel(deltaY: number, pos: Vector2): void {
     if (deltaY === 0) {
+      return;
+    }
+
+    if (this.activePointerMode !== InteractionMode.Play) {
+      useEditorStore.getState().zoomCameraAt(pos, deltaY > 0 ? 0.9 : 1.1);
       return;
     }
 
@@ -268,9 +273,14 @@ export class InputManager {
   }
 
   private screenToWorld(pos: Vector2): Vector2 {
-    const cameraOffset = useEditorStore.getState().cameraOffset;
+    const editorState = useEditorStore.getState();
+    const cameraOffset = editorState.cameraOffset;
+    const cameraZoom = editorState.cameraZoom;
 
-    return new Vector2(pos.x - cameraOffset.x, pos.y - cameraOffset.y);
+    return new Vector2(
+      (pos.x - cameraOffset.x) / cameraZoom,
+      (pos.y - cameraOffset.y) / cameraZoom,
+    );
   }
 
   private setActivePointerMode(mode?: InteractionMode): void {

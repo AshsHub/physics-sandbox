@@ -12,7 +12,7 @@ export interface IApplication {
   render(ctx: CanvasRenderingContext2D, width: number, height: number): void;
   pointerDown(pos: Vector2, button: number): void;
   pointerMove(pos: Vector2): void;
-  pointerWheel(deltaY: number): void;
+  pointerWheel(deltaY: number, pos: Vector2): void;
   pointerUp(button: number): void;
   pointerLeave(): void;
 }

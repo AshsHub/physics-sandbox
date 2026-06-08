@@ -10,10 +10,13 @@ export class Renderer {
     ctx.clearRect(0, 0, width, height);
 
     const objects = this.engine.getAllObjects();
-    const cameraOffset = useEditorStore.getState().cameraOffset;
+    const editorState = useEditorStore.getState();
+    const cameraOffset = editorState.cameraOffset;
+    const cameraZoom = editorState.cameraZoom;
 
     ctx.save();
     ctx.translate(cameraOffset.x, cameraOffset.y);
+    ctx.scale(cameraZoom, cameraZoom);
 
     for (const object of objects) {
       this.drawSandboxObject(ctx, object);
