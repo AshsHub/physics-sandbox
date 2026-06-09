@@ -5,6 +5,7 @@ import { Vector2 } from "../maths/Vector2";
 import type { IApplication } from "../application/IApplication";
 import { InteractionMode } from "../input/InteractionMode";
 import { useEditorStore } from "../store/editorStore";
+import { SelectionBoxOverlay } from "./SelectionBoxOverlay";
 
 export interface CanvasViewProps {
   app: IApplication;
@@ -19,6 +20,7 @@ export function CanvasView({ app, onObjectContextMenu }: CanvasViewProps) {
   const interactionMode = useEditorStore((s) => s.interactionMode);
   const activePointerMode = useEditorStore((s) => s.activePointerMode);
   const hoveredObjectId = useEditorStore((s) => s.hoveredObjectId);
+  const selectionBox = useEditorStore((s) => s.selectionBox);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -135,25 +137,26 @@ export function CanvasView({ app, onObjectContextMenu }: CanvasViewProps) {
       window.removeEventListener("resize", resizeCanvas);
       cancelAnimationFrame(frameId);
     };
-  }, [
-    app,
-    onObjectContextMenu,
-  ]);
+  }, [app, onObjectContextMenu]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        cursor: getCanvasCursor(
-          interactionMode,
-          activePointerMode,
-          hoveredObjectId,
-        ),
-        touchAction: "none",
-        width: "100%",
-        height: "100%",
-      }}
-    />
+    <div className="canvas-stage">
+      <canvas
+        ref={canvasRef}
+        style={{
+          cursor: getCanvasCursor(
+            interactionMode,
+            activePointerMode,
+            hoveredObjectId,
+          ),
+          touchAction: "none",
+          width: "100%",
+          height: "100%",
+        }}
+      />
+
+      {selectionBox && <SelectionBoxOverlay selectionBox={selectionBox} />}
+    </div>
   );
 }
 
@@ -164,6 +167,10 @@ function getCanvasCursor(
 ): string {
   if (activePointerMode === InteractionMode.Play) {
     return "grabbing";
+  }
+
+  if (activePointerMode === InteractionMode.Selection) {
+    return "crosshair";
   }
 
   if (

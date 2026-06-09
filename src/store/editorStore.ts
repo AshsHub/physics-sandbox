@@ -9,6 +9,11 @@ export interface CameraOffset {
   y: number;
 }
 
+export interface SelectionBox {
+  start: CameraOffset;
+  current: CameraOffset;
+}
+
 export interface IEditorStore {
   staticObjectCount: number;
   dynamicObjectCount: number;
@@ -20,6 +25,7 @@ export interface IEditorStore {
   cameraZoom: number;
   viewportSize: ViewportSize;
   hoveredObjectId?: string;
+  selectionBox?: SelectionBox;
   selectedIds: Set<string>;
   activePanel?: SidebarPanel;
   activeGravitySimulation?: GravitySimulationType;
@@ -43,6 +49,7 @@ export interface IEditorStore {
   setInteractionMode(mode: InteractionMode): void;
   setActivePointerMode(mode?: InteractionMode): void;
   setHoveredObject(id?: string): void;
+  setSelectionBox(selectionBox?: SelectionBox): void;
   setCameraState(state: {
     offset: CameraOffset;
     zoom: number;
@@ -67,6 +74,7 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
     height: 0,
   },
   hoveredObjectId: undefined,
+  selectionBox: undefined,
   selectedIds: new Set<string>(),
   activePanel: SidebarPanel.Create,
   activeGravitySimulation: GravitySimulationType.Earth,
@@ -166,6 +174,12 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
       return {
         hoveredObjectId: id,
       };
+    });
+  },
+
+  setSelectionBox(selectionBox) {
+    set({
+      selectionBox,
     });
   },
 
