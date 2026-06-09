@@ -1,6 +1,7 @@
 import type { IEventBus } from "../events/IEventBus";
 import type { ISandboxEngine } from "./ISandboxEngine";
 
+import type { Camera } from "../camera/Camera";
 import { Vector2 } from "../maths/Vector2";
 
 import { PhysicsWorld } from "../physics/PhysicsWorld";
@@ -25,7 +26,10 @@ export class SandboxEngine implements ISandboxEngine {
 
   private readonly events: IEventBus;
 
-  public constructor(events: IEventBus) {
+  public constructor(
+    events: IEventBus,
+    private readonly camera: Camera,
+  ) {
     this.events = events;
   }
 
@@ -179,15 +183,7 @@ export class SandboxEngine implements ISandboxEngine {
     }
 
     const margin = 1200;
-    const editorState = useEditorStore.getState();
-    const cameraOffset = editorState.cameraOffset;
-    const cameraZoom = editorState.cameraZoom;
-    const bounds = {
-      left: -cameraOffset.x / cameraZoom - margin,
-      right: (width - cameraOffset.x) / cameraZoom + margin,
-      top: -cameraOffset.y / cameraZoom - margin,
-      bottom: (height - cameraOffset.y) / cameraZoom + margin,
-    };
+    const bounds = this.camera.getViewportBounds(margin);
     const idsToCull = this.objects
       .getAll()
       .filter((object) => (object.flags & SandboxObjectFlags.Locked) === 0)

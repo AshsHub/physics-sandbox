@@ -189,7 +189,7 @@ export class InputManager {
   public pointerMove(pos: Vector2): void {
     if (this.activePointerMode === InteractionMode.Camera) {
       if (this.lastPointerPosition) {
-        useEditorStore.getState().panCamera({
+        this.app.camera.pan({
           x: pos.x - this.lastPointerPosition.x,
           y: pos.y - this.lastPointerPosition.y,
         });
@@ -213,7 +213,7 @@ export class InputManager {
     }
 
     if (this.activePointerMode !== InteractionMode.Play) {
-      useEditorStore.getState().zoomCameraAt(pos, deltaY > 0 ? 0.9 : 1.1);
+      this.app.camera.zoomAt(pos, deltaY > 0 ? 0.9 : 1.1);
       return;
     }
 
@@ -273,14 +273,7 @@ export class InputManager {
   }
 
   private screenToWorld(pos: Vector2): Vector2 {
-    const editorState = useEditorStore.getState();
-    const cameraOffset = editorState.cameraOffset;
-    const cameraZoom = editorState.cameraZoom;
-
-    return new Vector2(
-      (pos.x - cameraOffset.x) / cameraZoom,
-      (pos.y - cameraOffset.y) / cameraZoom,
-    );
+    return this.app.camera.screenToWorld(pos);
   }
 
   private setActivePointerMode(mode?: InteractionMode): void {

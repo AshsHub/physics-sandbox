@@ -1,4 +1,5 @@
 import { Commands } from "../commands/Commands";
+import { Camera } from "../camera/Camera";
 import { InputManager } from "../input/InputManager";
 import type { Vector2 } from "../maths/Vector2";
 import { Renderer } from "../rendering/Renderer";
@@ -9,6 +10,7 @@ import type { IApplication } from "./IApplication";
 import { SandboxObjectFlags } from "../sandbox/SandboxObjectType";
 
 export class Application implements IApplication {
+  public readonly camera: Camera;
   public readonly engine: SandboxEngine;
   public readonly renderer: Renderer;
   public readonly commands: Commands;
@@ -18,8 +20,11 @@ export class Application implements IApplication {
   private readonly unsubscribers: (() => void)[] = [];
 
   public constructor() {
-    this.engine = new SandboxEngine(this.events);
-    this.commands = new Commands(this.engine);
+    this.camera = new Camera(undefined, (view) => {
+      useEditorStore.getState().setCameraState(view);
+    });
+    this.engine = new SandboxEngine(this.events, this.camera);
+    this.commands = new Commands(this.engine, this.camera);
     this.inputManager = new InputManager(this);
     this.renderer = new Renderer(this.engine);
   }

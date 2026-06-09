@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { type ViewportSize } from "../camera/Camera";
 import { InteractionMode } from "../input/InteractionMode";
 import { GravitySimulationType } from "../physics/SandboxSimulation";
 import { SidebarPanel } from "../ui/panels/SidebarPanel";
@@ -7,9 +8,6 @@ export interface CameraOffset {
   x: number;
   y: number;
 }
-
-const MIN_CAMERA_ZOOM = 0.2;
-const MAX_CAMERA_ZOOM = 4;
 
 export interface IEditorStore {
   staticObjectCount: number;
@@ -20,6 +18,7 @@ export interface IEditorStore {
   activePointerMode?: InteractionMode;
   cameraOffset: CameraOffset;
   cameraZoom: number;
+  viewportSize: ViewportSize;
   hoveredObjectId?: string;
   selectedIds: Set<string>;
   activePanel?: SidebarPanel;
@@ -42,9 +41,11 @@ export interface IEditorStore {
   setInteractionMode(mode: InteractionMode): void;
   setActivePointerMode(mode?: InteractionMode): void;
   setHoveredObject(id?: string): void;
-  panCamera(delta: CameraOffset): void;
-  zoomCameraAt(screenPosition: CameraOffset, zoomFactor: number): void;
-  setCameraView(offset: CameraOffset, zoom: number): void;
+  setCameraState(state: {
+    offset: CameraOffset;
+    zoom: number;
+    viewportSize: ViewportSize;
+  }): void;
 }
 
 export const useEditorStore = create<IEditorStore>((set, get) => ({
@@ -59,6 +60,10 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
     y: 0,
   },
   cameraZoom: 1,
+  viewportSize: {
+    width: 0,
+    height: 0,
+  },
   hoveredObjectId: undefined,
   selectedIds: new Set<string>(),
   activePanel: SidebarPanel.Create,
@@ -161,46 +166,11 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
     });
   },
 
-  panCamera(delta: CameraOffset) {
-    set((state) => ({
-      cameraOffset: {
-        x: state.cameraOffset.x + delta.x,
-        y: state.cameraOffset.y + delta.y,
-      },
-    }));
-  },
-
-  zoomCameraAt(screenPosition: CameraOffset, zoomFactor: number) {
-    set((state) => {
-      const nextZoom = clamp(
-        state.cameraZoom * zoomFactor,
-        MIN_CAMERA_ZOOM,
-        MAX_CAMERA_ZOOM,
-      );
-
-      if (nextZoom === state.cameraZoom) {
-        return state;
-      }
-
-      const worldX =
-        (screenPosition.x - state.cameraOffset.x) / state.cameraZoom;
-      const worldY =
-        (screenPosition.y - state.cameraOffset.y) / state.cameraZoom;
-
-      return {
-        cameraZoom: nextZoom,
-        cameraOffset: {
-          x: screenPosition.x - worldX * nextZoom,
-          y: screenPosition.y - worldY * nextZoom,
-        },
-      };
-    });
-  },
-
-  setCameraView(offset: CameraOffset, zoom: number) {
+  setCameraState(cameraState) {
     set({
-      cameraOffset: offset,
-      cameraZoom: clamp(zoom, MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM),
+      cameraOffset: cameraState.offset,
+      cameraZoom: cameraState.zoom,
+      viewportSize: cameraState.viewportSize,
     });
   },
 
@@ -223,7 +193,3 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
     });
   },
 }));
-
-function clamp(value: number, min: number, max: number): number {
-  return Math.min(max, Math.max(min, value));
-}

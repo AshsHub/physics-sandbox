@@ -1,4 +1,5 @@
 import type { ISandboxEngine } from "../engine/ISandboxEngine";
+import type { Camera } from "../camera/Camera";
 import { Vector2 } from "../maths/Vector2";
 import type { ISandboxObjectSnapshot } from "../sandbox/SandboxObject";
 import type { SandboxObjectType } from "../sandbox/SandboxObjectType";
@@ -14,6 +15,7 @@ export class CreateObjectCommand implements ICommand {
 
   public constructor(
     private readonly engine: ISandboxEngine,
+    private readonly camera: Camera,
     private readonly options: CreateObjectCommandOptions,
   ) {}
 
@@ -26,7 +28,8 @@ export class CreateObjectCommand implements ICommand {
     }
 
     const object = this.engine.createObject(
-      this.options.position ?? new Vector2(200 + Math.random() * 200, 100),
+      this.options.position ??
+        this.camera.getViewportCenterPosition().subtract(0, 200),
       this.options.type,
     );
     const position = this.engine.getObjectPosition(object.id);

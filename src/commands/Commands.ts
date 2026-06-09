@@ -1,4 +1,5 @@
 import { SandboxEngine } from "../engine/SandboxEngine";
+import type { Camera } from "../camera/Camera";
 import { CreateObjectCommand } from "./CreateObjectCommand";
 import { DeleteObjectCommand } from "./DeleteObjectCommand";
 import type {
@@ -31,11 +32,15 @@ export class Commands implements ICommandBus {
   private readonly commandMap: CommandFactoryMap = {
     updateObjectProperties: (options) =>
       new UpdateObjectPropertiesCommand(this.engine, options),
-    createObject: (options) => new CreateObjectCommand(this.engine, options),
+    createObject: (options) =>
+      new CreateObjectCommand(this.engine, this.camera, options),
     deleteObject: (options) => new DeleteObjectCommand(this.engine, options),
   };
 
-  public constructor(private readonly engine: SandboxEngine) {}
+  public constructor(
+    private readonly engine: SandboxEngine,
+    private readonly camera: Camera,
+  ) {}
 
   public execute<T extends keyof ICommandMap>(
     type: T,

@@ -19,8 +19,6 @@ export function CanvasView({ app, onObjectContextMenu }: CanvasViewProps) {
   const interactionMode = useEditorStore((s) => s.interactionMode);
   const activePointerMode = useEditorStore((s) => s.activePointerMode);
   const hoveredObjectId = useEditorStore((s) => s.hoveredObjectId);
-  const cameraOffset = useEditorStore((s) => s.cameraOffset);
-  const cameraZoom = useEditorStore((s) => s.cameraZoom);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -73,10 +71,7 @@ export function CanvasView({ app, onObjectContextMenu }: CanvasViewProps) {
         e.clientX - rect.left,
         e.clientY - rect.top,
       );
-      const worldPosition = new Vector2(
-        (canvasPosition.x - cameraOffset.x) / cameraZoom,
-        (canvasPosition.y - cameraOffset.y) / cameraZoom,
-      );
+      const worldPosition = app.camera.screenToWorld(canvasPosition);
       const object = app.engine.getObjectFromPosition(worldPosition);
 
       if (!object) {
@@ -120,6 +115,10 @@ export function CanvasView({ app, onObjectContextMenu }: CanvasViewProps) {
     const resizeCanvas = () => {
       canvas.width = canvas.clientWidth;
       canvas.height = canvas.clientHeight;
+      app.camera.setViewportSize({
+        width: canvas.width,
+        height: canvas.height,
+      });
     };
 
     window.addEventListener("resize", resizeCanvas);
@@ -138,9 +137,6 @@ export function CanvasView({ app, onObjectContextMenu }: CanvasViewProps) {
     };
   }, [
     app,
-    cameraOffset.x,
-    cameraOffset.y,
-    cameraZoom,
     onObjectContextMenu,
   ]);
 

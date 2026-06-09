@@ -1,9 +1,11 @@
 import type { Vector2 } from "../maths/Vector2";
+import type { Camera } from "../camera/Camera";
 import type { IEventBus } from "../events/IEventBus";
 import type { ISandboxEngine } from "../engine/ISandboxEngine";
 import type { ICommandBus } from "../commands/ICommands";
 
 export interface IApplication {
+  camera: Camera;
   commands: ICommandBus;
   engine: ISandboxEngine;
   events: IEventBus;

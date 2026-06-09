@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import "./App.css";
 import { Application } from "./application/Application";
 import { CanvasView } from "./canvas/CanvasView";
@@ -17,6 +17,7 @@ export default function App() {
     position: Vector2;
     targetIds: string[];
   }>();
+  const hasCenteredInitialScene = useRef(false);
 
   useEffect(() => {
     app.init();
@@ -30,7 +31,8 @@ export default function App() {
   const dynamicObjectCount = useEditorStore((s) => s.dynamicObjectCount);
   const selectedCount = useEditorStore((s) => s.selectedIds.size);
   const selectedIds = useEditorStore((s) => s.selectedIds);
-  const setCameraView = useEditorStore((s) => s.setCameraView);
+  const objectRevision = useEditorStore((s) => s.objectRevision);
+  const viewportSize = useEditorStore((s) => s.viewportSize);
 
   const openObjectContextMenu = useCallback(
     (objectId: string, position: { x: number; y: number }) => {
@@ -47,19 +49,16 @@ export default function App() {
   );
 
   const fitView = useCallback(() => {
-    const viewport = document.querySelector(".viewport");
-
-    if (!(viewport instanceof HTMLElement)) {
-      return;
-    }
-
-    const rect = viewport.getBoundingClientRect();
     const objects = app.engine
       .getAllObjects()
       .filter((object) => (object.flags & SandboxObjectFlags.Hidden) === 0);
 
-    if (objects.length === 0 || rect.width <= 0 || rect.height <= 0) {
-      setCameraView({ x: 0, y: 0 }, 1);
+    if (
+      objects.length === 0 ||
+      viewportSize.width <= 0 ||
+      viewportSize.height <= 0
+    ) {
+      app.camera.setView({ x: 0, y: 0 }, 1);
       return;
     }
 
@@ -78,27 +77,22 @@ export default function App() {
       },
     );
 
-    const padding = 64;
-    const sceneWidth = Math.max(1, sceneBounds.maxX - sceneBounds.minX);
-    const sceneHeight = Math.max(1, sceneBounds.maxY - sceneBounds.minY);
-    const zoom = Math.min(
-      (rect.width - padding * 2) / sceneWidth,
-      (rect.height - padding * 2) / sceneHeight,
-    );
-    const sceneCenter = {
-      x: sceneBounds.minX + sceneWidth / 2,
-      y: sceneBounds.minY + sceneHeight / 2,
-    };
-    const nextZoom = Number.isFinite(zoom) && zoom > 0 ? zoom : 1;
+    app.camera.fitBounds(sceneBounds, 64, 1);
+  }, [app, viewportSize]);
 
-    setCameraView(
-      {
-        x: rect.width / 2 - sceneCenter.x * nextZoom,
-        y: rect.height / 2 - sceneCenter.y * nextZoom,
-      },
-      nextZoom,
-    );
-  }, [app, setCameraView]);
+  useEffect(() => {
+    if (
+      hasCenteredInitialScene.current ||
+      viewportSize.width <= 0 ||
+      viewportSize.height <= 0 ||
+      app.engine.getAllObjects().length === 0
+    ) {
+      return;
+    }
+
+    fitView();
+    hasCenteredInitialScene.current = true;
+  }, [app, fitView, objectRevision, viewportSize.height, viewportSize.width]);
 
   return (
     <div className="app">
