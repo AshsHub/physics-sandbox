@@ -2,64 +2,17 @@
 
 import type { IApplication } from "../../application/IApplication";
 import { SandboxObjectType } from "../../sandbox/SandboxObjectType";
+import {
+  type CreatorShapeAction,
+  dynamicShapes,
+  staticShapes,
+} from "../creatorShapes";
 import { Panel } from "./Panel";
 
 export interface CreatorPanelProps {
   app: IApplication;
   onClose?: () => void;
 }
-
-interface ShapeAction {
-  label: string;
-  type: SandboxObjectType;
-  preview: string;
-}
-
-const dynamicShapes: ShapeAction[] = [
-  {
-    label: "Box",
-    type: SandboxObjectType.Box,
-    preview: "box",
-  },
-  {
-    label: "Circle",
-    type: SandboxObjectType.Circle,
-    preview: "circle",
-  },
-  {
-    label: "Triangle",
-    type: SandboxObjectType.Triangle,
-    preview: "triangle",
-  },
-  {
-    label: "Pentagon",
-    type: SandboxObjectType.Pentagon,
-    preview: "pentagon",
-  },
-  {
-    label: "Oval",
-    type: SandboxObjectType.Oval,
-    preview: "oval",
-  },
-];
-
-const staticShapes: ShapeAction[] = [
-  {
-    label: "Platform",
-    type: SandboxObjectType.Platform,
-    preview: "platform",
-  },
-  {
-    label: "Wall",
-    type: SandboxObjectType.Wall,
-    preview: "wall",
-  },
-  {
-    label: "Ramp",
-    type: SandboxObjectType.Ramp,
-    preview: "ramp",
-  },
-];
 
 export function CreatorPanel({ app, onClose }: CreatorPanelProps) {
   const createObject = (type: SandboxObjectType) => {
@@ -87,7 +40,7 @@ export function CreatorPanel({ app, onClose }: CreatorPanelProps) {
 
 interface CreatorGroupProps {
   label: string;
-  shapes: ShapeAction[];
+  shapes: CreatorShapeAction[];
   onCreate: (type: SandboxObjectType) => void;
 }
 

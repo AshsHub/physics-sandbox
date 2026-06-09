@@ -5,6 +5,7 @@ import { CanvasView } from "./canvas/CanvasView";
 import { Vector2 } from "./maths/Vector2";
 import { SandboxObjectFlags } from "./sandbox/SandboxObjectType";
 import { useEditorStore } from "./store/editorStore";
+import { CanvasContextMenu } from "./ui/context/CanvasContextMenu";
 import { ObjectContextMenu } from "./ui/context/ObjectContextMenu";
 import { Sidebar } from "./ui/sidebar/Sidebar";
 import { StatusBar } from "./ui/StatusBar";
@@ -12,11 +13,19 @@ import { Toolbar } from "./ui/Toolbar";
 
 export default function App() {
   const [app] = useState(() => new Application());
-  const [contextMenu, setContextMenu] = useState<{
-    objectId: string;
-    position: Vector2;
-    targetIds: string[];
-  }>();
+  const [contextMenu, setContextMenu] = useState<
+    | {
+        type: "object";
+        objectId: string;
+        position: Vector2;
+        targetIds: string[];
+      }
+    | {
+        type: "canvas";
+        position: Vector2;
+        worldPosition: Vector2;
+      }
+  >();
   const hasCenteredInitialScene = useRef(false);
 
   useEffect(() => {
@@ -40,6 +49,7 @@ export default function App() {
   const openObjectContextMenu = useCallback(
     (objectId: string, position: { x: number; y: number }) => {
       setContextMenu({
+        type: "object",
         objectId,
         position: new Vector2(position),
         targetIds:
@@ -49,6 +59,17 @@ export default function App() {
       });
     },
     [selectedIds],
+  );
+
+  const openCanvasContextMenu = useCallback(
+    (position: { x: number; y: number }, worldPosition: Vector2) => {
+      setContextMenu({
+        type: "canvas",
+        position: new Vector2(position),
+        worldPosition: worldPosition.clone(),
+      });
+    },
+    [],
   );
 
   const fitView = useCallback(() => {
@@ -116,18 +137,29 @@ export default function App() {
           <Toolbar onFitView={fitView} />
           <CanvasView
             app={app}
+            onCanvasContextMenu={openCanvasContextMenu}
             onObjectContextMenu={openObjectContextMenu}
           />
         </main>
       </div>
 
-      {contextMenu && (
+      {contextMenu?.type === "object" && (
         <ObjectContextMenu
           app={app}
           key={`${contextMenu.objectId}:${contextMenu.position.x}:${contextMenu.position.y}`}
           objectId={contextMenu.objectId}
           position={contextMenu.position}
           targetIds={contextMenu.targetIds}
+          onClose={() => setContextMenu(undefined)}
+        />
+      )}
+
+      {contextMenu?.type === "canvas" && (
+        <CanvasContextMenu
+          app={app}
+          key={`canvas:${contextMenu.position.x}:${contextMenu.position.y}`}
+          position={contextMenu.position}
+          worldPosition={contextMenu.worldPosition}
           onClose={() => setContextMenu(undefined)}
         />
       )}

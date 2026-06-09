@@ -9,13 +9,21 @@ import { SelectionBoxOverlay } from "./SelectionBoxOverlay";
 
 export interface CanvasViewProps {
   app: IApplication;
+  onCanvasContextMenu: (
+    position: { x: number; y: number },
+    worldPosition: Vector2,
+  ) => void;
   onObjectContextMenu: (
     objectId: string,
     position: { x: number; y: number },
   ) => void;
 }
 
-export function CanvasView({ app, onObjectContextMenu }: CanvasViewProps) {
+export function CanvasView({
+  app,
+  onCanvasContextMenu,
+  onObjectContextMenu,
+}: CanvasViewProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const interactionMode = useEditorStore((s) => s.interactionMode);
   const activePointerMode = useEditorStore((s) => s.activePointerMode);
@@ -77,6 +85,13 @@ export function CanvasView({ app, onObjectContextMenu }: CanvasViewProps) {
       const object = app.engine.getObjectFromPosition(worldPosition);
 
       if (!object) {
+        onCanvasContextMenu(
+          {
+            x: e.clientX,
+            y: e.clientY,
+          },
+          worldPosition,
+        );
         return;
       }
 
@@ -137,7 +152,7 @@ export function CanvasView({ app, onObjectContextMenu }: CanvasViewProps) {
       window.removeEventListener("resize", resizeCanvas);
       cancelAnimationFrame(frameId);
     };
-  }, [app, onObjectContextMenu]);
+  }, [app, onCanvasContextMenu, onObjectContextMenu]);
 
   return (
     <div className="canvas-stage">

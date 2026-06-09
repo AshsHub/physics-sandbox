@@ -29,7 +29,7 @@
   flex: 1;
   padding: 4px 6px;
   border: 1px solid #4f8cff;
-  border-radius: 4px;
+  border-radius: 2px;
   background: #1f1f1f;
   color: var(--text-primary);
   font: inherit;
@@ -69,7 +69,7 @@
 
 .inspector-list-item {
   padding: var(--space-sm);
-  border-radius: 10px;
+  border-radius: 8px;
   background: var(--bg-card);
   border: 1px solid transparent;
   transition:
@@ -147,7 +147,7 @@
   width: 100%;
   padding: 5px 6px;
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: 2px;
   background: #1f1f1f;
   color: var(--text-primary);
   font: inherit;
@@ -225,7 +225,7 @@
   height: 28px;
   padding: 0;
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: 2px;
   background: transparent;
 }
 
@@ -245,7 +245,7 @@
   justify-self: start;
   padding: 2px 6px;
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: 2px;
   color: var(--text-primary);
   font-size: 12px;
 }
@@ -261,5 +261,5 @@
   width: 14px;
   height: 14px;
   border: 1px solid var(--border);
-  border-radius: 3px;
+  border-radius: 2px;
 }
