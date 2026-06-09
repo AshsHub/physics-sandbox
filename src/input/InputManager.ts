@@ -1,5 +1,7 @@
 import type { IApplication } from "../application/IApplication";
+import type Matter from "matter-js";
 import { Vector2 } from "../maths/Vector2";
+import { SandboxObjectFlags } from "../sandbox/SandboxObjectType";
 import { useEditorStore } from "../store/editorStore";
 import { InteractionMode } from "./InteractionMode";
 
@@ -15,12 +17,24 @@ enum KeyModifiers {
 
 const KEY_ROTATION_STEP = Math.PI / 18;
 const WHEEL_ROTATION_STEP = Math.PI / 36;
+const SELECTION_DRAG_THRESHOLD_SQUARED = 16;
+
+interface SelectionGesture {
+  currentScreen: Vector2;
+  hitObjectId?: string;
+  initialSelection: Set<string>;
+  isAdditive: boolean;
+  isBoxActive: boolean;
+  startScreen: Vector2;
+  startWorld: Vector2;
+}
 
 export class InputManager {
   private readonly pressedKeys = new Set<string>();
   private readonly keyActions = new Map<string, Action[]>();
   private activePointerMode?: InteractionMode;
   private lastPointerPosition?: Vector2;
+  private selectionGesture?: SelectionGesture;
   private readonly handleKeyDown = (e: KeyboardEvent) => {
     this.keyDown(e);
   };
@@ -42,18 +56,23 @@ export class InputManager {
     this.pressedKeys.clear();
     this.keyActions.clear();
     useEditorStore.getState().setHoveredObject(undefined);
+    useEditorStore.getState().setSelectionBox(undefined);
     this.setActivePointerMode(undefined);
   }
 
   private registerKeyActions(): void {
     this.registerAction(["1"], () => {
-      useEditorStore.getState().setInteractionMode(InteractionMode.Selection);
+      useEditorStore.getState().setInteractionMode(InteractionMode.Play);
     });
     this.registerAction(["2"], () => {
-      useEditorStore.getState().setInteractionMode(InteractionMode.Camera);
+      useEditorStore.getState().setInteractionMode(InteractionMode.Selection);
     });
     this.registerAction(["3"], () => {
-      useEditorStore.getState().setInteractionMode(InteractionMode.Play);
+      useEditorStore.getState().setInteractionMode(InteractionMode.Camera);
+    });
+    this.registerAction(["space", " "], () => {
+      const state = useEditorStore.getState();
+      state.setSimulationRunning(!state.isSimulationRunning);
     });
     this.registerAction(["q"], () => {
       this.rotateHeldObjects(-KEY_ROTATION_STEP);
@@ -151,7 +170,13 @@ export class InputManager {
 
     const worldPos = this.screenToWorld(pos);
     const sandboxObject = this.app.engine.getObjectFromPosition(worldPos);
+    const mode = this.getInteractionMode();
     this.updateHoveredObject(worldPos);
+
+    if (mode === InteractionMode.Selection) {
+      this.startSelectionGesture(pos, worldPos, sandboxObject?.id);
+      return;
+    }
 
     if (!sandboxObject) {
       if (!this.isMultiSelectHeld()) {
@@ -162,7 +187,24 @@ export class InputManager {
     }
 
     const id = sandboxObject.id;
-    const mode = this.getInteractionMode();
+
+    if (mode === InteractionMode.Play) {
+      let draggedIds: string[];
+
+      if (this.isSelected(id)) {
+        draggedIds = Array.from(this.getSelection());
+      } else if (this.isMultiSelectHeld()) {
+        this.select(id);
+        draggedIds = Array.from(this.getSelection());
+      } else {
+        useEditorStore.getState().setSelection([id]);
+        draggedIds = [id];
+      }
+
+      this.setActivePointerMode(InteractionMode.Play);
+      this.app.engine.startDrag(draggedIds, worldPos);
+      return;
+    }
 
     if (this.isMultiSelectHeld()) {
       if (this.isSelected(id)) {
@@ -172,17 +214,7 @@ export class InputManager {
       }
     } else {
       this.clearSelection();
-
       this.select(id);
-    }
-
-    if (mode === InteractionMode.Play) {
-      const draggedIds = this.isSelected(id)
-        ? Array.from(this.getSelection())
-        : [id];
-
-      this.setActivePointerMode(InteractionMode.Play);
-      this.app.engine.startDrag(draggedIds, worldPos);
     }
   }
 
@@ -196,6 +228,11 @@ export class InputManager {
       }
 
       this.lastPointerPosition = pos.clone();
+      return;
+    }
+
+    if (this.selectionGesture) {
+      this.updateSelectionGesture(pos);
       return;
     }
 
@@ -221,13 +258,18 @@ export class InputManager {
   }
 
   public pointerUp(): void {
+    if (this.selectionGesture) {
+      this.endSelectionGesture();
+      return;
+    }
+
     this.app.engine.endDrag();
     this.setActivePointerMode(undefined);
     this.lastPointerPosition = undefined;
   }
 
   public pointerLeave(): void {
-    if (!this.activePointerMode) {
+    if (!this.activePointerMode && !this.selectionGesture) {
       useEditorStore.getState().setHoveredObject(undefined);
     }
   }
@@ -288,6 +330,129 @@ export class InputManager {
     useEditorStore.getState().setHoveredObject(hoveredObjectId);
   }
 
+  private startSelectionGesture(
+    screenPosition: Vector2,
+    worldPosition: Vector2,
+    hitObjectId?: string,
+  ): void {
+    this.selectionGesture = {
+      currentScreen: screenPosition.clone(),
+      hitObjectId,
+      initialSelection: new Set(this.getSelection()),
+      isAdditive: this.isMultiSelectHeld(),
+      isBoxActive: false,
+      startScreen: screenPosition.clone(),
+      startWorld: worldPosition.clone(),
+    };
+  }
+
+  private updateSelectionGesture(screenPosition: Vector2): void {
+    const gesture = this.selectionGesture;
+
+    if (!gesture) {
+      return;
+    }
+
+    gesture.currentScreen = screenPosition.clone();
+
+    if (
+      !gesture.isBoxActive &&
+      gesture.startScreen.distanceSquaredTo(screenPosition) >=
+        SELECTION_DRAG_THRESHOLD_SQUARED
+    ) {
+      gesture.isBoxActive = true;
+      this.setActivePointerMode(InteractionMode.Selection);
+    }
+
+    if (!gesture.isBoxActive) {
+      this.updateHoveredObject(this.screenToWorld(screenPosition));
+      return;
+    }
+
+    useEditorStore.getState().setSelectionBox({
+      start: gesture.startScreen.toObject(),
+      current: gesture.currentScreen.toObject(),
+    });
+
+    this.applySelectionBox();
+  }
+
+  private endSelectionGesture(): void {
+    const gesture = this.selectionGesture;
+
+    if (!gesture) {
+      return;
+    }
+
+    if (!gesture.isBoxActive) {
+      this.applyClickSelection(gesture.hitObjectId);
+    }
+
+    this.selectionGesture = undefined;
+    useEditorStore.getState().setSelectionBox(undefined);
+    this.setActivePointerMode(undefined);
+    this.lastPointerPosition = undefined;
+  }
+
+  private applyClickSelection(objectId?: string): void {
+    if (!objectId) {
+      if (!this.isMultiSelectHeld()) {
+        this.clearSelection();
+      }
+
+      return;
+    }
+
+    if (this.isMultiSelectHeld()) {
+      if (this.isSelected(objectId)) {
+        this.deselect(objectId);
+      } else {
+        this.select(objectId);
+      }
+
+      return;
+    }
+
+    this.clearSelection();
+    this.select(objectId);
+  }
+
+  private applySelectionBox(): void {
+    const gesture = this.selectionGesture;
+
+    if (!gesture) {
+      return;
+    }
+
+    const currentWorld = this.screenToWorld(gesture.currentScreen);
+    const bounds = {
+      minX: Math.min(gesture.startWorld.x, currentWorld.x),
+      maxX: Math.max(gesture.startWorld.x, currentWorld.x),
+      minY: Math.min(gesture.startWorld.y, currentWorld.y),
+      maxY: Math.max(gesture.startWorld.y, currentWorld.y),
+    };
+    const selectedIds = new Set(
+      gesture.isAdditive ? gesture.initialSelection : [],
+    );
+
+    for (const object of this.app.engine.getAllObjects()) {
+      if (object.flags & SandboxObjectFlags.Hidden) {
+        continue;
+      }
+
+      if (doesBodyIntersectBounds(object.body.bounds, bounds)) {
+        selectedIds.add(object.id);
+      } else if (
+        gesture.isAdditive &&
+        !gesture.initialSelection.has(object.id)
+      ) {
+        selectedIds.delete(object.id);
+      }
+    }
+
+    useEditorStore.getState().setSelection(selectedIds);
+  }
+
   private isTypingTarget(target: EventTarget | null): boolean {
     if (!(target instanceof HTMLElement)) {
       return false;
@@ -299,4 +464,21 @@ export class InputManager {
       target.isContentEditable
     );
   }
+}
+
+function doesBodyIntersectBounds(
+  bodyBounds: Matter.Bounds,
+  selectionBounds: {
+    minX: number;
+    maxX: number;
+    minY: number;
+    maxY: number;
+  },
+): boolean {
+  return (
+    bodyBounds.max.x >= selectionBounds.minX &&
+    bodyBounds.min.x <= selectionBounds.maxX &&
+    bodyBounds.max.y >= selectionBounds.minY &&
+    bodyBounds.min.y <= selectionBounds.maxY
+  );
 }
