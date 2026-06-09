@@ -19,6 +19,8 @@ export class PhysicsWorld {
 
   private readonly draggedBodies: IDraggedBody[] = [];
   private readonly moveToPosition = new Vector2();
+  private lastGravityY = 0;
+  private lastWindForce = 0;
 
   public init(): void {
     this._engine = Matter.Engine.create();
@@ -157,10 +159,24 @@ export class PhysicsWorld {
     }
 
     const editorState = useEditorStore.getState();
-    const { activeGravitySimulation, isSimulationRunning, windForce } =
-      editorState;
+    const {
+      activeGravitySimulation,
+      isGravityReversed,
+      isSimulationRunning,
+      windForce,
+    } = editorState;
 
-    this._engine.gravity.y = getGravityMultiplier(activeGravitySimulation);
+    const gravity =
+      getGravityMultiplier(activeGravitySimulation) *
+      (isGravityReversed ? -1 : 1);
+
+    if (gravity !== this.lastGravityY || windForce !== this.lastWindForce) {
+      this.wakeDynamicBodies();
+      this.lastGravityY = gravity;
+      this.lastWindForce = windForce;
+    }
+
+    this._engine.gravity.y = gravity;
     this._engine.gravity.x = 0;
 
     if (isSimulationRunning && windForce !== 0) {
@@ -216,6 +232,20 @@ export class PhysicsWorld {
         x: force * body.mass,
         y: 0,
       });
+    }
+  }
+
+  private wakeDynamicBodies(): void {
+    if (!this._world) {
+      return;
+    }
+
+    const bodies = Matter.Composite.allBodies(this._world);
+
+    for (const body of bodies) {
+      if (!body.isStatic) {
+        Matter.Sleeping.set(body, false);
+      }
     }
   }
 }

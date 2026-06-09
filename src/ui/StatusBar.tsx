@@ -18,6 +18,7 @@ export function StatusBar({
   const activeGravitySimulation = useEditorStore(
     (s) => s.activeGravitySimulation,
   );
+  const isGravityReversed = useEditorStore((s) => s.isGravityReversed);
   const windForce = useEditorStore((s) => s.windForce);
   const activeGravityPreset = getGravitySimulationPreset(
     activeGravitySimulation,
@@ -40,7 +41,8 @@ export function StatusBar({
       <div className="status-bar-group">
         <span className="status-bar-group-label">Modifiers</span>
         <span>
-          Gravity: {activeGravityPreset.label}{" "}
+          Gravity: {isGravityReversed ? "Reverse " : ""}
+          {activeGravityPreset.label}{" "}
           {activeGravityPreset.gravityMultiplier.toFixed(2)}g
         </span>
         <span>

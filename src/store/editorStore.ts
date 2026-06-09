@@ -23,6 +23,7 @@ export interface IEditorStore {
   selectedIds: Set<string>;
   activePanel?: SidebarPanel;
   activeGravitySimulation?: GravitySimulationType;
+  isGravityReversed: boolean;
   windForce: number;
 
   select(id: string): void;
@@ -36,6 +37,7 @@ export interface IEditorStore {
   bumpObjectRevision(): void;
   setSimulationRunning(isRunning: boolean): void;
   setGravitySimulation(sim?: GravitySimulationType): void;
+  setGravityReversed(isReversed: boolean): void;
   setWindForce(force: number): void;
   clearSimulations(): void;
   setInteractionMode(mode: InteractionMode): void;
@@ -68,6 +70,7 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
   selectedIds: new Set<string>(),
   activePanel: SidebarPanel.Create,
   activeGravitySimulation: GravitySimulationType.Earth,
+  isGravityReversed: false,
   windForce: 0,
 
   select(id: string) {
@@ -180,6 +183,12 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
     });
   },
 
+  setGravityReversed(isReversed) {
+    set({
+      isGravityReversed: isReversed,
+    });
+  },
+
   setWindForce(force) {
     set({
       windForce: force,
@@ -189,6 +198,7 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
   clearSimulations() {
     set({
       activeGravitySimulation: undefined,
+      isGravityReversed: false,
       windForce: 0,
     });
   },

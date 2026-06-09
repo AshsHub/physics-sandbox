@@ -373,9 +373,19 @@ button:hover {
   gap: var(--space-md);
 }
 
+.simulation-control-actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
 .simulation-reset-button {
   padding: 4px 8px;
   font-size: 12px;
+}
+
+.simulation-reset-button.selected {
+  background: #4f8cff;
+  border-color: #6a9fff;
 }
 
 .simulation-slider-value {

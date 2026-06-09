@@ -16,8 +16,10 @@ export function SimluationPanel({ onClose }: SimulationPanelProps) {
   const activeGravitySimulation = useEditorStore(
     (s) => s.activeGravitySimulation,
   );
+  const isGravityReversed = useEditorStore((s) => s.isGravityReversed);
   const windForce = useEditorStore((s) => s.windForce);
   const setGravitySimulation = useEditorStore((s) => s.setGravitySimulation);
+  const setGravityReversed = useEditorStore((s) => s.setGravityReversed);
   const setWindForce = useEditorStore((s) => s.setWindForce);
   const activeGravityIndex = Math.max(
     0,
@@ -34,13 +36,30 @@ export function SimluationPanel({ onClose }: SimulationPanelProps) {
       <section className="simulation-group">
         <div className="simulation-control-header">
           <h3 className="simulation-group-title">Gravity</h3>
-          <button
-            className="simulation-reset-button"
-            onClick={() => setGravitySimulation(GravitySimulationType.Earth)}
-            type="button"
-          >
-            Reset
-          </button>
+          <div className="simulation-control-actions">
+            <button
+              aria-pressed={isGravityReversed}
+              className={
+                isGravityReversed
+                  ? "simulation-reset-button selected"
+                  : "simulation-reset-button"
+              }
+              onClick={() => setGravityReversed(!isGravityReversed)}
+              type="button"
+            >
+              Reverse
+            </button>
+            <button
+              className="simulation-reset-button"
+              onClick={() => {
+                setGravitySimulation(GravitySimulationType.Earth);
+                setGravityReversed(false);
+              }}
+              type="button"
+            >
+              Reset
+            </button>
+          </div>
         </div>
 
         <div className="simulation-slider-value">

@@ -27,12 +27,15 @@ export default function App() {
     };
   }, [app]);
 
-  const staticObjectCount = useEditorStore((s) => s.staticObjectCount);
-  const dynamicObjectCount = useEditorStore((s) => s.dynamicObjectCount);
   const selectedCount = useEditorStore((s) => s.selectedIds.size);
   const selectedIds = useEditorStore((s) => s.selectedIds);
   const objectRevision = useEditorStore((s) => s.objectRevision);
   const viewportSize = useEditorStore((s) => s.viewportSize);
+  const objects = app.engine.getAllObjects();
+  const staticObjectCount = objects.filter(
+    (object) => object.flags & SandboxObjectFlags.Locked,
+  ).length;
+  const dynamicObjectCount = objects.length - staticObjectCount;
 
   const openObjectContextMenu = useCallback(
     (objectId: string, position: { x: number; y: number }) => {
