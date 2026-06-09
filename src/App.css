@@ -799,6 +799,14 @@ button:hover {
   clip-path: polygon(50% 0, 100% 38%, 82% 100%, 18% 100%, 0 38%);
 }
 
+.shape-preview.oval {
+  width: 38px;
+  height: 24px;
+  border-radius: 50%;
+  background: #38c8b0;
+  border-color: #b9fff3;
+}
+
 .shape-preview.ground {
   width: 42px;
   height: 10px;

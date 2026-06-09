@@ -218,6 +218,21 @@ function createDefaultMetadata(
         bounce: 0.25,
         friction: 0.12,
       };
+    case SandboxObjectType.Oval:
+      return {
+        width: 87,
+        height: 45,
+        color: "#38c8b0",
+        opacity: 1,
+        borderColor: "#b9fff3",
+        borderWidth: 1,
+        borderStyle: SandboxObjectBorderStyle.Solid,
+        label: "Oval",
+        description: "Dynamic oval body",
+        mass: 9,
+        bounce: 0.3,
+        friction: 0.1,
+      };
     case SandboxObjectType.Box:
     default:
       return {

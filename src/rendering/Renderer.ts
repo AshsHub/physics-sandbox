@@ -35,7 +35,6 @@ export class Renderer {
   ) {
     if (entity.flags & SandboxObjectFlags.Hidden) return;
 
-    const body = entity.body;
     const selectedIds = useEditorStore.getState().selectedIds;
     const metadata = entity.metadata;
 
@@ -43,7 +42,7 @@ export class Renderer {
     ctx.globalAlpha = metadata.opacity;
     ctx.fillStyle = metadata.color;
 
-    this.traceBodyPath(ctx, body);
+    this.traceBodyPath(ctx, entity.body);
     ctx.fill();
 
     if (
@@ -53,9 +52,9 @@ export class Renderer {
       const visibleBorderWidth = metadata.borderWidth;
 
       ctx.save();
-      this.traceBodyPath(ctx, body);
+      this.traceBodyPath(ctx, entity.body);
       ctx.clip();
-      this.traceBodyPath(ctx, body);
+      this.traceBodyPath(ctx, entity.body);
       ctx.strokeStyle = selectedIds.has(entity.id)
         ? "orange"
         : metadata.borderColor;

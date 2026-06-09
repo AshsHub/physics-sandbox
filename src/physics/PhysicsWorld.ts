@@ -64,6 +64,12 @@ export class PhysicsWorld {
       case SandboxObjectType.Pentagon:
         body = Matter.Bodies.polygon(position.x, position.y, 5, 30);
         break;
+      case SandboxObjectType.Oval:
+        body = Matter.Bodies.circle(position.x, position.y, 30, {
+          slop: 0.02,
+        });
+        Matter.Body.scale(body, 1.45, 0.75);
+        break;
       case SandboxObjectType.Platform:
         body = Matter.Bodies.rectangle(position.x, position.y, 240, 28, {
           isStatic: true,

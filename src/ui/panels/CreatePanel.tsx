@@ -36,6 +36,11 @@ const dynamicShapes: ShapeAction[] = [
     type: SandboxObjectType.Pentagon,
     preview: "pentagon",
   },
+  {
+    label: "Oval",
+    type: SandboxObjectType.Oval,
+    preview: "oval",
+  },
 ];
 
 const staticShapes: ShapeAction[] = [
