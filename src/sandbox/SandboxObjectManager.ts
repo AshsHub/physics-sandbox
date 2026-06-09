@@ -186,7 +186,7 @@ function createDefaultMetadata(
         description: "Dynamic circular body",
         mass: 8,
         bounce: 0.35,
-        friction: 0.1,
+        friction: 0.01,
       };
     case SandboxObjectType.Triangle:
       return {
@@ -201,7 +201,7 @@ function createDefaultMetadata(
         description: "Dynamic triangular body",
         mass: 8,
         bounce: 0.25,
-        friction: 0.12,
+        friction: 0.01,
       };
     case SandboxObjectType.Pentagon:
       return {
@@ -216,7 +216,7 @@ function createDefaultMetadata(
         description: "Dynamic pentagonal body",
         mass: 10,
         bounce: 0.25,
-        friction: 0.12,
+        friction: 0.01,
       };
     case SandboxObjectType.Oval:
       return {
@@ -231,7 +231,7 @@ function createDefaultMetadata(
         description: "Dynamic oval body",
         mass: 9,
         bounce: 0.3,
-        friction: 0.1,
+        friction: 0.01,
       };
     case SandboxObjectType.Box:
     default:
@@ -247,7 +247,7 @@ function createDefaultMetadata(
         description: "Dynamic rectangular body",
         mass: 10,
         bounce: 0.25,
-        friction: 0.12,
+        friction: 0.01,
       };
   }
 }
