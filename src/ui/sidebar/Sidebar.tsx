@@ -1,6 +1,6 @@
 import type { IApplication } from "../../application/IApplication";
 import { useEditorStore } from "../../store/editorStore";
-import { CreatorPanel } from "../panels/CreatePanel";
+import { CreatorPanel } from "../panels/CreatorPanel";
 import { InspectorPanel } from "../panels/InspectorPanel";
 import { SidebarPanel } from "../panels/SidebarPanel";
 import { SimluationPanel } from "../panels/SimulationPanel";

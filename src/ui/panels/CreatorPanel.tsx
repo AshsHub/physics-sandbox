@@ -69,14 +69,14 @@ export function CreatorPanel({ app, onClose }: CreatorPanelProps) {
   };
 
   return (
-    <Panel title="Create" onClose={onClose}>
-      <CreateGroup
+    <Panel title="Creator" onClose={onClose}>
+      <CreatorGroup
         label="Dynamic"
         shapes={dynamicShapes}
         onCreate={createObject}
       />
 
-      <CreateGroup
+      <CreatorGroup
         label="Static"
         shapes={staticShapes}
         onCreate={createObject}
@@ -85,13 +85,13 @@ export function CreatorPanel({ app, onClose }: CreatorPanelProps) {
   );
 }
 
-interface CreateGroupProps {
+interface CreatorGroupProps {
   label: string;
   shapes: ShapeAction[];
   onCreate: (type: SandboxObjectType) => void;
 }
 
-function CreateGroup({ label, shapes, onCreate }: CreateGroupProps) {
+function CreatorGroup({ label, shapes, onCreate }: CreatorGroupProps) {
   return (
     <section className="create-group">
       <h3 className="create-group-title">{label}</h3>
