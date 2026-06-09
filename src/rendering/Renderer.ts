@@ -1,5 +1,9 @@
 import type { ISandboxEngine } from "../engine/ISandboxEngine";
-import { type ISandboxObject } from "../sandbox/SandboxObject";
+import type Matter from "matter-js";
+import {
+  type ISandboxObject,
+  SandboxObjectBorderStyle,
+} from "../sandbox/SandboxObject";
 import { SandboxObjectFlags } from "../sandbox/SandboxObjectType";
 import { useEditorStore } from "../store/editorStore";
 
@@ -32,19 +36,6 @@ export class Renderer {
     if (entity.flags & SandboxObjectFlags.Hidden) return;
 
     const body = entity.body;
-
-    const vertices = body.vertices;
-
-    ctx.beginPath();
-
-    ctx.moveTo(vertices[0].x, vertices[0].y);
-
-    for (let i = 1; i < vertices.length; i++) {
-      ctx.lineTo(vertices[i].x, vertices[i].y);
-    }
-
-    ctx.closePath();
-
     const selectedIds = useEditorStore.getState().selectedIds;
     const metadata = entity.metadata;
 
@@ -52,30 +43,54 @@ export class Renderer {
     ctx.globalAlpha = metadata.opacity;
     ctx.fillStyle = metadata.color;
 
+    this.traceBodyPath(ctx, body);
     ctx.fill();
 
-    if (metadata.borderStyle !== "none" && metadata.borderWidth > 0) {
+    if (
+      metadata.borderStyle !== SandboxObjectBorderStyle.None &&
+      metadata.borderWidth > 0
+    ) {
+      const visibleBorderWidth = metadata.borderWidth;
+
+      ctx.save();
+      this.traceBodyPath(ctx, body);
+      ctx.clip();
+      this.traceBodyPath(ctx, body);
       ctx.strokeStyle = selectedIds.has(entity.id)
         ? "orange"
         : metadata.borderColor;
-      ctx.lineWidth = metadata.borderWidth;
-      ctx.setLineDash(getLineDash(metadata.borderStyle, metadata.borderWidth));
+      ctx.lineWidth = visibleBorderWidth * 2;
+      ctx.setLineDash(getLineDash(metadata.borderStyle, visibleBorderWidth));
       ctx.stroke();
       ctx.setLineDash([]);
+      ctx.restore();
     }
 
     ctx.restore();
   }
+
+  private traceBodyPath(ctx: CanvasRenderingContext2D, body: Matter.Body) {
+    const vertices = body.vertices;
+
+    ctx.beginPath();
+    ctx.moveTo(vertices[0].x, vertices[0].y);
+
+    for (let i = 1; i < vertices.length; i++) {
+      ctx.lineTo(vertices[i].x, vertices[i].y);
+    }
+
+    ctx.closePath();
+  }
 }
 
-function getLineDash(style: string, width: number): number[] {
+function getLineDash(style: SandboxObjectBorderStyle, width: number): number[] {
   switch (style) {
-    case "dashed":
+    case SandboxObjectBorderStyle.Dashed:
       return [width * 6, width * 4];
-    case "dotted":
+    case SandboxObjectBorderStyle.Dotted:
       return [width, width * 3];
-    case "solid":
-    case "none":
+    case SandboxObjectBorderStyle.Solid:
+    case SandboxObjectBorderStyle.None:
     default:
       return [];
   }

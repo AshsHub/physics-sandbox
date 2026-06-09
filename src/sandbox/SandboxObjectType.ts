@@ -1,11 +1,11 @@
 export enum SandboxObjectType {
-  Box = "box",
-  Circle = "circle",
-  Triangle = "triangle",
-  Pentagon = "pentagon",
-  Platform = "platform",
-  Wall = "wall",
-  Ramp = "ramp",
+  Box = "Box",
+  Circle = "Circle",
+  Triangle = "Triangle",
+  Pentagon = "Pentagon",
+  Platform = "Platform",
+  Wall = "Wall",
+  Ramp = "Ramp",
 }
 
 export enum SandboxObjectFlags {

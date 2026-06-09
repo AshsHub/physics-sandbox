@@ -121,6 +121,14 @@ export class SandboxEngine implements ISandboxEngine {
       return;
     }
 
+    if (property === "metadata") {
+      this.physics.applyMetadataToBody(
+        object.body,
+        object.metadata,
+        value as ISandboxObject["metadata"],
+      );
+    }
+
     object[property] = value;
 
     this.events.emit("sandboxObjectChanged", {

@@ -1,9 +1,11 @@
 import { Vector2 } from "../maths/Vector2";
+import Matter from "matter-js";
 import type { PhysicsWorld } from "../physics/PhysicsWorld";
 import {
   type ISandboxObjectMetadata,
   type ISandboxObject,
   type ISandboxObjectSnapshot,
+  SandboxObjectBorderStyle,
 } from "./SandboxObject";
 import { SandboxObjectFlags, SandboxObjectType } from "./SandboxObjectType";
 
@@ -26,6 +28,11 @@ export class SandboxObjectManager {
     const objectId = id ?? crypto.randomUUID();
 
     const body = this.physics.createBody(position, type);
+    const defaultMetadata = createDefaultMetadata(type);
+    const metadata = {
+      ...defaultMetadata,
+      ...options.metadata,
+    };
 
     const object: ISandboxObject = {
       id: objectId,
@@ -34,14 +41,13 @@ export class SandboxObjectManager {
       name:
         name ??
         `${type.charAt(0).toUpperCase()}${type.slice(1)} ${objectId.slice(0, 5)}`,
-      metadata: {
-        ...createDefaultMetadata(type),
-        ...options.metadata,
-      },
+      metadata,
       flags: body.isStatic
         ? SandboxObjectFlags.Locked
         : SandboxObjectFlags.None,
     };
+
+    this.physics.applyMetadataToBody(body, defaultMetadata, metadata);
 
     this.objects.set(objectId, object);
     this.bodyLookup.set(body, objectId);
@@ -130,10 +136,12 @@ function createDefaultMetadata(
         opacity: 1,
         borderColor: "#8a8a8a",
         borderWidth: 1,
-        borderStyle: "solid",
+        borderStyle: SandboxObjectBorderStyle.Solid,
         label: "Platform",
         description: "Static platform body",
         mass: 0,
+        bounce: 0.2,
+        friction: 0.6,
       };
     case SandboxObjectType.Wall:
       return {
@@ -143,10 +151,12 @@ function createDefaultMetadata(
         opacity: 1,
         borderColor: "#929292",
         borderWidth: 1,
-        borderStyle: "solid",
+        borderStyle: SandboxObjectBorderStyle.Solid,
         label: "Wall",
         description: "Static vertical wall body",
         mass: 0,
+        bounce: 0.2,
+        friction: 0.6,
       };
     case SandboxObjectType.Ramp:
       return {
@@ -156,10 +166,12 @@ function createDefaultMetadata(
         opacity: 1,
         borderColor: "#a0a0a0",
         borderWidth: 1,
-        borderStyle: "solid",
+        borderStyle: SandboxObjectBorderStyle.Solid,
         label: "Ramp",
         description: "Static angled ramp body",
         mass: 0,
+        bounce: 0.2,
+        friction: 0.6,
       };
     case SandboxObjectType.Circle:
       return {
@@ -169,10 +181,12 @@ function createDefaultMetadata(
         opacity: 1,
         borderColor: "#b8d0ff",
         borderWidth: 1,
-        borderStyle: "solid",
+        borderStyle: SandboxObjectBorderStyle.Solid,
         label: "Circle",
         description: "Dynamic circular body",
         mass: 8,
+        bounce: 0.35,
+        friction: 0.1,
       };
     case SandboxObjectType.Triangle:
       return {
@@ -182,10 +196,12 @@ function createDefaultMetadata(
         opacity: 1,
         borderColor: "#ffe1a0",
         borderWidth: 1,
-        borderStyle: "solid",
+        borderStyle: SandboxObjectBorderStyle.Solid,
         label: "Triangle",
         description: "Dynamic triangular body",
         mass: 8,
+        bounce: 0.25,
+        friction: 0.12,
       };
     case SandboxObjectType.Pentagon:
       return {
@@ -195,10 +211,12 @@ function createDefaultMetadata(
         opacity: 1,
         borderColor: "#e4c2ff",
         borderWidth: 1,
-        borderStyle: "solid",
+        borderStyle: SandboxObjectBorderStyle.Solid,
         label: "Pentagon",
         description: "Dynamic pentagonal body",
         mass: 10,
+        bounce: 0.25,
+        friction: 0.12,
       };
     case SandboxObjectType.Box:
     default:
@@ -209,10 +227,12 @@ function createDefaultMetadata(
         opacity: 1,
         borderColor: "#d6ffd9",
         borderWidth: 1,
-        borderStyle: "solid",
+        borderStyle: SandboxObjectBorderStyle.Solid,
         label: "Box",
         description: "Dynamic rectangular body",
         mass: 10,
+        bounce: 0.25,
+        friction: 0.12,
       };
   }
 }

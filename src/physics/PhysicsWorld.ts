@@ -3,9 +3,11 @@
 import Matter from "matter-js";
 
 import { Vector2 } from "../maths/Vector2";
+import type { ISandboxObjectMetadata } from "../sandbox/SandboxObject";
 import { SandboxObjectType } from "../sandbox/SandboxObjectType";
 import { useEditorStore } from "../store/editorStore";
 import { getGravityMultiplier } from "./SandboxSimulation";
+import { Maths } from "../maths/Maths";
 
 interface IDraggedBody {
   body: Matter.Body;
@@ -94,6 +96,43 @@ export class PhysicsWorld {
     }
 
     Matter.World.remove(this._world, body);
+  }
+
+  public applyMetadataToBody(
+    body: Matter.Body,
+    previousMetadata: ISandboxObjectMetadata,
+    nextMetadata: ISandboxObjectMetadata,
+  ): void {
+    let shouldWakeBody = false;
+    const widthScale =
+      previousMetadata.width > 0
+        ? nextMetadata.width / previousMetadata.width
+        : 1;
+    const heightScale =
+      previousMetadata.height > 0
+        ? nextMetadata.height / previousMetadata.height
+        : 1;
+
+    if (widthScale !== 1 || heightScale !== 1) {
+      Matter.Body.scale(body, widthScale, heightScale);
+      shouldWakeBody = true;
+    }
+
+    body.friction = Maths.clamp(nextMetadata.friction, 0, 1);
+    body.restitution = Maths.clamp(nextMetadata.bounce, 0, 1);
+
+    if (!body.isStatic) {
+      const nextMass = Math.max(0.1, nextMetadata.mass);
+
+      if (body.mass !== nextMass) {
+        Matter.Body.setMass(body, nextMass);
+        shouldWakeBody = true;
+      }
+    }
+
+    if (!body.isStatic && shouldWakeBody) {
+      Matter.Sleeping.set(body, false);
+    }
   }
 
   public pickBody(x: number, y: number): Matter.Body | undefined {

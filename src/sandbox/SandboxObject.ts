@@ -5,7 +5,12 @@ import type {
 } from "./SandboxObjectType";
 import type { Vector2 } from "../maths/Vector2";
 
-export type SandboxObjectBorderStyle = "none" | "solid" | "dashed" | "dotted";
+export enum SandboxObjectBorderStyle {
+  None = "None",
+  Solid = "Solid",
+  Dotted = "Dotted",
+  Dashed = "Dashed",
+}
 
 export interface ISandboxObjectMetadata {
   width: number;
@@ -18,6 +23,8 @@ export interface ISandboxObjectMetadata {
   label: string;
   description: string;
   mass: number;
+  bounce: number;
+  friction: number;
 }
 
 export interface ISandboxObjectSnapshot {

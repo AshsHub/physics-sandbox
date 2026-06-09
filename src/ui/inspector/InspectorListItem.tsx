@@ -1,8 +1,18 @@
 import { useRef, useState } from "react";
-import type { MouseEvent } from "react";
+import type { MouseEvent, ReactNode } from "react";
 import type { ICommandBus } from "../../commands/ICommands";
-import type { ISandboxObject } from "../../sandbox/SandboxObject";
+import {
+  SandboxObjectBorderStyle,
+  type ISandboxObject,
+  type ISandboxObjectMetadata,
+} from "../../sandbox/SandboxObject";
 import { SandboxObjectFlags } from "../../sandbox/SandboxObjectType";
+import {
+  EditableColor,
+  EditableNumber,
+  EditableSelect,
+  ReadOnlyRow,
+} from "./InspectorFields";
 
 export interface InspectorListItemProps {
   commands: ICommandBus;
@@ -26,6 +36,17 @@ export function InspectorListItem({
   const isStatic = (entity.flags & SandboxObjectFlags.Locked) !== 0;
   const isHidden = (entity.flags & SandboxObjectFlags.Hidden) !== 0;
   const metadata = entity.metadata;
+
+  const updateMetadata = (partial: Partial<ISandboxObjectMetadata>) => {
+    commands.execute("updateObjectProperties", {
+      objectIds: [entity.id],
+      property: "metadata",
+      value: {
+        ...metadata,
+        ...partial,
+      },
+    });
+  };
 
   const startEditingName = () => {
     shouldCancelCommit.current = false;
@@ -111,83 +132,141 @@ export function InspectorListItem({
 
       {isOpen && (
         <div className="inspector-item-content">
-          <div className="entity-meta-row">
-            <span className="entity-meta-label">State</span>
-            <span className="entity-state-badge">
-              {isStatic ? "Static" : "Dynamic"}
-            </span>
-          </div>
+          <InspectorSection title="Visual">
+            <EditableNumber
+              key={`width:${metadata.width}`}
+              label="Width"
+              min={4}
+              value={metadata.width}
+              onCommit={(width) => updateMetadata({ width })}
+            />
+            <EditableNumber
+              key={`height:${metadata.height}`}
+              label="Height"
+              min={4}
+              value={metadata.height}
+              onCommit={(height) => updateMetadata({ height })}
+            />
+            <EditableColor
+              key={`color:${metadata.color}`}
+              label="Fill"
+              value={metadata.color}
+              onCommit={(color) => updateMetadata({ color })}
+            />
+            <EditableNumber
+              key={`opacity:${metadata.opacity}`}
+              label="Opacity"
+              max={1}
+              min={0}
+              step={0.05}
+              value={metadata.opacity}
+              onCommit={(opacity) => updateMetadata({ opacity })}
+            />
+            <EditableColor
+              key={`borderColor:${metadata.borderColor}`}
+              label="Border"
+              value={metadata.borderColor}
+              onCommit={(borderColor) => updateMetadata({ borderColor })}
+            />
+            <EditableNumber
+              key={`borderWidth:${metadata.borderWidth}`}
+              label="Border px"
+              min={0}
+              step={1}
+              value={metadata.borderWidth}
+              onCommit={(borderWidth) => updateMetadata({ borderWidth })}
+            />
+            <EditableSelect
+              label="Border style"
+              value={metadata.borderStyle}
+              options={Object.values(SandboxObjectBorderStyle)}
+              onCommit={(borderStyle) => updateMetadata({ borderStyle })}
+            />
+          </InspectorSection>
 
-          <div className="entity-meta-row">
-            <span className="entity-meta-label">Type</span>
-            <span className="entity-inspector-info">{entity.type}</span>
-          </div>
-
-          <div className="entity-meta-row">
-            <span className="entity-meta-label">Size</span>
-            <span className="entity-inspector-info">
-              {metadata.width} x {metadata.height}
-            </span>
-          </div>
-
-          <div className="entity-meta-row">
-            <span className="entity-meta-label">Fill</span>
-            <span className="entity-inspector-info color-meta">
-              <span
-                className="color-swatch"
-                style={{
-                  background: metadata.color,
-                }}
+          <InspectorSection title="Physics">
+            {isStatic ? (
+              <ReadOnlyRow label="Mass" value="Static" />
+            ) : (
+              <EditableNumber
+                key={`mass:${metadata.mass}`}
+                label="Mass"
+                min={0.1}
+                step={0.1}
+                value={metadata.mass}
+                onCommit={(mass) => updateMetadata({ mass })}
               />
-              {metadata.color}
-            </span>
-          </div>
+            )}
+            <EditableNumber
+              key={`bounce:${metadata.bounce}`}
+              label="Bounce"
+              max={1}
+              min={0}
+              step={0.05}
+              value={metadata.bounce}
+              onCommit={(bounce) => updateMetadata({ bounce })}
+            />
+            <EditableNumber
+              key={`friction:${metadata.friction}`}
+              label="Friction"
+              max={1}
+              min={0}
+              step={0.05}
+              value={metadata.friction}
+              onCommit={(friction) => updateMetadata({ friction })}
+            />
+          </InspectorSection>
 
-          <div className="entity-meta-row">
-            <span className="entity-meta-label">Border</span>
-            <span className="entity-inspector-info color-meta">
-              <span
-                className="color-swatch"
-                style={{
-                  background: metadata.borderColor,
-                }}
-              />
-              {metadata.borderStyle}, {metadata.borderWidth}px
-            </span>
-          </div>
-
-          <div className="entity-meta-row">
-            <span className="entity-meta-label">Opacity</span>
-            <span className="entity-inspector-info">
-              {Math.round(metadata.opacity * 100)}%
-            </span>
-          </div>
-
-          <div className="entity-meta-row">
-            <span className="entity-meta-label">Mass</span>
-            <span className="entity-inspector-info">{metadata.mass}</span>
-          </div>
-
-          <div className="entity-meta-row">
-            <span className="entity-meta-label">Visible</span>
-            <span className="entity-inspector-info">
-              {isHidden ? "Hidden" : "Visible"}
-            </span>
-          </div>
-
-          <div className="entity-meta-row">
-            <span className="entity-meta-label">Selected</span>
-            <span className="entity-inspector-info">
-              {isSelected ? "Yes" : "No"}
-            </span>
-          </div>
-
-          <div className="entity-meta-row">
-            <span className="entity-meta-label">ID</span>
-            <span className="entity-inspector-info">{entity.id}</span>
-          </div>
+          <InspectorSection title="Read-only">
+            <ReadOnlyRow
+              label="State"
+              value={isStatic ? "Static" : "Dynamic"}
+            />
+            <ReadOnlyRow label="Type" value={entity.type} />
+            <ReadOnlyRow
+              label="Visible"
+              value={isHidden ? "Hidden" : "Visible"}
+            />
+            <ReadOnlyRow label="Selected" value={isSelected ? "Yes" : "No"} />
+            <ReadOnlyRow label="ID" value={entity.id} />
+          </InspectorSection>
         </div>
       )}
     </div>
+  );
+}
+
+function InspectorSection({
+  children,
+  title,
+}: {
+  children: ReactNode;
+  title: string;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <section className="inspector-section">
+      <button
+        className="inspector-section-header"
+        onClick={(event) => {
+          event.stopPropagation();
+          setIsOpen((current) => !current);
+        }}
+        type="button"
+      >
+        <span className="inspector-section-title">{title}</span>
+        <span
+          className="chevron"
+          style={{
+            transform: isOpen ? "rotate(0deg)" : "rotate(180deg)",
+          }}
+        >
+          v
+        </span>
+      </button>
+
+      {isOpen && <div className="inspector-section-content">{children}</div>}
+    </section>
   );
 }
