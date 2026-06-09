@@ -82,9 +82,15 @@ export const gravitySimulationPresets: GravitySimulationPreset[] = [
   },
 ];
 
-export const WIND_FORCE_MIN = -0.00035;
-export const WIND_FORCE_MAX = 0.00035;
+export const WIND_FORCE_MIN = -0.001;
+export const WIND_FORCE_MAX = 0.001;
 export const WIND_FORCE_STEP = 0.00001;
+
+export interface WindDescriptor {
+  label: string;
+  direction?: "Left" | "Right";
+  strengthPercent: number;
+}
 
 export function getGravitySimulationPreset(
   type?: GravitySimulationType,
@@ -97,4 +103,44 @@ export function getGravitySimulationPreset(
 
 export function getGravityMultiplier(type?: GravitySimulationType): number {
   return getGravitySimulationPreset(type).gravityMultiplier;
+}
+
+export function getWindDescriptor(force: number): WindDescriptor {
+  const strengthPercent =
+    Math.round((Math.abs(force) / WIND_FORCE_MAX) * 1000) / 10;
+
+  if (strengthPercent === 0) {
+    return {
+      label: "None",
+      strengthPercent,
+    };
+  }
+
+  const direction = force < 0 ? "Left" : "Right";
+
+  return {
+    label: getWindStrengthLabel(strengthPercent),
+    direction,
+    strengthPercent,
+  };
+}
+
+function getWindStrengthLabel(strengthPercent: number): string {
+  if (strengthPercent < 20) {
+    return "Light Breeze";
+  }
+
+  if (strengthPercent < 45) {
+    return "Mild Wind";
+  }
+
+  if (strengthPercent < 70) {
+    return "Gusty Wind";
+  }
+
+  if (strengthPercent < 90) {
+    return "Strong Wind";
+  }
+
+  return "Storm Force";
 }

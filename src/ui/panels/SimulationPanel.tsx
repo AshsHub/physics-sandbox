@@ -1,4 +1,5 @@
 import {
+  getWindDescriptor,
   gravitySimulationPresets,
   GravitySimulationType,
   WIND_FORCE_MAX,
@@ -28,8 +29,7 @@ export function SimluationPanel({ onClose }: SimulationPanelProps) {
     ),
   );
   const activeGravityPreset = gravitySimulationPresets[activeGravityIndex];
-  const windStrengthPercent =
-    Math.round((windForce / WIND_FORCE_MAX) * 1000) / 10;
+  const windDescriptor = getWindDescriptor(windForce);
 
   return (
     <Panel title="Simulation" onClose={onClose}>
@@ -107,14 +107,12 @@ export function SimluationPanel({ onClose }: SimulationPanelProps) {
 
         <div className="simulation-slider-value">
           <span className="simulation-slider-name">
-            {windForce < 0
-              ? "Left Wind"
-              : windForce > 0
-                ? "Right Wind"
-                : "None"}
+            {windDescriptor.direction
+              ? `${windDescriptor.label} ${windDescriptor.direction}`
+              : windDescriptor.label}
           </span>
           <span className="simulation-slider-meta">
-            {windStrengthPercent.toFixed(1)}%
+            {windDescriptor.strengthPercent.toFixed(1)}%
           </span>
         </div>
 

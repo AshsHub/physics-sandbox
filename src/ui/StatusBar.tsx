@@ -1,6 +1,6 @@
 import {
   getGravitySimulationPreset,
-  WIND_FORCE_MAX,
+  getWindDescriptor,
 } from "../physics/SandboxSimulation";
 import { useEditorStore } from "../store/editorStore";
 
@@ -23,9 +23,7 @@ export function StatusBar({
   const activeGravityPreset = getGravitySimulationPreset(
     activeGravitySimulation,
   );
-  const windLabel = windForce < 0 ? "Left" : windForce > 0 ? "Right" : "None";
-  const windStrengthPercent =
-    Math.round((Math.abs(windForce) / WIND_FORCE_MAX) * 1000) / 10;
+  const windDescriptor = getWindDescriptor(windForce);
 
   return (
     <footer className="status-bar">
@@ -46,8 +44,10 @@ export function StatusBar({
           {activeGravityPreset.gravityMultiplier.toFixed(2)}g
         </span>
         <span>
-          Wind: {windLabel}
-          {windForce !== 0 ? ` ${windStrengthPercent.toFixed(1)}%` : ""}
+          Wind:{" "}
+          {windDescriptor.direction
+            ? `${windDescriptor.label} ${windDescriptor.direction} ${windDescriptor.strengthPercent.toFixed(1)}%`
+            : windDescriptor.label}
         </span>
       </div>
     </footer>
