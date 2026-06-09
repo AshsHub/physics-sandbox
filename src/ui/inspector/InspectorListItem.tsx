@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { MouseEvent, ReactNode } from "react";
 import type { ICommandBus } from "../../commands/ICommands";
 import {
@@ -7,6 +7,7 @@ import {
   type ISandboxObjectMetadata,
 } from "../../sandbox/SandboxObject";
 import { SandboxObjectFlags } from "../../sandbox/SandboxObjectType";
+import { useEditorStore } from "../../store/editorStore";
 import {
   EditableColor,
   EditableNumber,
@@ -18,6 +19,7 @@ export interface InspectorListItemProps {
   commands: ICommandBus;
   entity: ISandboxObject;
   isSelected: boolean;
+  shouldScrollIntoView: boolean;
   onSelect: (event: MouseEvent) => void;
   onContextMenu: (event: MouseEvent) => void;
 }
@@ -26,16 +28,30 @@ export function InspectorListItem({
   commands,
   entity,
   isSelected,
+  shouldScrollIntoView,
   onSelect,
   onContextMenu,
 }: InspectorListItemProps) {
-  const [isOpen, setIsOpen] = useState(true);
+  const itemRef = useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
   const [draftName, setDraftName] = useState(entity.name);
   const shouldCancelCommit = useRef(false);
   const isStatic = (entity.flags & SandboxObjectFlags.Locked) !== 0;
   const isHidden = (entity.flags & SandboxObjectFlags.Hidden) !== 0;
   const metadata = entity.metadata;
+
+  useEffect(() => {
+    if (!shouldScrollIntoView) {
+      return;
+    }
+
+    itemRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+    useEditorStore.getState().setInspectorScrollTarget(undefined);
+  }, [shouldScrollIntoView]);
 
   const updateMetadata = (partial: Partial<ISandboxObjectMetadata>) => {
     commands.execute("updateObjectProperties", {
@@ -82,6 +98,7 @@ export function InspectorListItem({
       className={
         isSelected ? "inspector-list-item selected" : "inspector-list-item"
       }
+      ref={itemRef}
       onClick={onSelect}
       onContextMenu={onContextMenu}
     >

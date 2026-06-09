@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { IApplication } from "../../application/IApplication";
 import type { Vector2 } from "../../maths/Vector2";
 import { useEditorStore } from "../../store/editorStore";
+import { SidebarPanel } from "../panels/SidebarPanel";
 
 export interface ObjectContextMenuProps {
   app: IApplication;
@@ -79,6 +80,15 @@ export function ObjectContextMenu({
     onClose();
   };
 
+  const revealInInspector = () => {
+    const editorStore = useEditorStore.getState();
+
+    editorStore.setSelection([object.id]);
+    editorStore.setActivePanel(SidebarPanel.Inspector);
+    editorStore.setInspectorScrollTarget(object.id);
+    onClose();
+  };
+
   return (
     <div
       className="object-context-menu"
@@ -91,7 +101,7 @@ export function ObjectContextMenu({
       <input
         aria-label="Object name"
         autoFocus
-        className="object-context-menu-name"
+        className="object-context-menu-input"
         value={draftName}
         onBlur={commitName}
         onChange={(event) => setDraftName(event.target.value)}
@@ -109,7 +119,16 @@ export function ObjectContextMenu({
       />
 
       <button
-        className="object-context-menu-delete"
+        className="object-context-menu-action"
+        onClick={revealInInspector}
+        onPointerDown={(event) => event.preventDefault()}
+        type="button"
+      >
+        Show in Inspector
+      </button>
+
+      <button
+        className="object-context-menu-action"
         onClick={deleteObjects}
         onPointerDown={(event) => event.preventDefault()}
         type="button"

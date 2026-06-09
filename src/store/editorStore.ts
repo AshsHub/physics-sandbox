@@ -25,6 +25,7 @@ export interface IEditorStore {
   cameraZoom: number;
   viewportSize: ViewportSize;
   hoveredObjectId?: string;
+  inspectorScrollTargetId?: string;
   selectionBox?: SelectionBox;
   selectedIds: Set<string>;
   activePanel?: SidebarPanel;
@@ -49,6 +50,7 @@ export interface IEditorStore {
   setInteractionMode(mode: InteractionMode): void;
   setActivePointerMode(mode?: InteractionMode): void;
   setHoveredObject(id?: string): void;
+  setInspectorScrollTarget(id?: string): void;
   setSelectionBox(selectionBox?: SelectionBox): void;
   setCameraState(state: {
     offset: CameraOffset;
@@ -74,6 +76,7 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
     height: 0,
   },
   hoveredObjectId: undefined,
+  inspectorScrollTargetId: undefined,
   selectionBox: undefined,
   selectedIds: new Set<string>(),
   activePanel: SidebarPanel.Create,
@@ -174,6 +177,12 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
       return {
         hoveredObjectId: id,
       };
+    });
+  },
+
+  setInspectorScrollTarget(id?: string) {
+    set({
+      inspectorScrollTargetId: id,
     });
   },
 
