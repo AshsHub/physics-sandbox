@@ -1,0 +1,42 @@
+.sidebar {
+  display: flex;
+  width: 320px;
+  background: var(--bg-panel);
+  border-right: 1px solid var(--border);
+  padding: 0px;
+}
+
+.sidebar.collapsed {
+  width: auto;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  padding-top: var(--space-xl);
+  border-right: 1px solid var(--border);
+}
+
+.sidebar-nav button {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+.sidebar-nav button.selected {
+  background: #4f8cff;
+  border-color: #6a9fff;
+  color: white;
+}
+
+.sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}

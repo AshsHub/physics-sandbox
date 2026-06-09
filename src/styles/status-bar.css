@@ -1,0 +1,31 @@
+.status-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 6px 12px;
+  gap: var(--space-sm);
+  border-top: 1px solid #333;
+  background: #222;
+  color: #aaa;
+  font-size: 12px;
+  right: 10px;
+  position: absolute;
+  border-radius: 6px;
+}
+
+.status-bar-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.status-bar-group-label {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.status-bar-divider {
+  width: 1px;
+  height: 14px;
+  background: var(--border);
+}

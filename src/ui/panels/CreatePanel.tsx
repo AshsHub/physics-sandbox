@@ -4,7 +4,7 @@ import type { IApplication } from "../../application/IApplication";
 import { SandboxObjectType } from "../../sandbox/SandboxObjectType";
 import { Panel } from "./Panel";
 
-export interface CreatePanelProps {
+export interface CreatorPanelProps {
   app: IApplication;
   onClose?: () => void;
 }
@@ -61,7 +61,7 @@ const staticShapes: ShapeAction[] = [
   },
 ];
 
-export function CreatePanel({ app, onClose }: CreatePanelProps) {
+export function CreatorPanel({ app, onClose }: CreatorPanelProps) {
   const createObject = (type: SandboxObjectType) => {
     app.commands.execute("createObject", {
       type,

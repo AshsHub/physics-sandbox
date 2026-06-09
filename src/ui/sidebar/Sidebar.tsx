@@ -1,6 +1,6 @@
 import type { IApplication } from "../../application/IApplication";
 import { useEditorStore } from "../../store/editorStore";
-import { CreatePanel } from "../panels/CreatePanel";
+import { CreatorPanel } from "../panels/CreatePanel";
 import { InspectorPanel } from "../panels/InspectorPanel";
 import { SidebarPanel } from "../panels/SidebarPanel";
 import { SimluationPanel } from "../panels/SimulationPanel";
@@ -59,7 +59,7 @@ export function Sidebar({ app, onObjectContextMenu }: SidebarProps) {
       {hasActivePanel && (
         <div className="sidebar-content">
           {activePanel === SidebarPanel.Create && (
-            <CreatePanel app={app} onClose={closePanel} />
+            <CreatorPanel app={app} onClose={closePanel} />
           )}
           {activePanel === SidebarPanel.Inspector && (
             <InspectorPanel
