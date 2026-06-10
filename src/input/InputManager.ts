@@ -1,25 +1,15 @@
 import type { IApplication } from "../application/IApplication";
 import type Matter from "matter-js";
+import { InputConfig, MouseButton } from "../config/InputConfig";
 import { Vector2 } from "../maths/Vector2";
 import { SandboxObjectFlags } from "../sandbox/SandboxObjectType";
 import { useEditorStore } from "../store/editorStore";
-import { InputConfig, MouseButton } from "../config/InputConfig";
 import { InteractionMode } from "./InteractionMode";
-
-type Action = (modifiers: KeyModifiers) => void;
-
-interface KeyAction {
-  action: Action;
-  repeat: boolean;
-}
-
-enum KeyModifiers {
-  None = 0,
-  Control = 1 << 0,
-  Meta = 1 << 1,
-  Shift = 1 << 2,
-  Alt = 1 << 3,
-}
+import {
+  hasPrimaryModifier,
+  KeyboardInputController,
+  KeyModifiers,
+} from "./KeyboardInputController";
 
 interface SelectionGesture {
   currentScreen: Vector2;
@@ -32,169 +22,37 @@ interface SelectionGesture {
 }
 
 export class InputManager {
-  private readonly pressedKeys = new Set<string>();
-  private readonly keyActions = new Map<string, KeyAction[]>();
+  private readonly keyboard = new KeyboardInputController();
   private activePointerMode?: InteractionMode;
   private lastPointerPosition?: Vector2;
   private selectionGesture?: SelectionGesture;
-  private readonly handleKeyDown = (e: KeyboardEvent) => {
-    this.keyDown(e);
-  };
-
-  private readonly handleKeyUp = (e: KeyboardEvent) => {
-    this.keyUp(e);
-  };
 
   public constructor(private readonly app: IApplication) {}
 
   public init(): void {
-    this.registerEventListeners();
     this.registerKeyActions();
+    this.keyboard.init();
   }
 
-  public destroy() {
-    this.unregisterEventListeners();
-
-    this.pressedKeys.clear();
-    this.keyActions.clear();
+  public destroy(): void {
+    this.keyboard.destroy();
     useEditorStore.getState().setHoveredObject(undefined);
     useEditorStore.getState().setSelectionBox(undefined);
     this.setActivePointerMode(undefined);
+    this.lastPointerPosition = undefined;
+    this.selectionGesture = undefined;
   }
 
-  private registerKeyActions(): void {
-    this.registerAction(["1"], () => {
-      useEditorStore.getState().setInteractionMode(InteractionMode.Play);
-    });
-    this.registerAction(["2"], () => {
-      useEditorStore.getState().setInteractionMode(InteractionMode.Selection);
-    });
-    this.registerAction(["3"], () => {
-      useEditorStore.getState().setInteractionMode(InteractionMode.Camera);
-    });
-    this.registerAction(["space", " "], () => {
-      const state = useEditorStore.getState();
-      state.setSimulationRunning(!state.isSimulationRunning);
-    });
-    this.registerAction(["q"], () => {
-      this.rotateHeldObjects(-InputConfig.keyboard.rotationStep);
-    });
-    this.registerAction(["e"], () => {
-      this.rotateHeldObjects(InputConfig.keyboard.rotationStep);
-    });
-
-    this.registerAction(
-      ["-", "_"],
-      (mods) => {
-        this.zoomFromKeyboard(-InputConfig.keyboard.zoomStep, mods);
-      },
-      {
-        repeat: true,
-      },
-    );
-    this.registerAction(
-      ["+", "="],
-      (mods) => {
-        this.zoomFromKeyboard(InputConfig.keyboard.zoomStep, mods);
-      },
-      {
-        repeat: true,
-      },
-    );
-
-    this.registerAction(["r"], () => {
-      const state = useEditorStore.getState();
-      state.setShowForceRadius(!state.showForceRadius);
-    });
-
-    this.registerAction(["f"], () => {
-      this.app.fitView();
-    });
-
-    this.registerAction(["delete", "backspace"], () => {
-      this.app.commands.execute("deleteObject", {
-        ids: Array.from(useEditorStore.getState().selectedIds),
-      });
-    });
-    this.registerAction(["z"], (mods) => {
-      if (this.hasPrimaryModifier(mods)) {
-        if (mods & KeyModifiers.Shift) {
-          this.app.commands.redo();
-        } else {
-          this.app.commands.undo();
-        }
-      }
-    });
+  public keyDown(event: KeyboardEvent): void {
+    this.keyboard.keyDown(event);
   }
 
-  private registerAction(
-    keys: string[],
-    action: Action,
-    options: { repeat?: boolean } = {},
-  ): void {
-    for (const key of keys) {
-      const normalizedKey = key.toLowerCase();
-      const keyAction = {
-        action,
-        repeat: options.repeat ?? false,
-      };
-
-      const actions = this.keyActions.get(normalizedKey);
-
-      if (actions) {
-        actions.push(keyAction);
-      } else {
-        this.keyActions.set(normalizedKey, [keyAction]);
-      }
-    }
-  }
-
-  private registerEventListeners() {
-    window.addEventListener("keydown", this.handleKeyDown);
-    window.addEventListener("keyup", this.handleKeyUp);
-  }
-
-  private unregisterEventListeners() {
-    window.removeEventListener("keydown", this.handleKeyDown);
-    window.removeEventListener("keyup", this.handleKeyUp);
-  }
-
-  public keyDown(e: KeyboardEvent): void {
-    if (this.isTypingTarget(e.target)) {
-      return;
-    }
-
-    const normalizedKey = e.key.toLowerCase();
-    const wasPressed = this.pressedKeys.has(normalizedKey);
-    this.pressedKeys.add(normalizedKey);
-    const actions = this.keyActions.get(normalizedKey);
-
-    if (!actions) {
-      return;
-    }
-
-    actions.forEach(({ action, repeat }) => {
-      if (wasPressed && !repeat) {
-        return;
-      }
-
-      let modifier = KeyModifiers.None;
-
-      if (e.shiftKey) modifier |= KeyModifiers.Shift;
-      if (e.ctrlKey) modifier |= KeyModifiers.Control;
-      if (e.metaKey) modifier |= KeyModifiers.Meta;
-      if (e.altKey) modifier |= KeyModifiers.Alt;
-
-      action(modifier);
-    });
-  }
-
-  public keyUp(e: KeyboardEvent): void {
-    this.pressedKeys.delete(e.key.toLowerCase());
+  public keyUp(event: KeyboardEvent): void {
+    this.keyboard.keyUp(event);
   }
 
   public isKeyPressed(key: string): boolean {
-    return this.pressedKeys.has(key.toLowerCase());
+    return this.keyboard.isKeyPressed(key);
   }
 
   public pointerDown(pos: Vector2, button: number): void {
@@ -326,32 +184,93 @@ export class InputManager {
     }
   }
 
+  private registerKeyActions(): void {
+    this.keyboard.registerAction(["1"], () => {
+      useEditorStore.getState().setInteractionMode(InteractionMode.Play);
+    });
+    this.keyboard.registerAction(["2"], () => {
+      useEditorStore.getState().setInteractionMode(InteractionMode.Selection);
+    });
+    this.keyboard.registerAction(["3"], () => {
+      useEditorStore.getState().setInteractionMode(InteractionMode.Camera);
+    });
+    this.keyboard.registerAction(["space", " "], () => {
+      const state = useEditorStore.getState();
+      state.setSimulationRunning(!state.isSimulationRunning);
+    });
+    this.keyboard.registerAction(["q"], () => {
+      this.rotateHeldObjects(-InputConfig.keyboard.rotationStep);
+    });
+    this.keyboard.registerAction(["e"], () => {
+      this.rotateHeldObjects(InputConfig.keyboard.rotationStep);
+    });
+
+    this.keyboard.registerAction(
+      ["-", "_"],
+      (mods) => {
+        this.zoomFromKeyboard(-InputConfig.keyboard.zoomStep, mods);
+      },
+      {
+        repeat: true,
+      },
+    );
+    this.keyboard.registerAction(
+      ["+", "="],
+      (mods) => {
+        this.zoomFromKeyboard(InputConfig.keyboard.zoomStep, mods);
+      },
+      {
+        repeat: true,
+      },
+    );
+
+    this.keyboard.registerAction(["r"], () => {
+      const state = useEditorStore.getState();
+      state.setShowForceRadius(!state.showForceRadius);
+    });
+
+    this.keyboard.registerAction(["f"], () => {
+      this.app.fitView();
+    });
+
+    this.keyboard.registerAction(["delete", "backspace"], () => {
+      this.app.commands.execute("deleteObject", {
+        ids: Array.from(useEditorStore.getState().selectedIds),
+      });
+    });
+    this.keyboard.registerAction(["z"], (mods) => {
+      if (hasPrimaryModifier(mods)) {
+        if (mods & KeyModifiers.Shift) {
+          this.app.commands.redo();
+        } else {
+          this.app.commands.undo();
+        }
+      }
+    });
+  }
+
   private isMultiSelectHeld(): boolean {
     return this.isKeyPressed("control") || this.isKeyPressed("shift");
   }
 
-  public select(id: string): void {
+  private select(id: string): void {
     useEditorStore.getState().select(id);
   }
 
-  public deselect(id: string): void {
+  private deselect(id: string): void {
     useEditorStore.getState().deselect(id);
   }
 
-  public clearSelection(): void {
+  private clearSelection(): void {
     useEditorStore.getState().clearSelection();
   }
 
-  public isSelected(id: string): boolean {
+  private isSelected(id: string): boolean {
     return useEditorStore.getState().selectedIds.has(id);
   }
 
-  public getSelection() {
+  private getSelection(): Set<string> {
     return useEditorStore.getState().selectedIds;
-  }
-
-  private hasPrimaryModifier(mods: KeyModifiers) {
-    return (mods & (KeyModifiers.Control | KeyModifiers.Meta)) !== 0;
   }
 
   private rotateHeldObjects(angle: number): void {
@@ -363,7 +282,7 @@ export class InputManager {
   }
 
   private zoomFromKeyboard(delta: number, mods: KeyModifiers): void {
-    if (this.hasPrimaryModifier(mods)) {
+    if (hasPrimaryModifier(mods)) {
       return;
     }
 
@@ -511,18 +430,6 @@ export class InputManager {
     }
 
     useEditorStore.getState().setSelection(selectedIds);
-  }
-
-  private isTypingTarget(target: EventTarget | null): boolean {
-    if (!(target instanceof HTMLElement)) {
-      return false;
-    }
-
-    return (
-      target instanceof HTMLInputElement ||
-      target instanceof HTMLTextAreaElement ||
-      target.isContentEditable
-    );
   }
 }
 
