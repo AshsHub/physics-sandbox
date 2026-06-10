@@ -3,6 +3,7 @@ import type { ISandboxEngine } from "./ISandboxEngine";
 
 import type { Camera } from "../camera/Camera";
 import { CameraConfig } from "../config/CameraConfig";
+import { InitialSceneConfig } from "../config/InitialSceneConfig";
 import { Vector2 } from "../maths/Vector2";
 
 import { PhysicsWorld } from "../physics/PhysicsWorld";
@@ -37,8 +38,9 @@ export class SandboxEngine implements ISandboxEngine {
   public init(): void {
     this.physics.init();
 
-    // TODO: Construct a better method for initial world creation
-    this.createObject(new Vector2(0, 580), SandboxObjectType.Platform);
+    for (const object of InitialSceneConfig.objects) {
+      this.createObject(new Vector2(object.position), object.type);
+    }
   }
 
   public destroy(): void {
