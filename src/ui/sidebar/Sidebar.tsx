@@ -3,7 +3,7 @@ import { useEditorStore } from "../../store/editorStore";
 import { CreatorPanel } from "../panels/CreatorPanel";
 import { InspectorPanel } from "../panels/InspectorPanel";
 import { SidebarPanel } from "../panels/SidebarPanel";
-import { SimluationPanel } from "../panels/SimulationPanel";
+import { SimulationPanel } from "../panels/SimulationPanel";
 
 export interface SidebarProps {
   app: IApplication;
@@ -75,7 +75,7 @@ export function Sidebar({ app, onObjectContextMenu }: SidebarProps) {
             />
           )}
           {activePanel === SidebarPanel.Simulation && (
-            <SimluationPanel onClose={closePanel} />
+            <SimulationPanel onClose={closePanel} />
           )}
         </div>
       )}

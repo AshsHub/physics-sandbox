@@ -11,7 +11,7 @@ export interface SimulationPanelProps {
   onClose?: () => void;
 }
 
-export function SimluationPanel({ onClose }: SimulationPanelProps) {
+export function SimulationPanel({ onClose }: SimulationPanelProps) {
   const activeGravitySimulation = useEditorStore(
     (s) => s.activeGravitySimulation,
   );
