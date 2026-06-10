@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { Vector2 } from "../maths/Vector2";
 import type { IApplication } from "../application/IApplication";
+import { CanvasContextMenuController } from "../input/CanvasContextMenuController";
 import { InteractionMode } from "../input/InteractionMode";
 import { useEditorStore } from "../store/editorStore";
 import { SelectionBoxOverlay } from "./SelectionBoxOverlay";
@@ -41,6 +42,10 @@ export function CanvasView({
     if (!ctx) return;
 
     let frameId = 0;
+    const contextMenuController = new CanvasContextMenuController(app, {
+      onCanvasContextMenu,
+      onObjectContextMenu,
+    });
 
     const handlePointerDown = (e: PointerEvent) => {
       if (e.button === MouseButton.Middle) {
@@ -75,31 +80,7 @@ export function CanvasView({
     };
 
     const handleContextMenu = (e: MouseEvent) => {
-      e.preventDefault();
-
-      const rect = canvas.getBoundingClientRect();
-      const canvasPosition = new Vector2(
-        e.clientX - rect.left,
-        e.clientY - rect.top,
-      );
-      const worldPosition = app.camera.screenToWorld(canvasPosition);
-      const object = app.engine.getObjectFromPosition(worldPosition);
-
-      if (!object) {
-        onCanvasContextMenu(
-          {
-            x: e.clientX,
-            y: e.clientY,
-          },
-          worldPosition,
-        );
-        return;
-      }
-
-      onObjectContextMenu(object.id, {
-        x: e.clientX,
-        y: e.clientY,
-      });
+      contextMenuController.open(e, canvas);
     };
 
     const handleWheel = (e: WheelEvent) => {
