@@ -109,9 +109,6 @@ export class PhysicsWorld {
           position.y,
           SandboxObjectConfig.defaults.Platform.metadata.width,
           SandboxObjectConfig.defaults.Platform.metadata.height,
-          {
-            isStatic: true,
-          },
         );
         break;
       case SandboxObjectType.Wall:
@@ -120,9 +117,6 @@ export class PhysicsWorld {
           position.y,
           SandboxObjectConfig.defaults.Wall.metadata.width,
           SandboxObjectConfig.defaults.Wall.metadata.height,
-          {
-            isStatic: true,
-          },
         );
         break;
       case SandboxObjectType.Ramp:
@@ -131,9 +125,6 @@ export class PhysicsWorld {
           position.y,
           SandboxObjectConfig.defaults.Ramp.metadata.width,
           SandboxObjectConfig.defaults.Ramp.metadata.height,
-          {
-            isStatic: true,
-          },
         );
         Matter.Body.rotate(body, PhysicsConfig.body.rampAngle);
         break;
@@ -193,10 +184,7 @@ export class PhysicsWorld {
     );
 
     if (!body.isStatic) {
-      const nextMass = Math.max(
-        PhysicsConfig.body.minimumDynamicMass,
-        nextMetadata.mass,
-      );
+      const nextMass = this._getDynamicMass(nextMetadata.mass);
 
       if (body.mass !== nextMass) {
         Matter.Body.setMass(body, nextMass);
@@ -434,5 +422,9 @@ export class PhysicsWorld {
         Matter.Sleeping.set(body, false);
       }
     }
+  }
+
+  private _getDynamicMass(mass: number): number {
+    return Math.max(PhysicsConfig.body.minimumDynamicMass, mass);
   }
 }
