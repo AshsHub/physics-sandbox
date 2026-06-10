@@ -19,16 +19,16 @@ export interface CreateSandboxObjectOptions {
 }
 
 export class SandboxObjectManager {
-  private readonly objects = new Map<string, ISandboxObject>();
-  private readonly bodyLookup = new WeakMap<Matter.Body, string>();
+  private readonly _objects = new Map<string, ISandboxObject>();
+  private readonly _bodyLookup = new WeakMap<Matter.Body, string>();
 
-  public constructor(private readonly physics: PhysicsWorld) {}
+  public constructor(private readonly _physics: PhysicsWorld) {}
 
   public create(options: CreateSandboxObjectOptions): ISandboxObject {
     const { position, type, id, name } = options;
     const objectId = id ?? crypto.randomUUID();
 
-    const body = this.physics.createBody(position, type);
+    const body = this._physics.createBody(position, type);
     const defaultMetadata = SandboxObjectConfig.defaults[type].metadata;
     const flags = options.flags ?? SandboxObjectConfig.defaults[type].flags;
     const metadata = {
@@ -50,17 +50,17 @@ export class SandboxObjectManager {
       flags,
     };
 
-    this.physics.applyMetadataToBody(body, defaultMetadata, metadata);
-    this.physics.applyFlagsToBody(body, flags);
+    this._physics.applyMetadataToBody(body, defaultMetadata, metadata);
+    this._physics.applyFlagsToBody(body, flags);
 
-    this.objects.set(objectId, object);
-    this.bodyLookup.set(body, objectId);
+    this._objects.set(objectId, object);
+    this._bodyLookup.set(body, objectId);
 
     return object;
   }
 
   public createSnapshot(id: string): ISandboxObjectSnapshot | undefined {
-    const object = this.objects.get(id);
+    const object = this._objects.get(id);
 
     if (!object) {
       return;
@@ -85,33 +85,33 @@ export class SandboxObjectManager {
   }
 
   public get(id: string): ISandboxObject | undefined {
-    return this.objects.get(id);
+    return this._objects.get(id);
   }
 
   public getAll(): ISandboxObject[] {
-    return [...this.objects.values()];
+    return [...this._objects.values()];
   }
 
   public getByBody(body: Matter.Body): ISandboxObject | undefined {
-    const id = this.bodyLookup.get(body);
+    const id = this._bodyLookup.get(body);
 
     if (!id) {
       return;
     }
 
-    return this.objects.get(id);
+    return this._objects.get(id);
   }
 
   public destroy(id: string): void {
-    const object = this.objects.get(id);
+    const object = this._objects.get(id);
 
     if (!object) {
       return;
     }
 
-    this.physics.destroyBody(object.body);
+    this._physics.destroyBody(object.body);
 
-    this.objects.delete(id);
+    this._objects.delete(id);
   }
 
   public destroyMany(ids: string[]): void {
@@ -121,10 +121,10 @@ export class SandboxObjectManager {
   }
 
   public destroyAll(): void {
-    for (const object of this.objects.values()) {
-      this.physics.destroyBody(object.body);
+    for (const object of this._objects.values()) {
+      this._physics.destroyBody(object.body);
     }
 
-    this.objects.clear();
+    this._objects.clear();
   }
 }

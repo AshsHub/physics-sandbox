@@ -14,8 +14,8 @@ export interface CanvasContextMenuCallbacks {
 
 export class CanvasContextMenuController {
   public constructor(
-    private readonly app: IApplication,
-    private readonly callbacks: CanvasContextMenuCallbacks,
+    private readonly _app: IApplication,
+    private readonly _callbacks: CanvasContextMenuCallbacks,
   ) {}
 
   public open(event: MouseEvent, canvas: HTMLCanvasElement): void {
@@ -26,18 +26,18 @@ export class CanvasContextMenuController {
       event.clientX - rect.left,
       event.clientY - rect.top,
     );
-    const worldPosition = this.app.camera.screenToWorld(canvasPosition);
-    const object = this.app.engine.getObjectFromPosition(worldPosition);
+    const worldPosition = this._app.camera.screenToWorld(canvasPosition);
+    const object = this._app.engine.getObjectFromPosition(worldPosition);
     const menuPosition = {
       x: event.clientX,
       y: event.clientY,
     };
 
     if (!object) {
-      this.callbacks.onCanvasContextMenu(menuPosition, worldPosition);
+      this._callbacks.onCanvasContextMenu(menuPosition, worldPosition);
       return;
     }
 
-    this.callbacks.onObjectContextMenu(object.id, menuPosition);
+    this._callbacks.onObjectContextMenu(object.id, menuPosition);
   }
 }

@@ -18,5 +18,34 @@ export default defineConfig([
     languageOptions: {
       globals: globals.browser,
     },
+    rules: {
+      '@typescript-eslint/explicit-member-accessibility': [
+        'error',
+        {
+          accessibility: 'explicit',
+        },
+      ],
+      '@typescript-eslint/naming-convention': [
+        'error',
+        {
+          selector: 'memberLike',
+          modifiers: ['private'],
+          format: ['camelCase'],
+          leadingUnderscore: 'require',
+        },
+        {
+          selector: 'memberLike',
+          modifiers: ['protected'],
+          format: ['camelCase'],
+          leadingUnderscore: 'forbid',
+        },
+        {
+          selector: 'memberLike',
+          modifiers: ['public'],
+          format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
+          leadingUnderscore: 'forbid',
+        },
+      ],
+    },
   },
 ])

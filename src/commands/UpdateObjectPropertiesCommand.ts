@@ -9,23 +9,23 @@ export interface UpdateObjectPropertiesCommandOptions {
 }
 
 export class UpdateObjectPropertiesCommand implements ICommand {
-  private readonly previousValues = new Map<string, unknown>();
+  private readonly _previousValues = new Map<string, unknown>();
 
   public constructor(
-    private readonly engine: SandboxEngine,
-    private readonly options: UpdateObjectPropertiesCommandOptions,
+    private readonly _engine: SandboxEngine,
+    private readonly _options: UpdateObjectPropertiesCommandOptions,
   ) {}
 
   public execute(): ICommandResult {
-    if (this.options.objectIds.length === 0) {
+    if (this._options.objectIds.length === 0) {
       return {
         success: false,
         message: "No objects were provided to update.",
       };
     }
 
-    const objects = this.options.objectIds
-      .map((id) => this.engine.getObject(id))
+    const objects = this._options.objectIds
+      .map((id) => this._engine.getObject(id))
       .filter((object): object is ISandboxObject => object !== undefined);
 
     if (objects.length === 0) {
@@ -36,17 +36,17 @@ export class UpdateObjectPropertiesCommand implements ICommand {
     }
 
     for (const object of objects) {
-      if (!this.previousValues.has(object.id)) {
-        this.previousValues.set(
+      if (!this._previousValues.has(object.id)) {
+        this._previousValues.set(
           object.id,
-          clonePropertyValue(object[this.options.property]),
+          clonePropertyValue(object[this._options.property]),
         );
       }
 
-      this.engine.updateObjectProperty(
+      this._engine.updateObjectProperty(
         object.id,
-        this.options.property,
-        this.options.value as never,
+        this._options.property,
+        this._options.value as never,
       );
     }
 
@@ -56,17 +56,17 @@ export class UpdateObjectPropertiesCommand implements ICommand {
   }
 
   public undo(): ICommandResult {
-    if (this.previousValues.size === 0) {
+    if (this._previousValues.size === 0) {
       return {
         success: false,
         message: "Cannot undo update before previous values are known.",
       };
     }
 
-    for (const [id, previousValue] of this.previousValues) {
-      this.engine.updateObjectProperty(
+    for (const [id, previousValue] of this._previousValues) {
+      this._engine.updateObjectProperty(
         id,
-        this.options.property,
+        this._options.property,
         previousValue as never,
       );
     }

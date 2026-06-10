@@ -22,48 +22,48 @@ interface SelectionGesture {
 }
 
 export class InputManager {
-  private readonly keyboard = new KeyboardInputController();
-  private activePointerMode?: InteractionMode;
-  private lastPointerPosition?: Vector2;
-  private selectionGesture?: SelectionGesture;
+  private readonly _keyboard = new KeyboardInputController();
+  private _activePointerMode?: InteractionMode;
+  private _lastPointerPosition?: Vector2;
+  private _selectionGesture?: SelectionGesture;
 
-  public constructor(private readonly app: IApplication) {}
+  public constructor(private readonly _app: IApplication) {}
 
   public init(): void {
-    this.registerKeyActions();
-    this.keyboard.init();
+    this._registerKeyActions();
+    this._keyboard.init();
   }
 
   public destroy(): void {
-    this.keyboard.destroy();
+    this._keyboard.destroy();
     useEditorStore.getState().setHoveredObject(undefined);
     useEditorStore.getState().setSelectionBox(undefined);
-    this.setActivePointerMode(undefined);
-    this.lastPointerPosition = undefined;
-    this.selectionGesture = undefined;
+    this._setActivePointerMode(undefined);
+    this._lastPointerPosition = undefined;
+    this._selectionGesture = undefined;
   }
 
   public keyDown(event: KeyboardEvent): void {
-    this.keyboard.keyDown(event);
+    this._keyboard.keyDown(event);
   }
 
   public keyUp(event: KeyboardEvent): void {
-    this.keyboard.keyUp(event);
+    this._keyboard.keyUp(event);
   }
 
   public isKeyPressed(key: string): boolean {
-    return this.keyboard.isKeyPressed(key);
+    return this._keyboard.isKeyPressed(key);
   }
 
   public pointerDown(pos: Vector2, button: number): void {
-    this.lastPointerPosition = pos.clone();
+    this._lastPointerPosition = pos.clone();
 
     if (
       button === MouseButton.Middle ||
       (button === MouseButton.Primary &&
-        this.getInteractionMode() === InteractionMode.Camera)
+        this._getInteractionMode() === InteractionMode.Camera)
     ) {
-      this.setActivePointerMode(InteractionMode.Camera);
+      this._setActivePointerMode(InteractionMode.Camera);
       return;
     }
 
@@ -71,19 +71,19 @@ export class InputManager {
       return;
     }
 
-    const worldPos = this.screenToWorld(pos);
-    const sandboxObject = this.app.engine.getObjectFromPosition(worldPos);
-    const mode = this.getInteractionMode();
-    this.updateHoveredObject(worldPos);
+    const worldPos = this._screenToWorld(pos);
+    const sandboxObject = this._app.engine.getObjectFromPosition(worldPos);
+    const mode = this._getInteractionMode();
+    this._updateHoveredObject(worldPos);
 
     if (mode === InteractionMode.Selection) {
-      this.startSelectionGesture(pos, worldPos, sandboxObject?.id);
+      this._startSelectionGesture(pos, worldPos, sandboxObject?.id);
       return;
     }
 
     if (!sandboxObject) {
-      if (!this.isMultiSelectHeld()) {
-        this.clearSelection();
+      if (!this._isMultiSelectHeld()) {
+        this._clearSelection();
       }
 
       return;
@@ -94,57 +94,57 @@ export class InputManager {
     if (mode === InteractionMode.Play) {
       let draggedIds: string[];
 
-      if (this.isSelected(id)) {
-        draggedIds = Array.from(this.getSelection());
-      } else if (this.isMultiSelectHeld()) {
-        this.select(id);
-        draggedIds = Array.from(this.getSelection());
+      if (this._isSelected(id)) {
+        draggedIds = Array.from(this._getSelection());
+      } else if (this._isMultiSelectHeld()) {
+        this._select(id);
+        draggedIds = Array.from(this._getSelection());
       } else {
         useEditorStore.getState().setSelection([id]);
         draggedIds = [id];
       }
 
-      this.setActivePointerMode(InteractionMode.Play);
-      this.app.engine.startDrag(draggedIds, worldPos);
+      this._setActivePointerMode(InteractionMode.Play);
+      this._app.engine.startDrag(draggedIds, worldPos);
       return;
     }
 
-    if (this.isMultiSelectHeld()) {
-      if (this.isSelected(id)) {
-        this.deselect(id);
+    if (this._isMultiSelectHeld()) {
+      if (this._isSelected(id)) {
+        this._deselect(id);
       } else {
-        this.select(id);
+        this._select(id);
       }
     } else {
-      this.clearSelection();
-      this.select(id);
+      this._clearSelection();
+      this._select(id);
     }
   }
 
   public pointerMove(pos: Vector2): void {
-    if (this.activePointerMode === InteractionMode.Camera) {
-      if (this.lastPointerPosition) {
-        this.app.camera.pan({
-          x: pos.x - this.lastPointerPosition.x,
-          y: pos.y - this.lastPointerPosition.y,
+    if (this._activePointerMode === InteractionMode.Camera) {
+      if (this._lastPointerPosition) {
+        this._app.camera.pan({
+          x: pos.x - this._lastPointerPosition.x,
+          y: pos.y - this._lastPointerPosition.y,
         });
       }
 
-      this.lastPointerPosition = pos.clone();
+      this._lastPointerPosition = pos.clone();
       return;
     }
 
-    if (this.selectionGesture) {
-      this.updateSelectionGesture(pos);
+    if (this._selectionGesture) {
+      this._updateSelectionGesture(pos);
       return;
     }
 
-    if (this.activePointerMode === InteractionMode.Play) {
-      this.app.engine.updateDrag(this.screenToWorld(pos));
+    if (this._activePointerMode === InteractionMode.Play) {
+      this._app.engine.updateDrag(this._screenToWorld(pos));
       return;
     }
 
-    this.updateHoveredObject(this.screenToWorld(pos));
+    this._updateHoveredObject(this._screenToWorld(pos));
   }
 
   public pointerWheel(deltaY: number, pos: Vector2): void {
@@ -152,8 +152,8 @@ export class InputManager {
       return;
     }
 
-    if (this.activePointerMode !== InteractionMode.Play) {
-      this.app.camera.zoomAt(
+    if (this._activePointerMode !== InteractionMode.Play) {
+      this._app.camera.zoomAt(
         pos,
         deltaY > 0
           ? InputConfig.pointer.wheelZoomOutFactor
@@ -162,171 +162,171 @@ export class InputManager {
       return;
     }
 
-    this.rotateHeldObjects(
+    this._rotateHeldObjects(
       Math.sign(deltaY) * InputConfig.pointer.wheelRotationStep,
     );
   }
 
   public pointerUp(): void {
-    if (this.selectionGesture) {
-      this.endSelectionGesture();
+    if (this._selectionGesture) {
+      this._endSelectionGesture();
       return;
     }
 
-    this.app.engine.endDrag();
-    this.setActivePointerMode(undefined);
-    this.lastPointerPosition = undefined;
+    this._app.engine.endDrag();
+    this._setActivePointerMode(undefined);
+    this._lastPointerPosition = undefined;
   }
 
   public pointerLeave(): void {
-    if (!this.activePointerMode && !this.selectionGesture) {
+    if (!this._activePointerMode && !this._selectionGesture) {
       useEditorStore.getState().setHoveredObject(undefined);
     }
   }
 
-  private registerKeyActions(): void {
-    this.keyboard.registerAction(["1"], () => {
+  private _registerKeyActions(): void {
+    this._keyboard.registerAction(["1"], () => {
       useEditorStore.getState().setInteractionMode(InteractionMode.Play);
     });
-    this.keyboard.registerAction(["2"], () => {
+    this._keyboard.registerAction(["2"], () => {
       useEditorStore.getState().setInteractionMode(InteractionMode.Selection);
     });
-    this.keyboard.registerAction(["3"], () => {
+    this._keyboard.registerAction(["3"], () => {
       useEditorStore.getState().setInteractionMode(InteractionMode.Camera);
     });
-    this.keyboard.registerAction(["space", " "], () => {
+    this._keyboard.registerAction(["space", " "], () => {
       const state = useEditorStore.getState();
       state.setSimulationRunning(!state.isSimulationRunning);
     });
-    this.keyboard.registerAction(["q"], () => {
-      this.rotateHeldObjects(-InputConfig.keyboard.rotationStep);
+    this._keyboard.registerAction(["q"], () => {
+      this._rotateHeldObjects(-InputConfig.keyboard.rotationStep);
     });
-    this.keyboard.registerAction(["e"], () => {
-      this.rotateHeldObjects(InputConfig.keyboard.rotationStep);
+    this._keyboard.registerAction(["e"], () => {
+      this._rotateHeldObjects(InputConfig.keyboard.rotationStep);
     });
 
-    this.keyboard.registerAction(
+    this._keyboard.registerAction(
       ["-", "_"],
       (mods) => {
-        this.zoomFromKeyboard(-InputConfig.keyboard.zoomStep, mods);
+        this._zoomFromKeyboard(-InputConfig.keyboard.zoomStep, mods);
       },
       {
         repeat: true,
       },
     );
-    this.keyboard.registerAction(
+    this._keyboard.registerAction(
       ["+", "="],
       (mods) => {
-        this.zoomFromKeyboard(InputConfig.keyboard.zoomStep, mods);
+        this._zoomFromKeyboard(InputConfig.keyboard.zoomStep, mods);
       },
       {
         repeat: true,
       },
     );
 
-    this.keyboard.registerAction(["r"], () => {
+    this._keyboard.registerAction(["r"], () => {
       const state = useEditorStore.getState();
       state.setShowForceRadius(!state.showForceRadius);
     });
 
-    this.keyboard.registerAction(["f"], () => {
-      this.app.fitView();
+    this._keyboard.registerAction(["f"], () => {
+      this._app.fitView();
     });
 
-    this.keyboard.registerAction(["delete", "backspace"], () => {
-      this.app.commands.execute("deleteObject", {
+    this._keyboard.registerAction(["delete", "backspace"], () => {
+      this._app.commands.execute("deleteObject", {
         ids: Array.from(useEditorStore.getState().selectedIds),
       });
     });
-    this.keyboard.registerAction(["z"], (mods) => {
+    this._keyboard.registerAction(["z"], (mods) => {
       if (hasPrimaryModifier(mods)) {
         if (mods & KeyModifiers.Shift) {
-          this.app.commands.redo();
+          this._app.commands.redo();
         } else {
-          this.app.commands.undo();
+          this._app.commands.undo();
         }
       }
     });
   }
 
-  private isMultiSelectHeld(): boolean {
+  private _isMultiSelectHeld(): boolean {
     return this.isKeyPressed("control") || this.isKeyPressed("shift");
   }
 
-  private select(id: string): void {
+  private _select(id: string): void {
     useEditorStore.getState().select(id);
   }
 
-  private deselect(id: string): void {
+  private _deselect(id: string): void {
     useEditorStore.getState().deselect(id);
   }
 
-  private clearSelection(): void {
+  private _clearSelection(): void {
     useEditorStore.getState().clearSelection();
   }
 
-  private isSelected(id: string): boolean {
+  private _isSelected(id: string): boolean {
     return useEditorStore.getState().selectedIds.has(id);
   }
 
-  private getSelection(): Set<string> {
+  private _getSelection(): Set<string> {
     return useEditorStore.getState().selectedIds;
   }
 
-  private rotateHeldObjects(angle: number): void {
-    if (this.activePointerMode !== InteractionMode.Play) {
+  private _rotateHeldObjects(angle: number): void {
+    if (this._activePointerMode !== InteractionMode.Play) {
       return;
     }
 
-    this.app.engine.rotateDrag(angle);
+    this._app.engine.rotateDrag(angle);
   }
 
-  private zoomFromKeyboard(delta: number, mods: KeyModifiers): void {
+  private _zoomFromKeyboard(delta: number, mods: KeyModifiers): void {
     if (hasPrimaryModifier(mods)) {
       return;
     }
 
-    this.app.camera.setZoomAtViewportCenter(this.app.camera.getZoom() + delta);
+    this._app.camera.setZoomAtViewportCenter(this._app.camera.getZoom() + delta);
   }
 
-  private getInteractionMode(): InteractionMode {
+  private _getInteractionMode(): InteractionMode {
     return useEditorStore.getState().interactionMode;
   }
 
-  private screenToWorld(pos: Vector2): Vector2 {
-    return this.app.camera.screenToWorld(pos);
+  private _screenToWorld(pos: Vector2): Vector2 {
+    return this._app.camera.screenToWorld(pos);
   }
 
-  private setActivePointerMode(mode?: InteractionMode): void {
-    this.activePointerMode = mode;
+  private _setActivePointerMode(mode?: InteractionMode): void {
+    this._activePointerMode = mode;
     useEditorStore.getState().setActivePointerMode(mode);
   }
 
-  private updateHoveredObject(pos: Vector2): void {
-    const object = this.app.engine.getObjectFromPosition(pos);
+  private _updateHoveredObject(pos: Vector2): void {
+    const object = this._app.engine.getObjectFromPosition(pos);
     const hoveredObjectId = object ? object.id : undefined;
 
     useEditorStore.getState().setHoveredObject(hoveredObjectId);
   }
 
-  private startSelectionGesture(
+  private _startSelectionGesture(
     screenPosition: Vector2,
     worldPosition: Vector2,
     hitObjectId?: string,
   ): void {
-    this.selectionGesture = {
+    this._selectionGesture = {
       currentScreen: screenPosition.clone(),
       hitObjectId,
-      initialSelection: new Set(this.getSelection()),
-      isAdditive: this.isMultiSelectHeld(),
+      initialSelection: new Set(this._getSelection()),
+      isAdditive: this._isMultiSelectHeld(),
       isBoxActive: false,
       startScreen: screenPosition.clone(),
       startWorld: worldPosition.clone(),
     };
   }
 
-  private updateSelectionGesture(screenPosition: Vector2): void {
-    const gesture = this.selectionGesture;
+  private _updateSelectionGesture(screenPosition: Vector2): void {
+    const gesture = this._selectionGesture;
 
     if (!gesture) {
       return;
@@ -340,11 +340,11 @@ export class InputManager {
         InputConfig.selection.dragThresholdSquared
     ) {
       gesture.isBoxActive = true;
-      this.setActivePointerMode(InteractionMode.Selection);
+      this._setActivePointerMode(InteractionMode.Selection);
     }
 
     if (!gesture.isBoxActive) {
-      this.updateHoveredObject(this.screenToWorld(screenPosition));
+      this._updateHoveredObject(this._screenToWorld(screenPosition));
       return;
     }
 
@@ -353,57 +353,57 @@ export class InputManager {
       current: gesture.currentScreen.toObject(),
     });
 
-    this.applySelectionBox();
+    this._applySelectionBox();
   }
 
-  private endSelectionGesture(): void {
-    const gesture = this.selectionGesture;
+  private _endSelectionGesture(): void {
+    const gesture = this._selectionGesture;
 
     if (!gesture) {
       return;
     }
 
     if (!gesture.isBoxActive) {
-      this.applyClickSelection(gesture.hitObjectId);
+      this._applyClickSelection(gesture.hitObjectId);
     }
 
-    this.selectionGesture = undefined;
+    this._selectionGesture = undefined;
     useEditorStore.getState().setSelectionBox(undefined);
-    this.setActivePointerMode(undefined);
-    this.lastPointerPosition = undefined;
+    this._setActivePointerMode(undefined);
+    this._lastPointerPosition = undefined;
   }
 
-  private applyClickSelection(objectId?: string): void {
+  private _applyClickSelection(objectId?: string): void {
     if (!objectId) {
-      if (!this.isMultiSelectHeld()) {
-        this.clearSelection();
+      if (!this._isMultiSelectHeld()) {
+        this._clearSelection();
       }
 
       return;
     }
 
-    if (this.isMultiSelectHeld()) {
-      if (this.isSelected(objectId)) {
-        this.deselect(objectId);
+    if (this._isMultiSelectHeld()) {
+      if (this._isSelected(objectId)) {
+        this._deselect(objectId);
       } else {
-        this.select(objectId);
+        this._select(objectId);
       }
 
       return;
     }
 
-    this.clearSelection();
-    this.select(objectId);
+    this._clearSelection();
+    this._select(objectId);
   }
 
-  private applySelectionBox(): void {
-    const gesture = this.selectionGesture;
+  private _applySelectionBox(): void {
+    const gesture = this._selectionGesture;
 
     if (!gesture) {
       return;
     }
 
-    const currentWorld = this.screenToWorld(gesture.currentScreen);
+    const currentWorld = this._screenToWorld(gesture.currentScreen);
     const bounds = {
       minX: Math.min(gesture.startWorld.x, currentWorld.x),
       maxX: Math.max(gesture.startWorld.x, currentWorld.x),
@@ -414,7 +414,7 @@ export class InputManager {
       gesture.isAdditive ? gesture.initialSelection : [],
     );
 
-    for (const object of this.app.engine.getAllObjects()) {
+    for (const object of this._app.engine.getAllObjects()) {
       if (object.flags & SandboxObjectFlags.Hidden) {
         continue;
       }

@@ -14,28 +14,28 @@ export enum KeyModifiers {
 }
 
 export class KeyboardInputController {
-  private readonly pressedKeys = new Set<string>();
-  private readonly keyActions = new Map<string, KeyAction[]>();
+  private readonly _pressedKeys = new Set<string>();
+  private readonly _keyActions = new Map<string, KeyAction[]>();
 
-  private readonly handleKeyDown = (event: KeyboardEvent) => {
+  private readonly _handleKeyDown = (event: KeyboardEvent) => {
     this.keyDown(event);
   };
 
-  private readonly handleKeyUp = (event: KeyboardEvent) => {
+  private readonly _handleKeyUp = (event: KeyboardEvent) => {
     this.keyUp(event);
   };
 
   public init(): void {
-    window.addEventListener("keydown", this.handleKeyDown);
-    window.addEventListener("keyup", this.handleKeyUp);
+    window.addEventListener("keydown", this._handleKeyDown);
+    window.addEventListener("keyup", this._handleKeyUp);
   }
 
   public destroy(): void {
-    window.removeEventListener("keydown", this.handleKeyDown);
-    window.removeEventListener("keyup", this.handleKeyUp);
+    window.removeEventListener("keydown", this._handleKeyDown);
+    window.removeEventListener("keyup", this._handleKeyUp);
 
-    this.pressedKeys.clear();
-    this.keyActions.clear();
+    this._pressedKeys.clear();
+    this._keyActions.clear();
   }
 
   public registerAction(
@@ -50,25 +50,25 @@ export class KeyboardInputController {
         repeat: options.repeat ?? false,
       };
 
-      const actions = this.keyActions.get(normalizedKey);
+      const actions = this._keyActions.get(normalizedKey);
 
       if (actions) {
         actions.push(keyAction);
       } else {
-        this.keyActions.set(normalizedKey, [keyAction]);
+        this._keyActions.set(normalizedKey, [keyAction]);
       }
     }
   }
 
   public keyDown(event: KeyboardEvent): void {
-    if (this.isTypingTarget(event.target)) {
+    if (this._isTypingTarget(event.target)) {
       return;
     }
 
     const normalizedKey = event.key.toLowerCase();
-    const wasPressed = this.pressedKeys.has(normalizedKey);
-    this.pressedKeys.add(normalizedKey);
-    const actions = this.keyActions.get(normalizedKey);
+    const wasPressed = this._pressedKeys.has(normalizedKey);
+    this._pressedKeys.add(normalizedKey);
+    const actions = this._keyActions.get(normalizedKey);
 
     if (!actions) {
       return;
@@ -86,14 +86,14 @@ export class KeyboardInputController {
   }
 
   public keyUp(event: KeyboardEvent): void {
-    this.pressedKeys.delete(event.key.toLowerCase());
+    this._pressedKeys.delete(event.key.toLowerCase());
   }
 
   public isKeyPressed(key: string): boolean {
-    return this.pressedKeys.has(key.toLowerCase());
+    return this._pressedKeys.has(key.toLowerCase());
   }
 
-  private isTypingTarget(target: EventTarget | null): boolean {
+  private _isTypingTarget(target: EventTarget | null): boolean {
     if (!(target instanceof HTMLElement)) {
       return false;
     }

@@ -23,34 +23,34 @@ interface CommandHistoryEntry {
 }
 
 export class Commands implements ICommandBus {
-  private readonly history: CommandHistoryEntry[] = [];
-  private readonly log: CommandLogEntry[] = [];
-  private historyIndex = -1;
-  private nextCommandId = 1;
-  private nextLogId = 1;
+  private readonly _history: CommandHistoryEntry[] = [];
+  private readonly _log: CommandLogEntry[] = [];
+  private _historyIndex = -1;
+  private _nextCommandId = 1;
+  private _nextLogId = 1;
 
-  private readonly commandMap: CommandFactoryMap = {
+  private readonly _commandMap: CommandFactoryMap = {
     updateObjectProperties: (options) =>
-      new UpdateObjectPropertiesCommand(this.engine, options),
+      new UpdateObjectPropertiesCommand(this._engine, options),
     createObject: (options) =>
-      new CreateObjectCommand(this.engine, this.camera, options),
-    deleteObject: (options) => new DeleteObjectCommand(this.engine, options),
+      new CreateObjectCommand(this._engine, this._camera, options),
+    deleteObject: (options) => new DeleteObjectCommand(this._engine, options),
   };
 
   public constructor(
-    private readonly engine: SandboxEngine,
-    private readonly camera: Camera,
+    private readonly _engine: SandboxEngine,
+    private readonly _camera: Camera,
   ) {}
 
   public execute<T extends keyof ICommandMap>(
     type: T,
     options: ICommandMap[T],
   ): ICommandResult {
-    const factory = this.commandMap[type];
+    const factory = this._commandMap[type];
 
     const command = factory(options);
-    const commandId = this.nextCommandId++;
-    const result = this.runCommand(type, "execute", commandId, () =>
+    const commandId = this._nextCommandId++;
+    const result = this._runCommand(type, "execute", commandId, () =>
       command.execute(),
     );
 
@@ -58,23 +58,23 @@ export class Commands implements ICommandBus {
       return result;
     }
 
-    if (this.historyIndex < this.history.length - 1) {
-      this.history.splice(this.historyIndex + 1);
+    if (this._historyIndex < this._history.length - 1) {
+      this._history.splice(this._historyIndex + 1);
     }
 
-    this.history.push({
+    this._history.push({
       id: commandId,
       type,
       command,
     });
 
-    this.historyIndex++;
+    this._historyIndex++;
 
     return result;
   }
 
   public undo(): ICommandResult {
-    const entry = this.history[this.historyIndex];
+    const entry = this._history[this._historyIndex];
 
     if (!entry) {
       return {
@@ -83,7 +83,7 @@ export class Commands implements ICommandBus {
       };
     }
 
-    const result = this.runCommand(entry.type, "undo", entry.id, () =>
+    const result = this._runCommand(entry.type, "undo", entry.id, () =>
       entry.command.undo(),
     );
 
@@ -91,13 +91,13 @@ export class Commands implements ICommandBus {
       return result;
     }
 
-    this.historyIndex--;
+    this._historyIndex--;
 
     return result;
   }
 
   public redo(): ICommandResult {
-    const entry = this.history[this.historyIndex + 1];
+    const entry = this._history[this._historyIndex + 1];
 
     if (!entry) {
       return {
@@ -106,7 +106,7 @@ export class Commands implements ICommandBus {
       };
     }
 
-    const result = this.runCommand(entry.type, "redo", entry.id, () =>
+    const result = this._runCommand(entry.type, "redo", entry.id, () =>
       entry.command.redo(),
     );
 
@@ -114,16 +114,16 @@ export class Commands implements ICommandBus {
       return result;
     }
 
-    this.historyIndex++;
+    this._historyIndex++;
 
     return result;
   }
 
   public getLog(): CommandLogEntry[] {
-    return [...this.log];
+    return [...this._log];
   }
 
-  private runCommand(
+  private _runCommand(
     type: keyof ICommandMap,
     action: CommandAction,
     commandId: number,
@@ -140,19 +140,19 @@ export class Commands implements ICommandBus {
       };
     }
 
-    this.logCommand(type, action, commandId, result);
+    this._logCommand(type, action, commandId, result);
 
     return result;
   }
 
-  private logCommand(
+  private _logCommand(
     command: keyof ICommandMap,
     action: CommandAction,
     commandId: number,
     result: ICommandResult,
   ): void {
     const entry: CommandLogEntry = {
-      id: this.nextLogId++,
+      id: this._nextLogId++,
       commandId,
       command,
       action,
@@ -161,7 +161,7 @@ export class Commands implements ICommandBus {
       timestamp: Date.now(),
     };
 
-    this.log.push(entry);
+    this._log.push(entry);
 
     console.info(
       `[command:${entry.commandId}] ${entry.action} ${entry.command} ${entry.success ? "succeeded" : "failed"}`,

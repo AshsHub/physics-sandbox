@@ -17,7 +17,7 @@ export class Application implements IApplication {
   public readonly inputManager: InputManager;
   public readonly events = new EventBus();
 
-  private readonly unsubscribers: (() => void)[] = [];
+  private readonly _unsubscribers: (() => void)[] = [];
 
   public constructor() {
     this.camera = new Camera(undefined, (view) => {
@@ -36,9 +36,9 @@ export class Application implements IApplication {
   }
 
   public destroy(): void {
-    this.unsubscribers.forEach((unsubscribe) => unsubscribe());
+    this._unsubscribers.forEach((unsubscribe) => unsubscribe());
 
-    this.unsubscribers.length = 0;
+    this._unsubscribers.length = 0;
 
     this.inputManager.destroy();
     this.engine.destroy();
@@ -57,14 +57,14 @@ export class Application implements IApplication {
       useEditorStore.getState().setObjectCounts(staticCount, dynamicCount);
     };
 
-    this.unsubscribers.push(
+    this._unsubscribers.push(
       this.events.subscribe("sandboxObjectCreated", () => {
         updateCounts();
         useEditorStore.getState().bumpObjectRevision();
       }),
     );
 
-    this.unsubscribers.push(
+    this._unsubscribers.push(
       this.events.subscribe("sandboxObjectDestroyed", ({ id }) => {
         const editorStoreState = useEditorStore.getState();
 
@@ -77,7 +77,7 @@ export class Application implements IApplication {
       }),
     );
 
-    this.unsubscribers.push(
+    this._unsubscribers.push(
       this.events.subscribe("sandboxObjectChanged", () => {
         updateCounts();
         useEditorStore.getState().bumpObjectRevision();
@@ -94,32 +94,32 @@ export class Application implements IApplication {
     this.camera.fitBoundsFromCollection(visibleBounds);
   }
 
-  update(width: number, height: number) {
+  public update(width: number, height: number) {
     this.engine.update();
     this.engine.cullObjectsOutsideViewport(width, height);
   }
 
-  render(ctx: CanvasRenderingContext2D, width: number, height: number) {
+  public render(ctx: CanvasRenderingContext2D, width: number, height: number) {
     this.renderer.render(ctx, width, height);
   }
 
-  pointerDown(pos: Vector2, button: number) {
+  public pointerDown(pos: Vector2, button: number) {
     this.inputManager.pointerDown(pos, button);
   }
 
-  pointerMove(pos: Vector2) {
+  public pointerMove(pos: Vector2) {
     this.inputManager.pointerMove(pos);
   }
 
-  pointerWheel(deltaY: number, pos: Vector2) {
+  public pointerWheel(deltaY: number, pos: Vector2) {
     this.inputManager.pointerWheel(deltaY, pos);
   }
 
-  pointerUp() {
+  public pointerUp() {
     this.inputManager.pointerUp();
   }
 
-  pointerLeave() {
+  public pointerLeave() {
     this.inputManager.pointerLeave();
   }
 }

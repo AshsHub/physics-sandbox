@@ -11,17 +11,17 @@ export interface CreateObjectCommandOptions {
 }
 
 export class CreateObjectCommand implements ICommand {
-  private snapshot?: ISandboxObjectSnapshot;
+  private _snapshot?: ISandboxObjectSnapshot;
 
   public constructor(
-    private readonly engine: ISandboxEngine,
-    private readonly camera: Camera,
-    private readonly options: CreateObjectCommandOptions,
+    private readonly _engine: ISandboxEngine,
+    private readonly _camera: Camera,
+    private readonly _options: CreateObjectCommandOptions,
   ) {}
 
   public execute(): ICommandResult {
-    if (this.snapshot) {
-      this.engine.createObjectFromSnapshot(this.snapshot);
+    if (this._snapshot) {
+      this._engine.createObjectFromSnapshot(this._snapshot);
       return {
         success: true,
       };
@@ -29,12 +29,12 @@ export class CreateObjectCommand implements ICommand {
 
     // TODO: Find a better way to handle initial object creation
     // Possibly drag or stamp method
-    const object = this.engine.createObject(
-      this.options.position ??
-        this.camera.getViewportCenterPosition().subtract(0, 200),
-      this.options.type,
+    const object = this._engine.createObject(
+      this._options.position ??
+        this._camera.getViewportCenterPosition().subtract(0, 200),
+      this._options.type,
     );
-    const position = this.engine.getObjectPosition(object.id);
+    const position = this._engine.getObjectPosition(object.id);
 
     if (!position) {
       return {
@@ -43,7 +43,7 @@ export class CreateObjectCommand implements ICommand {
       };
     }
 
-    this.snapshot = {
+    this._snapshot = {
       id: object.id,
       name: object.name,
       type: object.type,
@@ -60,14 +60,14 @@ export class CreateObjectCommand implements ICommand {
   }
 
   public undo(): ICommandResult {
-    if (!this.snapshot) {
+    if (!this._snapshot) {
       return {
         success: false,
         message: "Cannot undo object creation before the object exists.",
       };
     }
 
-    this.engine.destroyObject(this.snapshot.id);
+    this._engine.destroyObject(this._snapshot.id);
 
     return {
       success: true,

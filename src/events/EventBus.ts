@@ -4,7 +4,7 @@ import type { IEventMap } from "./EventMap";
 type EventListener<T> = (payload: T) => void;
 
 export class EventBus implements IEventBus {
-  private readonly listeners = new Map<
+  private readonly _listeners = new Map<
     keyof IEventMap,
     Set<EventListener<unknown>>
   >();
@@ -13,7 +13,7 @@ export class EventBus implements IEventBus {
     event: K,
     payload: IEventMap[K],
   ): void {
-    const listeners = this.listeners.get(event);
+    const listeners = this._listeners.get(event);
 
     if (!listeners) {
       return;
@@ -28,11 +28,11 @@ export class EventBus implements IEventBus {
     event: K,
     listener: EventListener<IEventMap[K]>,
   ): () => void {
-    if (!this.listeners.has(event)) {
-      this.listeners.set(event, new Set());
+    if (!this._listeners.has(event)) {
+      this._listeners.set(event, new Set());
     }
 
-    const listeners = this.listeners.get(event)!;
+    const listeners = this._listeners.get(event)!;
 
     listeners.add(listener as EventListener<unknown>);
 

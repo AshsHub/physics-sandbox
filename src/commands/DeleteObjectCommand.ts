@@ -7,32 +7,32 @@ export interface DeleteObjectCommandOptions {
 }
 
 export class DeleteObjectCommand implements ICommand {
-  private snapshots: ISandboxObjectSnapshot[] = [];
+  private _snapshots: ISandboxObjectSnapshot[] = [];
 
   public constructor(
-    private readonly engine: ISandboxEngine,
-    private readonly options: DeleteObjectCommandOptions,
+    private readonly _engine: ISandboxEngine,
+    private readonly _options: DeleteObjectCommandOptions,
   ) {}
 
   public execute(): ICommandResult {
-    if (this.snapshots.length === 0) {
-      for (const id of this.options.ids) {
-        const snapshot = this.engine.createSnapshot(id);
+    if (this._snapshots.length === 0) {
+      for (const id of this._options.ids) {
+        const snapshot = this._engine.createSnapshot(id);
 
         if (snapshot) {
-          this.snapshots.push(snapshot);
+          this._snapshots.push(snapshot);
         }
       }
     }
 
-    if (this.snapshots.length === 0) {
+    if (this._snapshots.length === 0) {
       return {
         success: false,
         message: "No matching objects were found to delete.",
       };
     }
 
-    this.engine.destroyObject(this.snapshots.map((snapshot) => snapshot.id));
+    this._engine.destroyObject(this._snapshots.map((snapshot) => snapshot.id));
 
     return {
       success: true,
@@ -40,15 +40,15 @@ export class DeleteObjectCommand implements ICommand {
   }
 
   public undo(): ICommandResult {
-    if (this.snapshots.length === 0) {
+    if (this._snapshots.length === 0) {
       return {
         success: false,
         message: "Cannot undo deletion without object snapshots.",
       };
     }
 
-    for (const snapshot of this.snapshots) {
-      this.engine.createObjectFromSnapshot(snapshot);
+    for (const snapshot of this._snapshots) {
+      this._engine.createObjectFromSnapshot(snapshot);
     }
 
     return {

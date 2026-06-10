@@ -9,12 +9,12 @@ import { SandboxObjectFlags } from "../sandbox/SandboxObjectType";
 import { useEditorStore } from "../store/editorStore";
 
 export class Renderer {
-  constructor(private engine: ISandboxEngine) {}
+  public constructor(private _engine: ISandboxEngine) {}
 
-  render(ctx: CanvasRenderingContext2D, width: number, height: number) {
+  public render(ctx: CanvasRenderingContext2D, width: number, height: number) {
     ctx.clearRect(0, 0, width, height);
 
-    const objects = this.engine.getAllObjects();
+    const objects = this._engine.getAllObjects();
     const editorState = useEditorStore.getState();
     const cameraOffset = editorState.cameraOffset;
     const cameraZoom = editorState.cameraZoom;
@@ -25,18 +25,18 @@ export class Renderer {
 
     if (editorState.showForceRadius) {
       for (const object of objects) {
-        this.drawForceRadius(ctx, object, cameraZoom);
+        this._drawForceRadius(ctx, object, cameraZoom);
       }
     }
 
     for (const object of objects) {
-      this.drawSandboxObject(ctx, object);
+      this._drawSandboxObject(ctx, object);
     }
 
     ctx.restore();
   }
 
-  private drawSandboxObject(
+  private _drawSandboxObject(
     ctx: CanvasRenderingContext2D,
     entity: ISandboxObject,
   ) {
@@ -49,7 +49,7 @@ export class Renderer {
     ctx.globalAlpha = metadata.opacity;
     ctx.fillStyle = metadata.color;
 
-    this.traceBodyPath(ctx, entity.body);
+    this._traceBodyPath(ctx, entity.body);
     ctx.fill();
 
     if (
@@ -59,9 +59,9 @@ export class Renderer {
       const visibleBorderWidth = metadata.borderWidth;
 
       ctx.save();
-      this.traceBodyPath(ctx, entity.body);
+      this._traceBodyPath(ctx, entity.body);
       ctx.clip();
-      this.traceBodyPath(ctx, entity.body);
+      this._traceBodyPath(ctx, entity.body);
       ctx.strokeStyle = selectedIds.has(entity.id)
         ? "orange"
         : metadata.borderColor;
@@ -75,7 +75,7 @@ export class Renderer {
     ctx.restore();
   }
 
-  private drawForceRadius(
+  private _drawForceRadius(
     ctx: CanvasRenderingContext2D,
     entity: ISandboxObject,
     cameraZoom: number,
@@ -114,7 +114,7 @@ export class Renderer {
     ctx.restore();
   }
 
-  private traceBodyPath(ctx: CanvasRenderingContext2D, body: Matter.Body) {
+  private _traceBodyPath(ctx: CanvasRenderingContext2D, body: Matter.Body) {
     const vertices = body.vertices;
 
     ctx.beginPath();

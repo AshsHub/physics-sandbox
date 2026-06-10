@@ -22,21 +22,21 @@ import {
 import { useEditorStore } from "../store/editorStore";
 
 export class SandboxEngine implements ISandboxEngine {
-  private readonly physics = new PhysicsWorld();
+  private readonly _physics = new PhysicsWorld();
 
-  private readonly objects = new SandboxObjectManager(this.physics);
+  private readonly _objects = new SandboxObjectManager(this._physics);
 
-  private readonly events: IEventBus;
+  private readonly _events: IEventBus;
 
   public constructor(
     events: IEventBus,
-    private readonly camera: Camera,
+    private readonly _camera: Camera,
   ) {
-    this.events = events;
+    this._events = events;
   }
 
   public init(): void {
-    this.physics.init();
+    this._physics.init();
 
     for (const object of InitialSceneConfig.objects) {
       this.createObject(new Vector2(object.position), object.type);
@@ -46,23 +46,23 @@ export class SandboxEngine implements ISandboxEngine {
   public destroy(): void {
     this.destroyAllObjects();
 
-    this.physics.destroy();
+    this._physics.destroy();
   }
 
   public update(): void {
-    this.physics.update(this.objects.getAll());
+    this._physics.update(this._objects.getAll());
   }
 
   public createObject(
     position: Vector2,
     type: SandboxObjectType = SandboxObjectType.Box,
   ): ISandboxObject {
-    const object = this.objects.create({
+    const object = this._objects.create({
       position,
       type,
     });
 
-    this.events.emit("sandboxObjectCreated", {
+    this._events.emit("sandboxObjectCreated", {
       id: object.id,
     });
 
@@ -70,15 +70,15 @@ export class SandboxEngine implements ISandboxEngine {
   }
 
   public createSnapshot(id: string): ISandboxObjectSnapshot | undefined {
-    return this.objects.createSnapshot(id);
+    return this._objects.createSnapshot(id);
   }
 
   public createObjectFromSnapshot(
     snapshot: ISandboxObjectSnapshot,
   ): ISandboxObject {
-    const object = this.objects.createObjectFromSnapshot(snapshot);
+    const object = this._objects.createObjectFromSnapshot(snapshot);
 
-    this.events.emit("sandboxObjectCreated", {
+    this._events.emit("sandboxObjectCreated", {
       id: object.id,
     });
 
@@ -89,21 +89,21 @@ export class SandboxEngine implements ISandboxEngine {
     const ids = Array.isArray(id) ? id : [id];
 
     for (const objectId of ids) {
-      this.objects.destroy(objectId);
+      this._objects.destroy(objectId);
 
-      this.events.emit("sandboxObjectDestroyed", {
+      this._events.emit("sandboxObjectDestroyed", {
         id: objectId,
       });
     }
   }
 
   public destroyAllObjects(): void {
-    const ids = this.objects.getAll().map((o) => o.id);
+    const ids = this._objects.getAll().map((o) => o.id);
 
-    this.objects.destroyAll();
+    this._objects.destroyAll();
 
     for (const id of ids) {
-      this.events.emit("sandboxObjectDestroyed", {
+      this._events.emit("sandboxObjectDestroyed", {
         id,
       });
     }
@@ -119,14 +119,14 @@ export class SandboxEngine implements ISandboxEngine {
     property: T,
     value: ISandboxObject[T],
   ): void {
-    const object = this.objects.get(id);
+    const object = this._objects.get(id);
 
     if (!object) {
       return;
     }
 
     if (property === "metadata") {
-      this.physics.applyMetadataToBody(
+      this._physics.applyMetadataToBody(
         object.body,
         object.metadata,
         value as ISandboxObject["metadata"],
@@ -134,7 +134,7 @@ export class SandboxEngine implements ISandboxEngine {
     }
 
     if (property === "flags") {
-      this.physics.applyFlagsToBody(
+      this._physics.applyFlagsToBody(
         object.body,
         value as ISandboxObject["flags"],
       );
@@ -142,21 +142,21 @@ export class SandboxEngine implements ISandboxEngine {
 
     object[property] = value;
 
-    this.events.emit("sandboxObjectChanged", {
+    this._events.emit("sandboxObjectChanged", {
       id,
     });
   }
 
   public getObject(id: string): ISandboxObject | undefined {
-    return this.objects.get(id);
+    return this._objects.get(id);
   }
 
   public getAllObjects(): ISandboxObject[] {
-    return this.objects.getAll();
+    return this._objects.getAll();
   }
 
   public getObjectPosition(id: string): Vector2 | undefined {
-    const object = this.objects.get(id);
+    const object = this._objects.get(id);
 
     if (!object) {
       return;
@@ -166,35 +166,35 @@ export class SandboxEngine implements ISandboxEngine {
   }
 
   public getObjectFromPosition(vector: Vector2): ISandboxObject | undefined {
-    const body = this.physics.pickBody(vector.x, vector.y);
+    const body = this._physics.pickBody(vector.x, vector.y);
 
     if (!body) {
       return;
     }
 
-    return this.objects.getByBody(body);
+    return this._objects.getByBody(body);
   }
 
   public startDrag(ids: string[], pos: Vector2): void {
     const bodies = ids
-      .map((id) => this.objects.get(id))
+      .map((id) => this._objects.get(id))
       .filter((object): object is ISandboxObject => object !== undefined)
       .filter((object) => (object.flags & SandboxObjectFlags.Locked) === 0)
       .map((object) => object.body);
 
-    this.physics.startDrag(bodies, pos);
+    this._physics.startDrag(bodies, pos);
   }
 
   public updateDrag(pos: Vector2): void {
-    this.physics.updateDrag(pos);
+    this._physics.updateDrag(pos);
   }
 
   public rotateDrag(angle: number): void {
-    this.physics.rotateDragged(angle);
+    this._physics.rotateDragged(angle);
   }
 
   public endDrag(): void {
-    this.physics.endDrag();
+    this._physics.endDrag();
   }
 
   public cullObjectsOutsideViewport(width: number, height: number): void {
@@ -203,8 +203,8 @@ export class SandboxEngine implements ISandboxEngine {
     }
 
     const margin = CameraConfig.culling.viewportMargin;
-    const bounds = this.camera.getViewportBounds(margin);
-    const idsToCull = this.objects
+    const bounds = this._camera.getViewportBounds(margin);
+    const idsToCull = this._objects
       .getAll()
       .filter(
         (object) =>

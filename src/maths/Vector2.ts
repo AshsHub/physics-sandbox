@@ -18,10 +18,10 @@ export class Vector2 {
   public x: number;
   public y: number;
 
-  constructor();
-  constructor(x: number, y: number);
-  constructor(vector: VectorLike);
-  constructor(xOrVector: number | VectorLike = 0, y: number = 0) {
+  public constructor();
+  public constructor(x: number, y: number);
+  public constructor(vector: VectorLike);
+  public constructor(xOrVector: number | VectorLike = 0, y: number = 0) {
     if (typeof xOrVector === "number") {
       this.x = xOrVector;
       this.y = y;
@@ -35,23 +35,23 @@ export class Vector2 {
   // Creation
   // -------------------------------------------------------------------------
 
-  static zero(): Vector2 {
+  public static zero(): Vector2 {
     return new Vector2(0, 0);
   }
 
-  static one(): Vector2 {
+  public static one(): Vector2 {
     return new Vector2(1, 1);
   }
 
-  static from(vector: VectorLike): Vector2 {
+  public static from(vector: VectorLike): Vector2 {
     return new Vector2(vector);
   }
 
-  clone(): Vector2 {
+  public clone(): Vector2 {
     return new Vector2(this.x, this.y);
   }
 
-  copy(): Vector2 {
+  public copy(): Vector2 {
     return this.clone();
   }
 
@@ -59,9 +59,9 @@ export class Vector2 {
   // Position
   // -------------------------------------------------------------------------
 
-  set(x: number, y: number): this;
-  set(vector: VectorLike): this;
-  set(xOrVector: number | VectorLike, y?: number): this {
+  public set(x: number, y: number): this;
+  public set(vector: VectorLike): this;
+  public set(xOrVector: number | VectorLike, y?: number): this {
     if (typeof xOrVector === "number") {
       this.x = xOrVector;
       this.y = y ?? this.y;
@@ -73,12 +73,12 @@ export class Vector2 {
     return this;
   }
 
-  setX(x: number): this {
+  public setX(x: number): this {
     this.x = x;
     return this;
   }
 
-  setY(y: number): this {
+  public setY(y: number): this {
     this.y = y;
     return this;
   }
@@ -87,9 +87,9 @@ export class Vector2 {
   // Math
   // -------------------------------------------------------------------------
 
-  add(x: number, y: number): this;
-  add(vector: VectorLike): this;
-  add(xOrVector: number | VectorLike, y?: number): this {
+  public add(x: number, y: number): this;
+  public add(vector: VectorLike): this;
+  public add(xOrVector: number | VectorLike, y?: number): this {
     if (typeof xOrVector === "number") {
       this.x += xOrVector;
       this.y += y ?? 0;
@@ -101,9 +101,9 @@ export class Vector2 {
     return this;
   }
 
-  subtract(x: number, y: number): this;
-  subtract(vector: VectorLike): this;
-  subtract(xOrVector: number | VectorLike, y?: number): this {
+  public subtract(x: number, y: number): this;
+  public subtract(vector: VectorLike): this;
+  public subtract(xOrVector: number | VectorLike, y?: number): this {
     if (typeof xOrVector === "number") {
       this.x -= xOrVector;
       this.y -= y ?? 0;
@@ -115,9 +115,9 @@ export class Vector2 {
     return this;
   }
 
-  multiply(value: number): this;
-  multiply(vector: VectorLike): this;
-  multiply(valueOrVector: number | VectorLike): this {
+  public multiply(value: number): this;
+  public multiply(vector: VectorLike): this;
+  public multiply(valueOrVector: number | VectorLike): this {
     if (typeof valueOrVector === "number") {
       this.x *= valueOrVector;
       this.y *= valueOrVector;
@@ -129,9 +129,9 @@ export class Vector2 {
     return this;
   }
 
-  divide(value: number): this;
-  divide(vector: VectorLike): this;
-  divide(valueOrVector: number | VectorLike): this {
+  public divide(value: number): this;
+  public divide(vector: VectorLike): this;
+  public divide(valueOrVector: number | VectorLike): this {
     if (typeof valueOrVector === "number") {
       this.x /= valueOrVector;
       this.y /= valueOrVector;
@@ -143,7 +143,7 @@ export class Vector2 {
     return this;
   }
 
-  negate(): this {
+  public negate(): this {
     this.x = -this.x;
     this.y = -this.y;
     return this;
@@ -153,9 +153,9 @@ export class Vector2 {
   // Distance
   // -------------------------------------------------------------------------
 
-  distanceTo(x: number, y: number): number;
-  distanceTo(vector: VectorLike): number;
-  distanceTo(xOrVector: number | VectorLike, y?: number): number {
+  public distanceTo(x: number, y: number): number;
+  public distanceTo(vector: VectorLike): number;
+  public distanceTo(xOrVector: number | VectorLike, y?: number): number {
     const targetX = typeof xOrVector === "number" ? xOrVector : xOrVector.x;
 
     const targetY = typeof xOrVector === "number" ? (y ?? 0) : xOrVector.y;
@@ -166,9 +166,9 @@ export class Vector2 {
     return Math.sqrt(dx * dx + dy * dy);
   }
 
-  distanceSquaredTo(x: number, y: number): number;
-  distanceSquaredTo(vector: VectorLike): number;
-  distanceSquaredTo(xOrVector: number | VectorLike, y?: number): number {
+  public distanceSquaredTo(x: number, y: number): number;
+  public distanceSquaredTo(vector: VectorLike): number;
+  public distanceSquaredTo(xOrVector: number | VectorLike, y?: number): number {
     const targetX = typeof xOrVector === "number" ? xOrVector : xOrVector.x;
 
     const targetY = typeof xOrVector === "number" ? (y ?? 0) : xOrVector.y;
@@ -179,14 +179,14 @@ export class Vector2 {
     return dx * dx + dy * dy;
   }
 
-  static distance(a: VectorLike, b: VectorLike): number {
+  public static distance(a: VectorLike, b: VectorLike): number {
     const dx = b.x - a.x;
     const dy = b.y - a.y;
 
     return Math.sqrt(dx * dx + dy * dy);
   }
 
-  static distanceSquared(a: VectorLike, b: VectorLike): number {
+  public static distanceSquared(a: VectorLike, b: VectorLike): number {
     const dx = b.x - a.x;
     const dy = b.y - a.y;
 
@@ -197,15 +197,15 @@ export class Vector2 {
   // Magnitude
   // -------------------------------------------------------------------------
 
-  length(): number {
+  public length(): number {
     return Math.sqrt(this.x * this.x + this.y * this.y);
   }
 
-  lengthSquared(): number {
+  public lengthSquared(): number {
     return this.x * this.x + this.y * this.y;
   }
 
-  normalize(): this {
+  public normalize(): this {
     const len = this.length();
 
     if (len !== 0) {
@@ -220,12 +220,12 @@ export class Vector2 {
   // Products
   // -------------------------------------------------------------------------
 
-  dot(vector: VectorLike): number {
+  public dot(vector: VectorLike): number {
     return this.x * vector.x + this.y * vector.y;
   }
 
   // 2D cross product magnitude
-  cross(vector: VectorLike): number {
+  public cross(vector: VectorLike): number {
     return this.x * vector.y - this.y * vector.x;
   }
 
@@ -233,53 +233,53 @@ export class Vector2 {
   // Utility
   // -------------------------------------------------------------------------
 
-  equals(vector: VectorLike): boolean {
+  public equals(vector: VectorLike): boolean {
     return this.x === vector.x && this.y === vector.y;
   }
 
-  lerp(target: VectorLike, alpha: number): this {
+  public lerp(target: VectorLike, alpha: number): this {
     this.x += (target.x - this.x) * alpha;
     this.y += (target.y - this.y) * alpha;
 
     return this;
   }
 
-  floor(): this {
+  public floor(): this {
     this.x = Math.floor(this.x);
     this.y = Math.floor(this.y);
     return this;
   }
 
-  ceil(): this {
+  public ceil(): this {
     this.x = Math.ceil(this.x);
     this.y = Math.ceil(this.y);
     return this;
   }
 
-  round(): this {
+  public round(): this {
     this.x = Math.round(this.x);
     this.y = Math.round(this.y);
     return this;
   }
 
-  clear(): this {
+  public clear(): this {
     this.x = 0;
     this.y = 0;
     return this;
   }
 
-  toObject(): VectorLike {
+  public toObject(): VectorLike {
     return {
       x: this.x,
       y: this.y,
     };
   }
 
-  toArray(): [number, number] {
+  public toArray(): [number, number] {
     return [this.x, this.y];
   }
 
-  toString(): string {
+  public toString(): string {
     return `Vector2(${this.x}, ${this.y})`;
   }
 }

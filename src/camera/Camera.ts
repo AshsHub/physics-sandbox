@@ -35,23 +35,23 @@ export interface ViewportWorldBounds {
 export type CameraChangeHandler = (view: CameraView) => void;
 
 export class Camera {
-  private readonly offset = Vector2.zero();
-  private zoom: number = CameraConfig.zoom.initial;
-  private viewportSize: ViewportSize = {
+  private readonly _offset = Vector2.zero();
+  private _zoom: number = CameraConfig.zoom.initial;
+  private _viewportSize: ViewportSize = {
     width: 0,
     height: 0,
   };
 
   public constructor(
     initialView?: Partial<CameraView>,
-    private readonly onChange?: CameraChangeHandler,
+    private readonly _onChange?: CameraChangeHandler,
   ) {
     if (initialView?.offset) {
-      this.offset.set(initialView.offset);
+      this._offset.set(initialView.offset);
     }
 
     if (initialView?.zoom !== undefined) {
-      this.zoom = Maths.clamp(
+      this._zoom = Maths.clamp(
         initialView.zoom,
         CameraConfig.zoom.min,
         CameraConfig.zoom.max,
@@ -59,67 +59,67 @@ export class Camera {
     }
 
     if (initialView?.viewportSize) {
-      this.viewportSize = {
+      this._viewportSize = {
         ...initialView.viewportSize,
       };
     }
   }
 
   public getOffset(): Vector2 {
-    return this.offset.clone();
+    return this._offset.clone();
   }
 
   public getZoom(): number {
-    return this.zoom;
+    return this._zoom;
   }
 
   public getViewportSize(): ViewportSize {
     return {
-      ...this.viewportSize,
+      ...this._viewportSize,
     };
   }
 
   public pan(delta: VectorLike): void {
-    this.offset.add(delta);
-    this.emitChange();
+    this._offset.add(delta);
+    this._emitChange();
   }
 
   public zoomAt(screenPosition: VectorLike, zoomFactor: number): void {
     const nextZoom = Maths.clamp(
-      this.zoom * zoomFactor,
+      this._zoom * zoomFactor,
       CameraConfig.zoom.min,
       CameraConfig.zoom.max,
     );
 
-    if (nextZoom === this.zoom) {
+    if (nextZoom === this._zoom) {
       return;
     }
 
     const worldPosition = this.screenToWorld(screenPosition);
 
-    this.offset.set(
+    this._offset.set(
       screenPosition.x - worldPosition.x * nextZoom,
       screenPosition.y - worldPosition.y * nextZoom,
     );
-    this.zoom = nextZoom;
-    this.emitChange();
+    this._zoom = nextZoom;
+    this._emitChange();
   }
 
   public setView(offset: VectorLike, zoom: number): void {
-    this.offset.set(offset);
-    this.zoom = Maths.clamp(zoom, CameraConfig.zoom.min, CameraConfig.zoom.max);
-    this.emitChange();
+    this._offset.set(offset);
+    this._zoom = Maths.clamp(zoom, CameraConfig.zoom.min, CameraConfig.zoom.max);
+    this._emitChange();
   }
 
   public setZoomAtViewportCenter(zoom: number): void {
-    if (this.viewportSize.width <= 0 || this.viewportSize.height <= 0) {
-      this.setView(this.offset, zoom);
+    if (this._viewportSize.width <= 0 || this._viewportSize.height <= 0) {
+      this.setView(this._offset, zoom);
       return;
     }
 
     const screenCenter = {
-      x: this.viewportSize.width / 2,
-      y: this.viewportSize.height / 2,
+      x: this._viewportSize.width / 2,
+      y: this._viewportSize.height / 2,
     };
     const worldCenter = this.screenToWorld(screenCenter);
     const nextZoom = Maths.clamp(
@@ -139,41 +139,41 @@ export class Camera {
 
   public setViewportSize(size: ViewportSize): void {
     if (
-      this.viewportSize.width === size.width &&
-      this.viewportSize.height === size.height
+      this._viewportSize.width === size.width &&
+      this._viewportSize.height === size.height
     ) {
       return;
     }
 
-    this.viewportSize = {
+    this._viewportSize = {
       ...size,
     };
-    this.emitChange();
+    this._emitChange();
   }
 
   public screenToWorld(screenPosition: VectorLike): Vector2 {
     return new Vector2(
-      (screenPosition.x - this.offset.x) / this.zoom,
-      (screenPosition.y - this.offset.y) / this.zoom,
+      (screenPosition.x - this._offset.x) / this._zoom,
+      (screenPosition.y - this._offset.y) / this._zoom,
     );
   }
 
   public getViewportCenterPosition(): Vector2 {
-    if (this.viewportSize.width <= 0 || this.viewportSize.height <= 0) {
+    if (this._viewportSize.width <= 0 || this._viewportSize.height <= 0) {
       return Vector2.zero();
     }
 
     return this.screenToWorld({
-      x: this.viewportSize.width / 2,
-      y: this.viewportSize.height / 2,
+      x: this._viewportSize.width / 2,
+      y: this._viewportSize.height / 2,
     });
   }
 
   public getViewportBounds(margin = 0): ViewportWorldBounds {
     const topLeft = this.screenToWorld({ x: 0, y: 0 });
     const bottomRight = this.screenToWorld({
-      x: this.viewportSize.width,
-      y: this.viewportSize.height,
+      x: this._viewportSize.width,
+      y: this._viewportSize.height,
     });
 
     return {
@@ -189,7 +189,7 @@ export class Camera {
     padding: number = CameraConfig.fitView.padding,
     maxZoom: number = CameraConfig.fitView.maxZoom,
   ): void {
-    if (this.viewportSize.width <= 0 || this.viewportSize.height <= 0) {
+    if (this._viewportSize.width <= 0 || this._viewportSize.height <= 0) {
       this.setView(Vector2.zero(), CameraConfig.zoom.initial);
       return;
     }
@@ -197,8 +197,8 @@ export class Camera {
     const sceneWidth = Math.max(1, bounds.maxX - bounds.minX);
     const sceneHeight = Math.max(1, bounds.maxY - bounds.minY);
     const zoom = Math.min(
-      (this.viewportSize.width - padding * 2) / sceneWidth,
-      (this.viewportSize.height - padding * 2) / sceneHeight,
+      (this._viewportSize.width - padding * 2) / sceneWidth,
+      (this._viewportSize.height - padding * 2) / sceneHeight,
       maxZoom,
     );
     const nextZoom =
@@ -210,8 +210,8 @@ export class Camera {
 
     this.setView(
       new Vector2(
-        this.viewportSize.width / 2 - sceneCenter.x * nextZoom,
-        this.viewportSize.height / 2 - sceneCenter.y * nextZoom,
+        this._viewportSize.width / 2 - sceneCenter.x * nextZoom,
+        this._viewportSize.height / 2 - sceneCenter.y * nextZoom,
       ),
       nextZoom,
     );
@@ -226,8 +226,8 @@ export class Camera {
 
     if (
       bounds.length === 0 ||
-      this.viewportSize.width <= 0 ||
-      this.viewportSize.height <= 0
+      this._viewportSize.width <= 0 ||
+      this._viewportSize.height <= 0
     ) {
       this.setView(Vector2.zero(), CameraConfig.zoom.initial);
       return;
@@ -251,10 +251,10 @@ export class Camera {
     this.fitBounds(sceneBounds, padding, maxZoom);
   }
 
-  private emitChange(): void {
-    this.onChange?.({
-      offset: this.offset.clone(),
-      zoom: this.zoom,
+  private _emitChange(): void {
+    this._onChange?.({
+      offset: this._offset.clone(),
+      zoom: this._zoom,
       viewportSize: this.getViewportSize(),
     });
   }

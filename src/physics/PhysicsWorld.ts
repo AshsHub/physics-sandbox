@@ -29,10 +29,10 @@ export class PhysicsWorld {
   private _engine?: Matter.Engine;
   private _world?: Matter.World;
 
-  private readonly draggedBodies: IDraggedBody[] = [];
-  private readonly moveToPosition = new Vector2();
-  private lastGravityY: number = 0;
-  private lastWindForce: number = SimulationConfig.wind.defaultWindForce;
+  private readonly _draggedBodies: IDraggedBody[] = [];
+  private readonly _moveToPosition = new Vector2();
+  private _lastGravityY: number = 0;
+  private _lastWindForce: number = SimulationConfig.wind.defaultWindForce;
 
   public init(): void {
     this._engine = Matter.Engine.create();
@@ -40,7 +40,7 @@ export class PhysicsWorld {
   }
 
   public destroy(): void {
-    this.draggedBodies.length = 0;
+    this._draggedBodies.length = 0;
 
     if (this._world) {
       Matter.World.clear(this._world, false);
@@ -232,10 +232,10 @@ export class PhysicsWorld {
   public startDrag(bodies: Matter.Body[], position: Vector2): void {
     this.endDrag();
 
-    this.moveToPosition.set(position);
+    this._moveToPosition.set(position);
 
     for (const body of bodies) {
-      this.draggedBodies.push({
+      this._draggedBodies.push({
         body,
         mode: body.isStatic ? "exact" : "soft",
         offset: new Vector2(
@@ -247,11 +247,11 @@ export class PhysicsWorld {
   }
 
   public updateDrag(position: Vector2): void {
-    this.moveToPosition.set(position);
+    this._moveToPosition.set(position);
   }
 
   public rotateDragged(angle: number): void {
-    for (const drag of this.draggedBodies) {
+    for (const drag of this._draggedBodies) {
       Matter.Body.rotate(drag.body, angle);
 
       if (drag.mode === "exact") {
@@ -265,7 +265,7 @@ export class PhysicsWorld {
   }
 
   public endDrag(): void {
-    this.draggedBodies.length = 0;
+    this._draggedBodies.length = 0;
   }
 
   public update(objects: ISandboxObject[] = []): void {
@@ -285,31 +285,31 @@ export class PhysicsWorld {
       getGravityMultiplier(activeGravitySimulation) *
       (isGravityReversed ? -1 : 1);
 
-    if (gravity !== this.lastGravityY || windForce !== this.lastWindForce) {
-      this.wakeDynamicBodies();
-      this.lastGravityY = gravity;
-      this.lastWindForce = windForce;
+    if (gravity !== this._lastGravityY || windForce !== this._lastWindForce) {
+      this._wakeDynamicBodies();
+      this._lastGravityY = gravity;
+      this._lastWindForce = windForce;
     }
 
     this._engine.gravity.y = gravity;
     this._engine.gravity.x = 0;
 
     if (isSimulationRunning && windForce !== 0) {
-      this.applyWind(windForce);
+      this._applyWind(windForce);
     }
 
     if (isSimulationRunning) {
-      this.applyRadialForces(objects);
+      this._applyRadialForces(objects);
     }
 
-    if (this.draggedBodies.length > 0) {
+    if (this._draggedBodies.length > 0) {
       const strength = PhysicsConfig.dragging.dynamicFollowStrength;
 
-      for (const drag of this.draggedBodies) {
+      for (const drag of this._draggedBodies) {
         if (drag.mode === "exact") {
           Matter.Body.setPosition(drag.body, {
-            x: this.moveToPosition.x + drag.offset.x,
-            y: this.moveToPosition.y + drag.offset.y,
+            x: this._moveToPosition.x + drag.offset.x,
+            y: this._moveToPosition.y + drag.offset.y,
           });
           Matter.Body.setVelocity(drag.body, {
             x: 0,
@@ -319,9 +319,9 @@ export class PhysicsWorld {
           continue;
         }
 
-        const dx = this.moveToPosition.x - drag.body.position.x;
+        const dx = this._moveToPosition.x - drag.body.position.x;
 
-        const dy = this.moveToPosition.y - drag.body.position.y;
+        const dy = this._moveToPosition.y - drag.body.position.y;
 
         Matter.Body.setVelocity(drag.body, {
           x: dx * strength,
@@ -330,7 +330,7 @@ export class PhysicsWorld {
       }
     }
 
-    if (isSimulationRunning || this.draggedBodies.length > 0) {
+    if (isSimulationRunning || this._draggedBodies.length > 0) {
       Matter.Engine.update(
         this._engine,
         PhysicsConfig.simulation.fixedTimeStepMs,
@@ -338,7 +338,7 @@ export class PhysicsWorld {
     }
   }
 
-  private applyWind(force: number): void {
+  private _applyWind(force: number): void {
     if (!this._world) {
       return;
     }
@@ -357,7 +357,7 @@ export class PhysicsWorld {
     }
   }
 
-  private applyRadialForces(objects: ISandboxObject[]): void {
+  private _applyRadialForces(objects: ISandboxObject[]): void {
     const forceSources = objects.filter(
       (object) =>
         (object.flags & SandboxObjectFlags.Hidden) === 0 &&
@@ -410,7 +410,7 @@ export class PhysicsWorld {
     }
   }
 
-  private wakeDynamicBodies(): void {
+  private _wakeDynamicBodies(): void {
     if (!this._world) {
       return;
     }
