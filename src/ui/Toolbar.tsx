@@ -1,10 +1,6 @@
 import { InteractionMode } from "../input/InteractionMode";
 import { useEditorStore } from "../store/editorStore";
 
-export interface ToolbarProps {
-  onFitView: () => void;
-}
-
 const modes = [
   {
     label: "Play",
@@ -23,10 +19,9 @@ const modes = [
   },
 ];
 
-export function Toolbar({ onFitView }: ToolbarProps) {
+export function Toolbar() {
   const interactionMode = useEditorStore((s) => s.interactionMode);
   const setInteractionMode = useEditorStore((s) => s.setInteractionMode);
-  const cameraZoom = useEditorStore((s) => s.cameraZoom);
   const isSimulationRunning = useEditorStore((s) => s.isSimulationRunning);
   const setSimulationRunning = useEditorStore((s) => s.setSimulationRunning);
   const showForceRadius = useEditorStore((s) => s.showForceRadius);
@@ -49,21 +44,11 @@ export function Toolbar({ onFitView }: ToolbarProps) {
             data-tooltip-position="bottom"
             type="button"
           >
-            <span className="interaction-mode-key">{input}</span>
+            <kbd className="interaction-mode-key">{input}</kbd>
             {label}
           </button>
         ))}
       </div>
-
-      <button
-        className="fit-view-button"
-        data-tooltip="Fit objects to view (F)"
-        data-tooltip-position="bottom"
-        onClick={onFitView}
-        type="button"
-      >
-        Fit {Math.round(cameraZoom * 100)}%
-      </button>
 
       <button
         aria-pressed={showForceRadius}

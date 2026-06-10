@@ -21,6 +21,7 @@ enum KeyModifiers {
 }
 
 const KEY_ROTATION_STEP = Math.PI / 18;
+const KEY_ZOOM_STEP = 0.1;
 const WHEEL_ROTATION_STEP = Math.PI / 36;
 const SELECTION_DRAG_THRESHOLD_SQUARED = 16;
 
@@ -85,6 +86,25 @@ export class InputManager {
     this.registerAction(["e"], () => {
       this.rotateHeldObjects(KEY_ROTATION_STEP);
     });
+
+    this.registerAction(
+      ["-", "_"],
+      (mods) => {
+        this.zoomFromKeyboard(-KEY_ZOOM_STEP, mods);
+      },
+      {
+        repeat: true,
+      },
+    );
+    this.registerAction(
+      ["+", "="],
+      (mods) => {
+        this.zoomFromKeyboard(KEY_ZOOM_STEP, mods);
+      },
+      {
+        repeat: true,
+      },
+    );
 
     this.registerAction(["r"], () => {
       const state = useEditorStore.getState();
@@ -336,6 +356,14 @@ export class InputManager {
     }
 
     this.app.engine.rotateDrag(angle);
+  }
+
+  private zoomFromKeyboard(delta: number, mods: KeyModifiers): void {
+    if (this.hasPrimaryModifier(mods)) {
+      return;
+    }
+
+    this.app.camera.setZoomAtViewportCenter(this.app.camera.getZoom() + delta);
   }
 
   private getInteractionMode(): InteractionMode {

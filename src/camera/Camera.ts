@@ -32,8 +32,8 @@ export interface ViewportWorldBounds {
 
 export type CameraChangeHandler = (view: CameraView) => void;
 
-const MIN_CAMERA_ZOOM = 0.2;
-const MAX_CAMERA_ZOOM = 4;
+export const MIN_CAMERA_ZOOM = 0.2;
+export const MAX_CAMERA_ZOOM = 4;
 
 export class Camera {
   private readonly offset = Vector2.zero();
@@ -106,6 +106,28 @@ export class Camera {
     this.offset.set(offset);
     this.zoom = Camera.clampZoom(zoom);
     this.emitChange();
+  }
+
+  public setZoomAtViewportCenter(zoom: number): void {
+    if (this.viewportSize.width <= 0 || this.viewportSize.height <= 0) {
+      this.setView(this.offset, zoom);
+      return;
+    }
+
+    const screenCenter = {
+      x: this.viewportSize.width / 2,
+      y: this.viewportSize.height / 2,
+    };
+    const worldCenter = this.screenToWorld(screenCenter);
+    const nextZoom = Camera.clampZoom(zoom);
+
+    this.setView(
+      new Vector2(
+        screenCenter.x - worldCenter.x * nextZoom,
+        screenCenter.y - worldCenter.y * nextZoom,
+      ),
+      nextZoom,
+    );
   }
 
   public setViewportSize(size: ViewportSize): void {

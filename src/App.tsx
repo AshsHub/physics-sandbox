@@ -10,6 +10,7 @@ import { Sidebar } from "./ui/sidebar/Sidebar";
 import { StatusBar } from "./ui/StatusBar";
 import { TooltipLayer } from "./ui/TooltipLayer";
 import { Toolbar } from "./ui/Toolbar";
+import { ZoomControl } from "./ui/ZoomControl";
 
 export default function App() {
   const [app] = useState(() => new Application());
@@ -129,7 +130,8 @@ export default function App() {
         <Sidebar app={app} onObjectContextMenu={openObjectContextMenu} />
 
         <main className="viewport">
-          <Toolbar onFitView={fitView} />
+          <Toolbar />
+          <ZoomControl app={app} />
           <CanvasView
             app={app}
             onCanvasContextMenu={openCanvasContextMenu}
