@@ -1,4 +1,6 @@
 import { Vector2, type VectorLike } from "../maths/Vector2";
+import { CameraConfig } from "../config/CameraConfig";
+import { Maths } from "../maths/Maths";
 
 export interface ViewportSize {
   width: number;
@@ -32,9 +34,6 @@ export interface ViewportWorldBounds {
 
 export type CameraChangeHandler = (view: CameraView) => void;
 
-export const MIN_CAMERA_ZOOM = 0.2;
-export const MAX_CAMERA_ZOOM = 4;
-
 export class Camera {
   private readonly offset = Vector2.zero();
   private zoom = 1;
@@ -52,7 +51,11 @@ export class Camera {
     }
 
     if (initialView?.zoom !== undefined) {
-      this.zoom = Camera.clampZoom(initialView.zoom);
+      this.zoom = Maths.clamp(
+        initialView.zoom,
+        CameraConfig.zoom.min,
+        CameraConfig.zoom.max,
+      );
     }
 
     if (initialView?.viewportSize) {
@@ -76,17 +79,17 @@ export class Camera {
     };
   }
 
-  public static clampZoom(zoom: number): number {
-    return Math.min(MAX_CAMERA_ZOOM, Math.max(MIN_CAMERA_ZOOM, zoom));
-  }
-
   public pan(delta: VectorLike): void {
     this.offset.add(delta);
     this.emitChange();
   }
 
   public zoomAt(screenPosition: VectorLike, zoomFactor: number): void {
-    const nextZoom = Camera.clampZoom(this.zoom * zoomFactor);
+    const nextZoom = Maths.clamp(
+      this.zoom * zoomFactor,
+      CameraConfig.zoom.min,
+      CameraConfig.zoom.max,
+    );
 
     if (nextZoom === this.zoom) {
       return;
@@ -104,7 +107,7 @@ export class Camera {
 
   public setView(offset: VectorLike, zoom: number): void {
     this.offset.set(offset);
-    this.zoom = Camera.clampZoom(zoom);
+    this.zoom = Maths.clamp(zoom, CameraConfig.zoom.min, CameraConfig.zoom.max);
     this.emitChange();
   }
 
@@ -119,7 +122,11 @@ export class Camera {
       y: this.viewportSize.height / 2,
     };
     const worldCenter = this.screenToWorld(screenCenter);
-    const nextZoom = Camera.clampZoom(zoom);
+    const nextZoom = Maths.clamp(
+      zoom,
+      CameraConfig.zoom.min,
+      CameraConfig.zoom.max,
+    );
 
     this.setView(
       new Vector2(
@@ -179,8 +186,8 @@ export class Camera {
 
   public fitBounds(
     bounds: WorldBounds,
-    padding: number,
-    maxZoom = MAX_CAMERA_ZOOM,
+    padding: number = CameraConfig.fitView.padding,
+    maxZoom: number = CameraConfig.zoom.max,
   ): void {
     if (this.viewportSize.width <= 0 || this.viewportSize.height <= 0) {
       this.setView(Vector2.zero(), 1);
@@ -209,10 +216,10 @@ export class Camera {
     );
   }
 
-  public fitBoundsCollection(
+  public fitBoundsFromCollection(
     boundsCollection: Iterable<CameraFitBounds>,
-    padding = 64,
-    maxZoom = MAX_CAMERA_ZOOM,
+    padding: number = CameraConfig.fitView.padding,
+    maxZoom: number = CameraConfig.zoom.max,
   ): void {
     const bounds = [...boundsCollection];
 

@@ -1,12 +1,11 @@
 import { Vector2 } from "../maths/Vector2";
 import Matter from "matter-js";
+import { SandboxObjectConfig } from "../config/SandboxObjectConfig";
 import type { PhysicsWorld } from "../physics/PhysicsWorld";
 import {
   type ISandboxObjectMetadata,
   type ISandboxObject,
   type ISandboxObjectSnapshot,
-  SandboxObjectBorderStyle,
-  SandboxObjectRadialForceMode,
 } from "./SandboxObject";
 import { SandboxObjectFlags, SandboxObjectType } from "./SandboxObjectType";
 
@@ -30,8 +29,8 @@ export class SandboxObjectManager {
     const objectId = id ?? crypto.randomUUID();
 
     const body = this.physics.createBody(position, type);
-    const defaultMetadata = createDefaultMetadata(type);
-    const flags = options.flags ?? createDefaultFlags(type);
+    const defaultMetadata = SandboxObjectConfig.defaults[type].metadata;
+    const flags = options.flags ?? SandboxObjectConfig.defaults[type].flags;
     const metadata = {
       ...defaultMetadata,
       ...options.metadata,
@@ -124,153 +123,5 @@ export class SandboxObjectManager {
     }
 
     this.objects.clear();
-  }
-}
-
-function createDefaultFlags(type: SandboxObjectType): SandboxObjectFlags {
-  switch (type) {
-    case SandboxObjectType.Platform:
-    case SandboxObjectType.Wall:
-    case SandboxObjectType.Ramp:
-      return SandboxObjectFlags.Static;
-    case SandboxObjectType.Box:
-    case SandboxObjectType.Circle:
-    case SandboxObjectType.Triangle:
-    case SandboxObjectType.Pentagon:
-    case SandboxObjectType.Oval:
-    default:
-      return SandboxObjectFlags.None;
-  }
-}
-
-function createDefaultMetadata(
-  type: SandboxObjectType,
-): ISandboxObjectMetadata {
-  const radialForceDefaults = {
-    radialForceMode: SandboxObjectRadialForceMode.None,
-    radialForceRadius: 240,
-    radialForceStrength: 0.0012,
-  };
-
-  const physicsDefaults = {
-    mass: 1,
-    bounce: 0.5,
-    friction: 0.6,
-  };
-
-  switch (type) {
-    case SandboxObjectType.Platform:
-      return {
-        width: 240,
-        height: 28,
-        color: "#565656",
-        opacity: 1,
-        borderColor: "#8a8a8a",
-        borderWidth: 1,
-        borderStyle: SandboxObjectBorderStyle.Solid,
-        label: "Platform",
-        description: "Static platform body",
-        ...physicsDefaults,
-        ...radialForceDefaults,
-      };
-    case SandboxObjectType.Wall:
-      return {
-        width: 36,
-        height: 220,
-        color: "#5c5c5c",
-        opacity: 1,
-        borderColor: "#929292",
-        borderWidth: 1,
-        borderStyle: SandboxObjectBorderStyle.Solid,
-        label: "Wall",
-        description: "Static vertical wall body",
-        ...physicsDefaults,
-        ...radialForceDefaults,
-      };
-    case SandboxObjectType.Ramp:
-      return {
-        width: 220,
-        height: 28,
-        color: "#686868",
-        opacity: 1,
-        borderColor: "#a0a0a0",
-        borderWidth: 1,
-        borderStyle: SandboxObjectBorderStyle.Solid,
-        label: "Ramp",
-        description: "Static angled ramp body",
-        ...physicsDefaults,
-        ...radialForceDefaults,
-      };
-    case SandboxObjectType.Circle:
-      return {
-        width: 50,
-        height: 50,
-        color: "#4f8cff",
-        opacity: 1,
-        borderColor: "#b8d0ff",
-        borderWidth: 1,
-        borderStyle: SandboxObjectBorderStyle.Solid,
-        label: "Circle",
-        description: "Dynamic circular body",
-        ...physicsDefaults,
-        ...radialForceDefaults,
-      };
-    case SandboxObjectType.Triangle:
-      return {
-        width: 64,
-        height: 64,
-        color: "#f2b84b",
-        opacity: 1,
-        borderColor: "#ffe1a0",
-        borderWidth: 1,
-        borderStyle: SandboxObjectBorderStyle.Solid,
-        label: "Triangle",
-        description: "Dynamic triangular body",
-        ...physicsDefaults,
-        ...radialForceDefaults,
-      };
-    case SandboxObjectType.Pentagon:
-      return {
-        width: 60,
-        height: 60,
-        color: "#c17cff",
-        opacity: 1,
-        borderColor: "#e4c2ff",
-        borderWidth: 1,
-        borderStyle: SandboxObjectBorderStyle.Solid,
-        label: "Pentagon",
-        description: "Dynamic pentagonal body",
-        ...physicsDefaults,
-        ...radialForceDefaults,
-      };
-    case SandboxObjectType.Oval:
-      return {
-        width: 87,
-        height: 45,
-        color: "#38c8b0",
-        opacity: 1,
-        borderColor: "#b9fff3",
-        borderWidth: 1,
-        borderStyle: SandboxObjectBorderStyle.Solid,
-        label: "Oval",
-        description: "Dynamic oval body",
-        ...physicsDefaults,
-        ...radialForceDefaults,
-      };
-    case SandboxObjectType.Box:
-    default:
-      return {
-        width: 50,
-        height: 50,
-        color: "#7cce83",
-        opacity: 1,
-        borderColor: "#d6ffd9",
-        borderWidth: 1,
-        borderStyle: SandboxObjectBorderStyle.Solid,
-        label: "Box",
-        description: "Dynamic rectangular body",
-        ...physicsDefaults,
-        ...radialForceDefaults,
-      };
   }
 }

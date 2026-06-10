@@ -2,6 +2,7 @@ import type { IEventBus } from "../events/IEventBus";
 import type { ISandboxEngine } from "./ISandboxEngine";
 
 import type { Camera } from "../camera/Camera";
+import { CameraConfig } from "../config/CameraConfig";
 import { Vector2 } from "../maths/Vector2";
 
 import { PhysicsWorld } from "../physics/PhysicsWorld";
@@ -198,7 +199,7 @@ export class SandboxEngine implements ISandboxEngine {
       return;
     }
 
-    const margin = 1200;
+    const margin = CameraConfig.culling.viewportMargin;
     const bounds = this.camera.getViewportBounds(margin);
     const idsToCull = this.objects
       .getAll()

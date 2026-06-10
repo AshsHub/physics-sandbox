@@ -3,6 +3,7 @@ import type Matter from "matter-js";
 import { Vector2 } from "../maths/Vector2";
 import { SandboxObjectFlags } from "../sandbox/SandboxObjectType";
 import { useEditorStore } from "../store/editorStore";
+import { InputConfig } from "../config/InputConfig";
 import { InteractionMode } from "./InteractionMode";
 
 type Action = (modifiers: KeyModifiers) => void;
@@ -19,11 +20,6 @@ enum KeyModifiers {
   Shift = 1 << 2,
   Alt = 1 << 3,
 }
-
-const KEY_ROTATION_STEP = Math.PI / 18;
-const KEY_ZOOM_STEP = 0.1;
-const WHEEL_ROTATION_STEP = Math.PI / 36;
-const SELECTION_DRAG_THRESHOLD_SQUARED = 16;
 
 interface SelectionGesture {
   currentScreen: Vector2;
@@ -81,16 +77,16 @@ export class InputManager {
       state.setSimulationRunning(!state.isSimulationRunning);
     });
     this.registerAction(["q"], () => {
-      this.rotateHeldObjects(-KEY_ROTATION_STEP);
+      this.rotateHeldObjects(-InputConfig.keyboard.rotationStep);
     });
     this.registerAction(["e"], () => {
-      this.rotateHeldObjects(KEY_ROTATION_STEP);
+      this.rotateHeldObjects(InputConfig.keyboard.rotationStep);
     });
 
     this.registerAction(
       ["-", "_"],
       (mods) => {
-        this.zoomFromKeyboard(-KEY_ZOOM_STEP, mods);
+        this.zoomFromKeyboard(-InputConfig.keyboard.zoomStep, mods);
       },
       {
         repeat: true,
@@ -99,7 +95,7 @@ export class InputManager {
     this.registerAction(
       ["+", "="],
       (mods) => {
-        this.zoomFromKeyboard(KEY_ZOOM_STEP, mods);
+        this.zoomFromKeyboard(InputConfig.keyboard.zoomStep, mods);
       },
       {
         repeat: true,
@@ -298,11 +294,18 @@ export class InputManager {
     }
 
     if (this.activePointerMode !== InteractionMode.Play) {
-      this.app.camera.zoomAt(pos, deltaY > 0 ? 0.9 : 1.1);
+      this.app.camera.zoomAt(
+        pos,
+        deltaY > 0
+          ? InputConfig.pointer.wheelZoomOutFactor
+          : InputConfig.pointer.wheelZoomInFactor,
+      );
       return;
     }
 
-    this.rotateHeldObjects(Math.sign(deltaY) * WHEEL_ROTATION_STEP);
+    this.rotateHeldObjects(
+      Math.sign(deltaY) * InputConfig.pointer.wheelRotationStep,
+    );
   }
 
   public pointerUp(): void {
@@ -414,7 +417,7 @@ export class InputManager {
     if (
       !gesture.isBoxActive &&
       gesture.startScreen.distanceSquaredTo(screenPosition) >=
-        SELECTION_DRAG_THRESHOLD_SQUARED
+        InputConfig.selection.dragThresholdSquared
     ) {
       gesture.isBoxActive = true;
       this.setActivePointerMode(InteractionMode.Selection);

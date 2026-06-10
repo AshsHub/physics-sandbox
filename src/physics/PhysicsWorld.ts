@@ -2,6 +2,8 @@
 
 import Matter from "matter-js";
 
+import { PhysicsConfig } from "../config/PhysicsConfig";
+import { SandboxObjectConfig } from "../config/SandboxObjectConfig";
 import { Vector2 } from "../maths/Vector2";
 import {
   SandboxObjectRadialForceMode,
@@ -63,39 +65,85 @@ export class PhysicsWorld {
 
     switch (type) {
       case SandboxObjectType.Circle:
-        body = Matter.Bodies.circle(position.x, position.y, 25);
+        body = Matter.Bodies.circle(
+          position.x,
+          position.y,
+          SandboxObjectConfig.bodyGeometry.circleRadius,
+        );
         break;
       case SandboxObjectType.Triangle:
-        body = Matter.Bodies.polygon(position.x, position.y, 3, 32);
+        body = Matter.Bodies.polygon(
+          position.x,
+          position.y,
+          3,
+          SandboxObjectConfig.bodyGeometry.triangleRadius,
+        );
         break;
       case SandboxObjectType.Pentagon:
-        body = Matter.Bodies.polygon(position.x, position.y, 5, 30);
+        body = Matter.Bodies.polygon(
+          position.x,
+          position.y,
+          5,
+          SandboxObjectConfig.bodyGeometry.pentagonRadius,
+        );
         break;
       case SandboxObjectType.Oval:
-        body = Matter.Bodies.circle(position.x, position.y, 30, {
-          slop: 0.02,
-        });
-        Matter.Body.scale(body, 1.45, 0.75);
+        body = Matter.Bodies.circle(
+          position.x,
+          position.y,
+          SandboxObjectConfig.bodyGeometry.ovalRadius,
+          {
+            slop: 0.02,
+          },
+        );
+        Matter.Body.scale(
+          body,
+          SandboxObjectConfig.bodyGeometry.ovalScaleX,
+          SandboxObjectConfig.bodyGeometry.ovalScaleY,
+        );
         break;
       case SandboxObjectType.Platform:
-        body = Matter.Bodies.rectangle(position.x, position.y, 240, 28, {
-          isStatic: true,
-        });
+        body = Matter.Bodies.rectangle(
+          position.x,
+          position.y,
+          SandboxObjectConfig.defaults.Platform.metadata.width,
+          SandboxObjectConfig.defaults.Platform.metadata.height,
+          {
+            isStatic: true,
+          },
+        );
         break;
       case SandboxObjectType.Wall:
-        body = Matter.Bodies.rectangle(position.x, position.y, 36, 220, {
-          isStatic: true,
-        });
+        body = Matter.Bodies.rectangle(
+          position.x,
+          position.y,
+          SandboxObjectConfig.defaults.Wall.metadata.width,
+          SandboxObjectConfig.defaults.Wall.metadata.height,
+          {
+            isStatic: true,
+          },
+        );
         break;
       case SandboxObjectType.Ramp:
-        body = Matter.Bodies.rectangle(position.x, position.y, 220, 28, {
-          isStatic: true,
-        });
-        Matter.Body.rotate(body, -Math.PI / 8);
+        body = Matter.Bodies.rectangle(
+          position.x,
+          position.y,
+          SandboxObjectConfig.defaults.Ramp.metadata.width,
+          SandboxObjectConfig.defaults.Ramp.metadata.height,
+          {
+            isStatic: true,
+          },
+        );
+        Matter.Body.rotate(body, PhysicsConfig.body.rampAngle);
         break;
       case SandboxObjectType.Box:
       default:
-        body = Matter.Bodies.rectangle(position.x, position.y, 50, 50);
+        body = Matter.Bodies.rectangle(
+          position.x,
+          position.y,
+          SandboxObjectConfig.defaults.Box.metadata.width,
+          SandboxObjectConfig.defaults.Box.metadata.height,
+        );
     }
 
     Matter.World.add(this._world, body);
@@ -136,7 +184,10 @@ export class PhysicsWorld {
     body.restitution = Maths.clamp(nextMetadata.bounce, 0, 1);
 
     if (!body.isStatic) {
-      const nextMass = Math.max(0.1, nextMetadata.mass);
+      const nextMass = Math.max(
+        PhysicsConfig.body.minimumDynamicMass,
+        nextMetadata.mass,
+      );
 
       if (body.mass !== nextMass) {
         Matter.Body.setMass(body, nextMass);
@@ -255,7 +306,7 @@ export class PhysicsWorld {
     }
 
     if (this.draggedBodies.length > 0) {
-      const strength = 0.25;
+      const strength = PhysicsConfig.dragging.dynamicFollowStrength;
 
       for (const drag of this.draggedBodies) {
         if (drag.mode === "exact") {
@@ -283,7 +334,7 @@ export class PhysicsWorld {
     }
 
     if (isSimulationRunning || this.draggedBodies.length > 0) {
-      Matter.Engine.update(this._engine, 1000 / 60);
+      Matter.Engine.update(this._engine, PhysicsConfig.simulation.fixedTimeStepMs);
     }
   }
 

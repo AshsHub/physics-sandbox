@@ -1,10 +1,8 @@
+import { SimulationConfig } from "../../config/SimulationConfig";
 import {
   getWindDescriptor,
   gravitySimulationPresets,
   GravitySimulationType,
-  WIND_FORCE_MAX,
-  WIND_FORCE_MIN,
-  WIND_FORCE_STEP,
 } from "../../physics/SandboxSimulation";
 import { useEditorStore } from "../../store/editorStore";
 import { Panel } from "./Panel";
@@ -39,16 +37,16 @@ export function SimluationPanel({ onClose }: SimulationPanelProps) {
           <div className="simulation-control-actions">
             <button
               aria-pressed={isGravityReversed}
-            className={
-              isGravityReversed
-                ? "simulation-reset-button selected"
-                : "simulation-reset-button"
-            }
-            data-tooltip="Invert gravity direction"
-            data-tooltip-position="bottom"
-            onClick={() => setGravityReversed(!isGravityReversed)}
-            type="button"
-          >
+              className={
+                isGravityReversed
+                  ? "simulation-reset-button selected"
+                  : "simulation-reset-button"
+              }
+              data-tooltip="Invert gravity direction"
+              data-tooltip-position="bottom"
+              onClick={() => setGravityReversed(!isGravityReversed)}
+              type="button"
+            >
               Reverse
             </button>
             <button
@@ -125,10 +123,10 @@ export function SimluationPanel({ onClose }: SimulationPanelProps) {
         <input
           aria-label="Wind force"
           className="simulation-slider"
-          max={WIND_FORCE_MAX}
-          min={WIND_FORCE_MIN}
+          max={SimulationConfig.wind.maxForce}
+          min={SimulationConfig.wind.minForce}
           onChange={(event) => setWindForce(Number(event.currentTarget.value))}
-          step={WIND_FORCE_STEP}
+          step={SimulationConfig.wind.step}
           type="range"
           value={windForce}
         />

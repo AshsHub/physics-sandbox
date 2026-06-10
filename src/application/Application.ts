@@ -91,7 +91,7 @@ export class Application implements IApplication {
       .filter((object) => (object.flags & SandboxObjectFlags.Hidden) === 0)
       .map((object) => object.body.bounds);
 
-    this.camera.fitBoundsCollection(visibleBounds, 64, 1);
+    this.camera.fitBoundsFromCollection(visibleBounds);
   }
 
   update(width: number, height: number) {

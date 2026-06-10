@@ -1,3 +1,5 @@
+import { SimulationConfig } from "../config/SimulationConfig";
+
 export enum GravitySimulationType {
   ZeroGravity = "zero_gravity",
   Sun = "sun",
@@ -82,10 +84,6 @@ export const gravitySimulationPresets: GravitySimulationPreset[] = [
   },
 ];
 
-export const WIND_FORCE_MIN = -0.001;
-export const WIND_FORCE_MAX = 0.001;
-export const WIND_FORCE_STEP = 0.00001;
-
 export interface WindDescriptor {
   label: string;
   direction?: "Left" | "Right";
@@ -107,7 +105,7 @@ export function getGravityMultiplier(type?: GravitySimulationType): number {
 
 export function getWindDescriptor(force: number): WindDescriptor {
   const strengthPercent =
-    Math.round((Math.abs(force) / WIND_FORCE_MAX) * 1000) / 10;
+    Math.round((Math.abs(force) / SimulationConfig.wind.maxForce) * 1000) / 10;
 
   if (strengthPercent === 0) {
     return {

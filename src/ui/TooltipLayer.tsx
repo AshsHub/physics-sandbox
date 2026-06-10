@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { TooltipConfig } from "../config/TooltipConfig";
 import { Maths } from "../maths/Maths";
 
 type TooltipPosition = "bottom" | "left" | "right" | "top";
@@ -16,10 +17,6 @@ interface TooltipPlacement {
   position: TooltipPosition;
 }
 
-const TOOLTIP_ID = "app-tooltip";
-const TOOLTIP_GAP = 8;
-const VIEWPORT_PADDING = 8;
-
 export function TooltipLayer() {
   const tooltipRef = useRef<HTMLDivElement>(null);
   const activeTargetRef = useRef<HTMLElement | undefined>(undefined);
@@ -35,7 +32,7 @@ export function TooltipLayer() {
       }
 
       activeTargetRef.current?.removeAttribute("aria-describedby");
-      target.setAttribute("aria-describedby", TOOLTIP_ID);
+      target.setAttribute("aria-describedby", TooltipConfig.id);
       activeTargetRef.current = target;
 
       setActiveTooltip({
@@ -150,7 +147,7 @@ export function TooltipLayer() {
   return (
     <div
       className={`app-tooltip ${placement ? `app-tooltip-${placement.position}` : ""}`}
-      id={TOOLTIP_ID}
+      id={TooltipConfig.id}
       ref={tooltipRef}
       role="tooltip"
       style={{
@@ -217,13 +214,13 @@ function calculateTooltipPlacement(
   return {
     left: Maths.clamp(
       unclamped.left,
-      VIEWPORT_PADDING,
-      window.innerWidth - tooltipRect.width - VIEWPORT_PADDING,
+      TooltipConfig.viewportPadding,
+      window.innerWidth - tooltipRect.width - TooltipConfig.viewportPadding,
     ),
     top: Maths.clamp(
       unclamped.top,
-      VIEWPORT_PADDING,
-      window.innerHeight - tooltipRect.height - VIEWPORT_PADDING,
+      TooltipConfig.viewportPadding,
+      window.innerHeight - tooltipRect.height - TooltipConfig.viewportPadding,
     ),
     position,
   };
@@ -236,13 +233,17 @@ function choosePosition(
 ): TooltipPosition {
   const fits = {
     bottom:
-      targetRect.bottom + TOOLTIP_GAP + tooltipRect.height <=
-      window.innerHeight - VIEWPORT_PADDING,
-    left: targetRect.left - TOOLTIP_GAP - tooltipRect.width >= VIEWPORT_PADDING,
+      targetRect.bottom + TooltipConfig.gap + tooltipRect.height <=
+      window.innerHeight - TooltipConfig.viewportPadding,
+    left:
+      targetRect.left - TooltipConfig.gap - tooltipRect.width >=
+      TooltipConfig.viewportPadding,
     right:
-      targetRect.right + TOOLTIP_GAP + tooltipRect.width <=
-      window.innerWidth - VIEWPORT_PADDING,
-    top: targetRect.top - TOOLTIP_GAP - tooltipRect.height >= VIEWPORT_PADDING,
+      targetRect.right + TooltipConfig.gap + tooltipRect.width <=
+      window.innerWidth - TooltipConfig.viewportPadding,
+    top:
+      targetRect.top - TooltipConfig.gap - tooltipRect.height >=
+      TooltipConfig.viewportPadding,
   };
 
   if (fits[preferredPosition]) {
@@ -262,24 +263,24 @@ function getUnclampedPlacement(
   switch (position) {
     case "left":
       return {
-        left: targetRect.left - tooltipRect.width - TOOLTIP_GAP,
+        left: targetRect.left - tooltipRect.width - TooltipConfig.gap,
         top: targetRect.top + targetRect.height / 2 - tooltipRect.height / 2,
       };
     case "right":
       return {
-        left: targetRect.right + TOOLTIP_GAP,
+        left: targetRect.right + TooltipConfig.gap,
         top: targetRect.top + targetRect.height / 2 - tooltipRect.height / 2,
       };
     case "top":
       return {
         left: targetRect.left + targetRect.width / 2 - tooltipRect.width / 2,
-        top: targetRect.top - tooltipRect.height - TOOLTIP_GAP,
+        top: targetRect.top - tooltipRect.height - TooltipConfig.gap,
       };
     case "bottom":
     default:
       return {
         left: targetRect.left + targetRect.width / 2 - tooltipRect.width / 2,
-        top: targetRect.bottom + TOOLTIP_GAP,
+        top: targetRect.bottom + TooltipConfig.gap,
       };
   }
 }
