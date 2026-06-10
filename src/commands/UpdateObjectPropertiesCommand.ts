@@ -39,7 +39,7 @@ export class UpdateObjectPropertiesCommand implements ICommand {
       if (!this._previousValues.has(object.id)) {
         this._previousValues.set(
           object.id,
-          clonePropertyValue(object[this._options.property]),
+          this._clonePropertyValue(object[this._options.property]),
         );
       }
 
@@ -79,18 +79,18 @@ export class UpdateObjectPropertiesCommand implements ICommand {
   public redo(): ICommandResult {
     return this.execute();
   }
-}
 
-function clonePropertyValue(value: unknown): unknown {
-  if (Array.isArray(value)) {
-    return [...value];
+  private _clonePropertyValue(value: unknown): unknown {
+    if (Array.isArray(value)) {
+      return [...value];
+    }
+
+    if (value && typeof value === "object") {
+      return {
+        ...value,
+      };
+    }
+
+    return value;
   }
-
-  if (value && typeof value === "object") {
-    return {
-      ...value,
-    };
-  }
-
-  return value;
 }

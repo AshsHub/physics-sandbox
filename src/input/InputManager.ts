@@ -6,7 +6,6 @@ import { SandboxObjectFlags } from "../sandbox/SandboxObjectType";
 import { useEditorStore } from "../store/editorStore";
 import { InteractionMode } from "./InteractionMode";
 import {
-  hasPrimaryModifier,
   KeyboardInputController,
   KeyModifiers,
 } from "./KeyboardInputController";
@@ -239,7 +238,7 @@ export class InputManager {
       });
     });
     this._keyboard.registerAction(["z"], (mods) => {
-      if (hasPrimaryModifier(mods)) {
+      if (this._hasPrimaryModifier(mods)) {
         if (mods & KeyModifiers.Shift) {
           this._app.commands.redo();
         } else {
@@ -282,11 +281,13 @@ export class InputManager {
   }
 
   private _zoomFromKeyboard(delta: number, mods: KeyModifiers): void {
-    if (hasPrimaryModifier(mods)) {
+    if (this._hasPrimaryModifier(mods)) {
       return;
     }
 
-    this._app.camera.setZoomAtViewportCenter(this._app.camera.getZoom() + delta);
+    this._app.camera.setZoomAtViewportCenter(
+      this._app.camera.getZoom() + delta,
+    );
   }
 
   private _getInteractionMode(): InteractionMode {
@@ -419,7 +420,7 @@ export class InputManager {
         continue;
       }
 
-      if (doesBodyIntersectBounds(object.body.bounds, bounds)) {
+      if (this._doesBodyIntersectBounds(object.body.bounds, bounds)) {
         selectedIds.add(object.id);
       } else if (
         gesture.isAdditive &&
@@ -431,21 +432,25 @@ export class InputManager {
 
     useEditorStore.getState().setSelection(selectedIds);
   }
-}
 
-function doesBodyIntersectBounds(
-  bodyBounds: Matter.Bounds,
-  selectionBounds: {
-    minX: number;
-    maxX: number;
-    minY: number;
-    maxY: number;
-  },
-): boolean {
-  return (
-    bodyBounds.max.x >= selectionBounds.minX &&
-    bodyBounds.min.x <= selectionBounds.maxX &&
-    bodyBounds.max.y >= selectionBounds.minY &&
-    bodyBounds.min.y <= selectionBounds.maxY
-  );
+  private _doesBodyIntersectBounds(
+    bodyBounds: Matter.Bounds,
+    selectionBounds: {
+      minX: number;
+      maxX: number;
+      minY: number;
+      maxY: number;
+    },
+  ): boolean {
+    return (
+      bodyBounds.max.x >= selectionBounds.minX &&
+      bodyBounds.min.x <= selectionBounds.maxX &&
+      bodyBounds.max.y >= selectionBounds.minY &&
+      bodyBounds.min.y <= selectionBounds.maxY
+    );
+  }
+
+  private _hasPrimaryModifier(modifiers: KeyModifiers): boolean {
+    return (modifiers & (KeyModifiers.Control | KeyModifiers.Meta)) !== 0;
+  }
 }

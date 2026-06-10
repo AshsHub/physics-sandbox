@@ -74,7 +74,7 @@ export class KeyboardInputController {
       return;
     }
 
-    const modifiers = getKeyModifiers(event);
+    const modifiers = this._getKeyModifiers(event);
 
     actions.forEach(({ action, repeat }) => {
       if (wasPressed && !repeat) {
@@ -104,19 +104,15 @@ export class KeyboardInputController {
       target.isContentEditable
     );
   }
-}
 
-export function hasPrimaryModifier(modifiers: KeyModifiers): boolean {
-  return (modifiers & (KeyModifiers.Control | KeyModifiers.Meta)) !== 0;
-}
+  private _getKeyModifiers(event: KeyboardEvent): KeyModifiers {
+    let modifiers = KeyModifiers.None;
 
-function getKeyModifiers(event: KeyboardEvent): KeyModifiers {
-  let modifiers = KeyModifiers.None;
+    if (event.shiftKey) modifiers |= KeyModifiers.Shift;
+    if (event.ctrlKey) modifiers |= KeyModifiers.Control;
+    if (event.metaKey) modifiers |= KeyModifiers.Meta;
+    if (event.altKey) modifiers |= KeyModifiers.Alt;
 
-  if (event.shiftKey) modifiers |= KeyModifiers.Shift;
-  if (event.ctrlKey) modifiers |= KeyModifiers.Control;
-  if (event.metaKey) modifiers |= KeyModifiers.Meta;
-  if (event.altKey) modifiers |= KeyModifiers.Alt;
-
-  return modifiers;
+    return modifiers;
+  }
 }

@@ -66,7 +66,9 @@ export class Renderer {
         ? "orange"
         : metadata.borderColor;
       ctx.lineWidth = visibleBorderWidth * 2;
-      ctx.setLineDash(getLineDash(metadata.borderStyle, visibleBorderWidth));
+      ctx.setLineDash(
+        this._getLineDash(metadata.borderStyle, visibleBorderWidth),
+      );
       ctx.stroke();
       ctx.setLineDash([]);
       ctx.restore();
@@ -126,17 +128,20 @@ export class Renderer {
 
     ctx.closePath();
   }
-}
 
-function getLineDash(style: SandboxObjectBorderStyle, width: number): number[] {
-  switch (style) {
-    case SandboxObjectBorderStyle.Dashed:
-      return [width * 6, width * 4];
-    case SandboxObjectBorderStyle.Dotted:
-      return [width, width * 3];
-    case SandboxObjectBorderStyle.Solid:
-    case SandboxObjectBorderStyle.None:
-    default:
-      return [];
+  private _getLineDash(
+    style: SandboxObjectBorderStyle,
+    width: number,
+  ): number[] {
+    switch (style) {
+      case SandboxObjectBorderStyle.Dashed:
+        return [width * 6, width * 4];
+      case SandboxObjectBorderStyle.Dotted:
+        return [width, width * 3];
+      case SandboxObjectBorderStyle.Solid:
+      case SandboxObjectBorderStyle.None:
+      default:
+        return [];
+    }
   }
 }
