@@ -3,6 +3,7 @@ import type Matter from "matter-js";
 import {
   type ISandboxObject,
   SandboxObjectBorderStyle,
+  SandboxObjectRadialForceMode,
 } from "../sandbox/SandboxObject";
 import { SandboxObjectFlags } from "../sandbox/SandboxObjectType";
 import { useEditorStore } from "../store/editorStore";
@@ -21,6 +22,10 @@ export class Renderer {
     ctx.save();
     ctx.translate(cameraOffset.x, cameraOffset.y);
     ctx.scale(cameraZoom, cameraZoom);
+
+    for (const object of objects) {
+      this.drawForceRadius(ctx, object, cameraZoom);
+    }
 
     for (const object of objects) {
       this.drawSandboxObject(ctx, object);
@@ -65,6 +70,45 @@ export class Renderer {
       ctx.restore();
     }
 
+    ctx.restore();
+  }
+
+  private drawForceRadius(
+    ctx: CanvasRenderingContext2D,
+    entity: ISandboxObject,
+    cameraZoom: number,
+  ) {
+    if (entity.flags & SandboxObjectFlags.Hidden) return;
+
+    const { radialForceMode, radialForceRadius } = entity.metadata;
+
+    if (
+      radialForceMode === SandboxObjectRadialForceMode.None ||
+      radialForceRadius <= 0
+    ) {
+      return;
+    }
+
+    const isPull = radialForceMode === SandboxObjectRadialForceMode.Pull;
+    const fillColor = isPull ? "#4f8cff20" : "#ff6c5c20";
+    const strokeColor = isPull ? "#4f8cff8c" : "#ff6c5c8c";
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(
+      entity.body.position.x,
+      entity.body.position.y,
+      radialForceRadius,
+      0,
+      Math.PI * 2,
+    );
+    ctx.fillStyle = fillColor;
+    ctx.strokeStyle = strokeColor;
+    ctx.lineWidth = 1 / cameraZoom;
+    ctx.setLineDash([6 / cameraZoom, 4 / cameraZoom]);
+    ctx.fill();
+    ctx.stroke();
+    ctx.setLineDash([]);
     ctx.restore();
   }
 

@@ -90,7 +90,7 @@ function shouldShowObject(
   filter: InspectorFilter,
   selectedIds: Set<string>,
 ): boolean {
-  const isStatic = (object.flags & SandboxObjectFlags.Locked) !== 0;
+  const isStatic = (object.flags & SandboxObjectFlags.Static) !== 0;
 
   switch (filter) {
     case "dynamic":

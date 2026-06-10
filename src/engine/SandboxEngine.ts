@@ -46,7 +46,7 @@ export class SandboxEngine implements ISandboxEngine {
   }
 
   public update(): void {
-    this.physics.update();
+    this.physics.update(this.objects.getAll());
   }
 
   public createObject(
@@ -129,6 +129,13 @@ export class SandboxEngine implements ISandboxEngine {
       );
     }
 
+    if (property === "flags") {
+      this.physics.applyFlagsToBody(
+        object.body,
+        value as ISandboxObject["flags"],
+      );
+    }
+
     object[property] = value;
 
     this.events.emit("sandboxObjectChanged", {
@@ -168,6 +175,7 @@ export class SandboxEngine implements ISandboxEngine {
     const bodies = ids
       .map((id) => this.objects.get(id))
       .filter((object): object is ISandboxObject => object !== undefined)
+      .filter((object) => (object.flags & SandboxObjectFlags.Locked) === 0)
       .map((object) => object.body);
 
     this.physics.startDrag(bodies, pos);
@@ -194,7 +202,11 @@ export class SandboxEngine implements ISandboxEngine {
     const bounds = this.camera.getViewportBounds(margin);
     const idsToCull = this.objects
       .getAll()
-      .filter((object) => (object.flags & SandboxObjectFlags.Locked) === 0)
+      .filter(
+        (object) =>
+          (object.flags & (SandboxObjectFlags.Locked | SandboxObjectFlags.Static)) ===
+          0,
+      )
       .filter((object) => {
         const bodyBounds = object.body.bounds;
 

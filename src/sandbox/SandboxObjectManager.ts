@@ -6,12 +6,14 @@ import {
   type ISandboxObject,
   type ISandboxObjectSnapshot,
   SandboxObjectBorderStyle,
+  SandboxObjectRadialForceMode,
 } from "./SandboxObject";
 import { SandboxObjectFlags, SandboxObjectType } from "./SandboxObjectType";
 
 export interface CreateSandboxObjectOptions {
   position: Vector2;
   type: SandboxObjectType;
+  flags?: SandboxObjectFlags;
   id?: string;
   name?: string;
   metadata?: ISandboxObjectMetadata;
@@ -29,6 +31,7 @@ export class SandboxObjectManager {
 
     const body = this.physics.createBody(position, type);
     const defaultMetadata = createDefaultMetadata(type);
+    const flags = options.flags ?? createDefaultFlags(type);
     const metadata = {
       ...defaultMetadata,
       ...options.metadata,
@@ -42,12 +45,11 @@ export class SandboxObjectManager {
         name ??
         `${type.charAt(0).toUpperCase()}${type.slice(1)} ${objectId.slice(0, 5)}`,
       metadata,
-      flags: body.isStatic
-        ? SandboxObjectFlags.Locked
-        : SandboxObjectFlags.None,
+      flags,
     };
 
     this.physics.applyMetadataToBody(body, defaultMetadata, metadata);
+    this.physics.applyFlagsToBody(body, flags);
 
     this.objects.set(objectId, object);
     this.bodyLookup.set(body, objectId);
@@ -67,6 +69,7 @@ export class SandboxObjectManager {
       name: object.name,
       type: object.type,
       position: new Vector2(object.body.position.x, object.body.position.y),
+      flags: object.flags,
       metadata: {
         ...object.metadata,
       },
@@ -124,9 +127,37 @@ export class SandboxObjectManager {
   }
 }
 
+function createDefaultFlags(type: SandboxObjectType): SandboxObjectFlags {
+  switch (type) {
+    case SandboxObjectType.Platform:
+    case SandboxObjectType.Wall:
+    case SandboxObjectType.Ramp:
+      return SandboxObjectFlags.Static;
+    case SandboxObjectType.Box:
+    case SandboxObjectType.Circle:
+    case SandboxObjectType.Triangle:
+    case SandboxObjectType.Pentagon:
+    case SandboxObjectType.Oval:
+    default:
+      return SandboxObjectFlags.None;
+  }
+}
+
 function createDefaultMetadata(
   type: SandboxObjectType,
 ): ISandboxObjectMetadata {
+  const radialForceDefaults = {
+    radialForceMode: SandboxObjectRadialForceMode.None,
+    radialForceRadius: 240,
+    radialForceStrength: 0.0012,
+  };
+
+  const physicsDefaults = {
+    mass: 1,
+    bounce: 0.5,
+    friction: 0.6,
+  };
+
   switch (type) {
     case SandboxObjectType.Platform:
       return {
@@ -139,9 +170,8 @@ function createDefaultMetadata(
         borderStyle: SandboxObjectBorderStyle.Solid,
         label: "Platform",
         description: "Static platform body",
-        mass: 0,
-        bounce: 0.2,
-        friction: 0.6,
+        ...physicsDefaults,
+        ...radialForceDefaults,
       };
     case SandboxObjectType.Wall:
       return {
@@ -154,9 +184,8 @@ function createDefaultMetadata(
         borderStyle: SandboxObjectBorderStyle.Solid,
         label: "Wall",
         description: "Static vertical wall body",
-        mass: 0,
-        bounce: 0.2,
-        friction: 0.6,
+        ...physicsDefaults,
+        ...radialForceDefaults,
       };
     case SandboxObjectType.Ramp:
       return {
@@ -169,9 +198,8 @@ function createDefaultMetadata(
         borderStyle: SandboxObjectBorderStyle.Solid,
         label: "Ramp",
         description: "Static angled ramp body",
-        mass: 0,
-        bounce: 0.2,
-        friction: 0.6,
+        ...physicsDefaults,
+        ...radialForceDefaults,
       };
     case SandboxObjectType.Circle:
       return {
@@ -184,9 +212,8 @@ function createDefaultMetadata(
         borderStyle: SandboxObjectBorderStyle.Solid,
         label: "Circle",
         description: "Dynamic circular body",
-        mass: 8,
-        bounce: 0.35,
-        friction: 0.01,
+        ...physicsDefaults,
+        ...radialForceDefaults,
       };
     case SandboxObjectType.Triangle:
       return {
@@ -199,9 +226,8 @@ function createDefaultMetadata(
         borderStyle: SandboxObjectBorderStyle.Solid,
         label: "Triangle",
         description: "Dynamic triangular body",
-        mass: 8,
-        bounce: 0.25,
-        friction: 0.01,
+        ...physicsDefaults,
+        ...radialForceDefaults,
       };
     case SandboxObjectType.Pentagon:
       return {
@@ -214,9 +240,8 @@ function createDefaultMetadata(
         borderStyle: SandboxObjectBorderStyle.Solid,
         label: "Pentagon",
         description: "Dynamic pentagonal body",
-        mass: 10,
-        bounce: 0.25,
-        friction: 0.01,
+        ...physicsDefaults,
+        ...radialForceDefaults,
       };
     case SandboxObjectType.Oval:
       return {
@@ -229,9 +254,8 @@ function createDefaultMetadata(
         borderStyle: SandboxObjectBorderStyle.Solid,
         label: "Oval",
         description: "Dynamic oval body",
-        mass: 9,
-        bounce: 0.3,
-        friction: 0.01,
+        ...physicsDefaults,
+        ...radialForceDefaults,
       };
     case SandboxObjectType.Box:
     default:
@@ -245,9 +269,8 @@ function createDefaultMetadata(
         borderStyle: SandboxObjectBorderStyle.Solid,
         label: "Box",
         description: "Dynamic rectangular body",
-        mass: 10,
-        bounce: 0.25,
-        friction: 0.01,
+        ...physicsDefaults,
+        ...radialForceDefaults,
       };
   }
 }

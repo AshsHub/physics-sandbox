@@ -3,8 +3,15 @@
 import Matter from "matter-js";
 
 import { Vector2 } from "../maths/Vector2";
-import type { ISandboxObjectMetadata } from "../sandbox/SandboxObject";
-import { SandboxObjectType } from "../sandbox/SandboxObjectType";
+import {
+  SandboxObjectRadialForceMode,
+  type ISandboxObject,
+  type ISandboxObjectMetadata,
+} from "../sandbox/SandboxObject";
+import {
+  SandboxObjectFlags,
+  SandboxObjectType,
+} from "../sandbox/SandboxObjectType";
 import { useEditorStore } from "../store/editorStore";
 import { getGravityMultiplier } from "./SandboxSimulation";
 import { Maths } from "../maths/Maths";
@@ -110,6 +117,7 @@ export class PhysicsWorld {
     nextMetadata: ISandboxObjectMetadata,
   ): void {
     let shouldWakeBody = false;
+
     const widthScale =
       previousMetadata.width > 0
         ? nextMetadata.width / previousMetadata.width
@@ -137,6 +145,20 @@ export class PhysicsWorld {
     }
 
     if (!body.isStatic && shouldWakeBody) {
+      Matter.Sleeping.set(body, false);
+    }
+  }
+
+  public applyFlagsToBody(body: Matter.Body, flags: SandboxObjectFlags): void {
+    const shouldBeStatic = (flags & SandboxObjectFlags.Static) !== 0;
+
+    if (body.isStatic === shouldBeStatic) {
+      return;
+    }
+
+    Matter.Body.setStatic(body, shouldBeStatic);
+
+    if (!shouldBeStatic) {
       Matter.Sleeping.set(body, false);
     }
   }
@@ -198,7 +220,7 @@ export class PhysicsWorld {
     this.draggedBodies.length = 0;
   }
 
-  public update(): void {
+  public update(objects: ISandboxObject[] = []): void {
     if (!this._engine) {
       return;
     }
@@ -226,6 +248,10 @@ export class PhysicsWorld {
 
     if (isSimulationRunning && windForce !== 0) {
       this.applyWind(windForce);
+    }
+
+    if (isSimulationRunning) {
+      this.applyRadialForces(objects);
     }
 
     if (this.draggedBodies.length > 0) {
@@ -277,6 +303,59 @@ export class PhysicsWorld {
         x: force * body.mass,
         y: 0,
       });
+    }
+  }
+
+  private applyRadialForces(objects: ISandboxObject[]): void {
+    const forceSources = objects.filter(
+      (object) =>
+        (object.flags & SandboxObjectFlags.Hidden) === 0 &&
+        object.metadata.radialForceMode !== SandboxObjectRadialForceMode.None &&
+        object.metadata.radialForceStrength > 0 &&
+        object.metadata.radialForceRadius > 0,
+    );
+
+    if (forceSources.length === 0) {
+      return;
+    }
+
+    for (const target of objects) {
+      if (
+        target.body.isStatic ||
+        (target.flags & SandboxObjectFlags.Hidden) !== 0
+      ) {
+        continue;
+      }
+
+      for (const source of forceSources) {
+        if (source.id === target.id) {
+          continue;
+        }
+
+        const radius = source.metadata.radialForceRadius;
+        const strength = source.metadata.radialForceStrength;
+        const direction =
+          source.metadata.radialForceMode === SandboxObjectRadialForceMode.Pull
+            ? 1
+            : -1;
+        const dx = source.body.position.x - target.body.position.x;
+        const dy = source.body.position.y - target.body.position.y;
+        const distanceSquared = dx * dx + dy * dy;
+
+        if (distanceSquared <= 0 || distanceSquared > radius * radius) {
+          continue;
+        }
+
+        const distance = Math.sqrt(distanceSquared);
+        const falloff = 1 - distance / radius;
+        const forceMagnitude =
+          strength * target.body.mass * falloff * direction;
+
+        Matter.Body.applyForce(target.body, target.body.position, {
+          x: (dx / distance) * forceMagnitude,
+          y: (dy / distance) * forceMagnitude,
+        });
+      }
     }
   }
 

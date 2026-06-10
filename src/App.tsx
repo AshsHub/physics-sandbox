@@ -66,11 +66,7 @@ export default function App() {
   const selectedIds = useEditorStore((s) => s.selectedIds);
   const objectRevision = useEditorStore((s) => s.objectRevision);
   const viewportSize = useEditorStore((s) => s.viewportSize);
-  const objects = app.engine.getAllObjects();
-  const staticObjectCount = objects.filter(
-    (object) => object.flags & SandboxObjectFlags.Locked,
-  ).length;
-  const dynamicObjectCount = objects.length - staticObjectCount;
+  const state = useEditorStore.getState();
 
   const openObjectContextMenu = useCallback(
     (objectId: string, position: { x: number; y: number }) => {
@@ -151,8 +147,8 @@ export default function App() {
 
         <StatusBar
           fps={fps}
-          staticObjectCount={staticObjectCount}
-          dynamicObjectCount={dynamicObjectCount}
+          staticObjectCount={state.dynamicObjectCount}
+          dynamicObjectCount={state.staticObjectCount}
           selectedCount={selectedCount}
         />
       </header>

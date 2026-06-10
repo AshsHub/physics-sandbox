@@ -12,6 +12,12 @@ export enum SandboxObjectBorderStyle {
   Dashed = "Dashed",
 }
 
+export enum SandboxObjectRadialForceMode {
+  None = "None",
+  Pull = "Pull",
+  Push = "Push",
+}
+
 export interface ISandboxObjectMetadata {
   width: number;
   height: number;
@@ -25,6 +31,9 @@ export interface ISandboxObjectMetadata {
   mass: number;
   bounce: number;
   friction: number;
+  radialForceMode: SandboxObjectRadialForceMode;
+  radialForceRadius: number;
+  radialForceStrength: number;
 }
 
 export interface ISandboxObjectSnapshot {
@@ -32,6 +41,7 @@ export interface ISandboxObjectSnapshot {
   name: string;
   type: SandboxObjectType;
   position: Vector2;
+  flags: SandboxObjectFlags;
   metadata: ISandboxObjectMetadata;
 }
 

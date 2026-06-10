@@ -49,7 +49,7 @@ export class Application implements IApplication {
       const objects = this.engine.getAllObjects();
 
       const staticCount = objects.filter(
-        (o) => o.flags & SandboxObjectFlags.Locked,
+        (o) => o.flags & SandboxObjectFlags.Static,
       ).length;
 
       const dynamicCount = objects.length - staticCount;
@@ -79,6 +79,7 @@ export class Application implements IApplication {
 
     this.unsubscribers.push(
       this.events.subscribe("sandboxObjectChanged", () => {
+        updateCounts();
         useEditorStore.getState().bumpObjectRevision();
       }),
     );

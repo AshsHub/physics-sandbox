@@ -3,6 +3,7 @@ import type { MouseEvent, ReactNode } from "react";
 import type { ICommandBus } from "../../commands/ICommands";
 import {
   SandboxObjectBorderStyle,
+  SandboxObjectRadialForceMode,
   type ISandboxObject,
   type ISandboxObjectMetadata,
 } from "../../sandbox/SandboxObject";
@@ -33,11 +34,12 @@ export function InspectorListItem({
   onContextMenu,
 }: InspectorListItemProps) {
   const itemRef = useRef<HTMLDivElement>(null);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(isSelected || shouldScrollIntoView);
   const [isEditingName, setIsEditingName] = useState(false);
   const [draftName, setDraftName] = useState(entity.name);
   const shouldCancelCommit = useRef(false);
-  const isStatic = (entity.flags & SandboxObjectFlags.Locked) !== 0;
+  const isStatic = (entity.flags & SandboxObjectFlags.Static) !== 0;
+  const isLocked = (entity.flags & SandboxObjectFlags.Locked) !== 0;
   const isHidden = (entity.flags & SandboxObjectFlags.Hidden) !== 0;
   const metadata = entity.metadata;
 
@@ -61,6 +63,14 @@ export function InspectorListItem({
         ...metadata,
         ...partial,
       },
+    });
+  };
+
+  const updateFlags = (nextFlags: SandboxObjectFlags) => {
+    commands.execute("updateObjectProperties", {
+      objectIds: [entity.id],
+      property: "flags",
+      value: nextFlags,
     });
   };
 
@@ -202,6 +212,23 @@ export function InspectorListItem({
           </InspectorSection>
 
           <InspectorSection title="Physics">
+            <EditableSelect
+              label="State"
+              value={isStatic ? "Static" : "Dynamic"}
+              options={["Static", "Dynamic"]}
+              onCommit={(state) => {
+                const nextIsStatic = state === "Static";
+                const nextFlags = nextIsStatic
+                  ? entity.flags | SandboxObjectFlags.Static
+                  : entity.flags & ~SandboxObjectFlags.Static;
+
+                updateFlags(nextFlags);
+
+                if (!nextIsStatic && metadata.mass <= 0) {
+                  updateMetadata({ mass: 10 });
+                }
+              }}
+            />
             {isStatic ? (
               <ReadOnlyRow label="Mass" value="Static" />
             ) : (
@@ -232,18 +259,51 @@ export function InspectorListItem({
               value={metadata.friction}
               onCommit={(friction) => updateMetadata({ friction })}
             />
+            <EditableSelect
+              label="Force"
+              value={metadata.radialForceMode}
+              options={Object.values(SandboxObjectRadialForceMode)}
+              onCommit={(radialForceMode) =>
+                updateMetadata({ radialForceMode })
+              }
+            />
+            {metadata.radialForceMode !== SandboxObjectRadialForceMode.None && (
+              <>
+                <EditableNumber
+                  key={`radialForceRadius:${metadata.radialForceRadius}`}
+                  label="Radius"
+                  min={0}
+                  step={10}
+                  value={metadata.radialForceRadius}
+                  onCommit={(radialForceRadius) =>
+                    updateMetadata({ radialForceRadius })
+                  }
+                />
+                <EditableNumber
+                  key={`radialForceStrength:${metadata.radialForceStrength}`}
+                  label="Strength"
+                  min={0}
+                  step={0.0001}
+                  value={metadata.radialForceStrength}
+                  onCommit={(radialForceStrength) =>
+                    updateMetadata({ radialForceStrength })
+                  }
+                />
+              </>
+            )}
           </InspectorSection>
 
           <InspectorSection title="Read-only">
-            <ReadOnlyRow
-              label="State"
-              value={isStatic ? "Static" : "Dynamic"}
-            />
             <ReadOnlyRow label="Type" value={entity.type} />
             <ReadOnlyRow
               label="Visible"
               value={isHidden ? "Hidden" : "Visible"}
             />
+            <ReadOnlyRow
+              label="State"
+              value={isStatic ? "Static" : "Dynamic"}
+            />
+            <ReadOnlyRow label="Locked" value={isLocked ? "Yes" : "No"} />
             <ReadOnlyRow label="Selected" value={isSelected ? "Yes" : "No"} />
             <ReadOnlyRow label="ID" value={entity.id} />
           </InspectorSection>
