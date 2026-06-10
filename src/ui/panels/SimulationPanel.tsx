@@ -39,18 +39,22 @@ export function SimluationPanel({ onClose }: SimulationPanelProps) {
           <div className="simulation-control-actions">
             <button
               aria-pressed={isGravityReversed}
-              className={
-                isGravityReversed
-                  ? "simulation-reset-button selected"
-                  : "simulation-reset-button"
-              }
-              onClick={() => setGravityReversed(!isGravityReversed)}
-              type="button"
-            >
+            className={
+              isGravityReversed
+                ? "simulation-reset-button selected"
+                : "simulation-reset-button"
+            }
+            data-tooltip="Invert gravity direction"
+            data-tooltip-position="bottom"
+            onClick={() => setGravityReversed(!isGravityReversed)}
+            type="button"
+          >
               Reverse
             </button>
             <button
               className="simulation-reset-button"
+              data-tooltip="Reset gravity to Earth"
+              data-tooltip-position="left"
               onClick={() => {
                 setGravitySimulation(GravitySimulationType.Earth);
                 setGravityReversed(false);
@@ -98,6 +102,8 @@ export function SimluationPanel({ onClose }: SimulationPanelProps) {
           <h3 className="simulation-group-title">Wind</h3>
           <button
             className="simulation-reset-button"
+            data-tooltip="Remove wind force"
+            data-tooltip-position="left"
             onClick={() => setWindForce(0)}
             type="button"
           >

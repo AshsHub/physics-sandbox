@@ -43,7 +43,8 @@ export function Toolbar({ onFitView }: ToolbarProps) {
             }
             key={mode}
             onClick={() => setInteractionMode(mode)}
-            title={`${label} (${input})`}
+            data-tooltip={`${label} mode (${input})`}
+            data-tooltip-position="bottom"
             type="button"
           >
             <span className="interaction-mode-key">{input}</span>
@@ -54,14 +55,22 @@ export function Toolbar({ onFitView }: ToolbarProps) {
 
       <button
         className="fit-view-button"
+        data-tooltip="Fit objects to view"
+        data-tooltip-position="bottom"
         onClick={onFitView}
-        title="Fit objects to view"
         type="button"
       >
         Fit {Math.round(cameraZoom * 100)}%
       </button>
 
-      <div className="simulation-controls" aria-label="Simulation controls">
+      <div
+        className="simulation-controls"
+        aria-label="Simulation controls"
+        data-tooltip={
+          isSimulationRunning ? "Pause simulation" : "Play simulation"
+        }
+        data-tooltip-position="bottom"
+      >
         <span
           className={
             isSimulationRunning
@@ -74,7 +83,6 @@ export function Toolbar({ onFitView }: ToolbarProps) {
           aria-pressed={isSimulationRunning}
           className="simulation-control-button"
           onClick={() => setSimulationRunning(!isSimulationRunning)}
-          title="Pause simulation"
           type="button"
         >
           ||
@@ -84,7 +92,6 @@ export function Toolbar({ onFitView }: ToolbarProps) {
           aria-pressed={!isSimulationRunning}
           className="simulation-control-button"
           onClick={() => setSimulationRunning(!isSimulationRunning)}
-          title="Play simulation"
           type="button"
         >
           {">"}

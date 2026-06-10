@@ -87,6 +87,8 @@ export function EditableNumber({
         <button
           aria-label={`Decrease ${label}`}
           className="inspector-stepper-button"
+          data-tooltip={`Decrease ${label}`}
+          data-tooltip-position="bottom"
           disabled={disabled}
           onClick={() => {
             inputRef.current?.focus();
@@ -126,6 +128,8 @@ export function EditableNumber({
         <button
           aria-label={`Increase ${label}`}
           className="inspector-stepper-button"
+          data-tooltip={`Increase ${label}`}
+          data-tooltip-position="bottom"
           disabled={disabled}
           onClick={() => {
             inputRef.current?.focus();

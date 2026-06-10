@@ -1,0 +1,53 @@
+.app-tooltip {
+  position: fixed;
+  z-index: 100;
+  max-width: 220px;
+  width: max-content;
+  padding: 6px 8px;
+  border: 1px solid #4a4a4a;
+  border-radius: 4px;
+  background: #1f1f1f;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.25;
+  pointer-events: none;
+  text-align: left;
+  white-space: normal;
+}
+
+.app-tooltip::before {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border: 1px solid #4a4a4a;
+  border-top: 0;
+  border-left: 0;
+  background: #1f1f1f;
+}
+
+.app-tooltip-bottom::before {
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%) rotate(225deg);
+}
+
+.app-tooltip-left::before {
+  top: 50%;
+  right: -5px;
+  transform: translateY(-50%) rotate(315deg);
+}
+
+.app-tooltip-right::before {
+  top: 50%;
+  left: -5px;
+  transform: translateY(-50%) rotate(135deg);
+}
+
+.app-tooltip-top::before {
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+}

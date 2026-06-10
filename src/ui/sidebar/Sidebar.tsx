@@ -28,6 +28,8 @@ export function Sidebar({ app, onObjectContextMenu }: SidebarProps) {
               ? "sidebar-button selected"
               : "sidebar-button"
           }
+          data-tooltip="Creator"
+          data-tooltip-position="right"
           onClick={() => setActivePanel(SidebarPanel.Create)}
         >
           +
@@ -39,6 +41,8 @@ export function Sidebar({ app, onObjectContextMenu }: SidebarProps) {
               ? "sidebar-button selected"
               : "sidebar-button"
           }
+          data-tooltip="Inspector"
+          data-tooltip-position="right"
           onClick={() => setActivePanel(SidebarPanel.Inspector)}
         >
           I
@@ -50,6 +54,8 @@ export function Sidebar({ app, onObjectContextMenu }: SidebarProps) {
               ? "sidebar-button selected"
               : "sidebar-button"
           }
+          data-tooltip="Simulation"
+          data-tooltip-position="right"
           onClick={() => setActivePanel(SidebarPanel.Simulation)}
         >
           S

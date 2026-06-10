@@ -9,6 +9,7 @@ import { CanvasContextMenu } from "./ui/context/CanvasContextMenu";
 import { ObjectContextMenu } from "./ui/context/ObjectContextMenu";
 import { Sidebar } from "./ui/sidebar/Sidebar";
 import { StatusBar } from "./ui/StatusBar";
+import { TooltipLayer } from "./ui/TooltipLayer";
 import { Toolbar } from "./ui/Toolbar";
 
 export default function App() {
@@ -163,6 +164,8 @@ export default function App() {
           onClose={() => setContextMenu(undefined)}
         />
       )}
+
+      <TooltipLayer />
     </div>
   );
 }

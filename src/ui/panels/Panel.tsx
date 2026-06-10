@@ -18,8 +18,9 @@ export function Panel({ title, onClose, children }: PanelProps) {
           <button
             aria-label={`Close ${title} panel`}
             className="panel-close-button"
+            data-tooltip="Close panel"
+            data-tooltip-position="left"
             onClick={onClose}
-            title="Close panel"
             type="button"
           >
             x
