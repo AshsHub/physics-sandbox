@@ -2,15 +2,22 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  padding: 6px 12px;
-  gap: var(--space-sm);
-  border-top: 1px solid #333;
-  background: #222;
+  gap: var(--space-xs);
   color: #aaa;
   font-size: 12px;
   right: 10px;
   position: absolute;
+}
+
+.status-bar-pill {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  padding: 6px 12px;
+  border-top: 1px solid #333;
   border-radius: 4px;
+  background: #222;
 }
 
 .status-bar-group {
@@ -28,4 +35,9 @@
   width: 1px;
   height: 14px;
   background: var(--border);
+}
+
+.status-bar-fps {
+  min-width: 68px;
+  justify-content: center;
 }

@@ -14,6 +14,7 @@ import { Toolbar } from "./ui/Toolbar";
 
 export default function App() {
   const [app] = useState(() => new Application());
+  const [fps, setFps] = useState(0);
   const [contextMenu, setContextMenu] = useState<
     | {
         type: "object";
@@ -36,6 +37,30 @@ export default function App() {
       app.destroy();
     };
   }, [app]);
+
+  useEffect(() => {
+    let frameId = 0;
+    let frameCount = 0;
+    let lastSampleTime = performance.now();
+
+    const updateFps = (time: number) => {
+      frameCount++;
+
+      const elapsed = time - lastSampleTime;
+
+      if (elapsed >= 500) {
+        setFps(Math.round((frameCount * 1000) / elapsed));
+        frameCount = 0;
+        lastSampleTime = time;
+      }
+
+      frameId = requestAnimationFrame(updateFps);
+    };
+
+    frameId = requestAnimationFrame(updateFps);
+
+    return () => cancelAnimationFrame(frameId);
+  }, []);
 
   const selectedCount = useEditorStore((s) => s.selectedIds.size);
   const selectedIds = useEditorStore((s) => s.selectedIds);
@@ -125,6 +150,7 @@ export default function App() {
         <h1 className="headerbar-title">Physics Sandbox</h1>
 
         <StatusBar
+          fps={fps}
           staticObjectCount={staticObjectCount}
           dynamicObjectCount={dynamicObjectCount}
           selectedCount={selectedCount}

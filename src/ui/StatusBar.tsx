@@ -5,12 +5,14 @@ import {
 import { useEditorStore } from "../store/editorStore";
 
 export interface StatusBarProps {
+  fps: number;
   staticObjectCount: number;
   dynamicObjectCount: number;
   selectedCount: number;
 }
 
 export function StatusBar({
+  fps,
   staticObjectCount,
   dynamicObjectCount,
   selectedCount,
@@ -27,28 +29,35 @@ export function StatusBar({
 
   return (
     <footer className="status-bar">
-      <div className="status-bar-group">
-        <span className="status-bar-group-label">Objects</span>
-        <span>Static: {staticObjectCount}</span>
-        <span>Dynamic: {dynamicObjectCount}</span>
-        <span>Selected: {selectedCount}</span>
+      <div className="status-bar-pill">
+        <div className="status-bar-group">
+          <span className="status-bar-group-label">Objects</span>
+          <span>Static: {staticObjectCount}</span>
+          <span>Dynamic: {dynamicObjectCount}</span>
+          <span>Selected: {selectedCount}</span>
+        </div>
+
+        <div className="status-bar-divider" aria-hidden="true" />
+
+        <div className="status-bar-group">
+          <span className="status-bar-group-label">Modifiers</span>
+          <span>
+            Gravity: {isGravityReversed ? "Reverse " : ""}
+            {activeGravityPreset.label}{" "}
+            {activeGravityPreset.gravityMultiplier.toFixed(2)}g
+          </span>
+          <span>
+            Wind:{" "}
+            {windDescriptor.direction
+              ? `${windDescriptor.label} ${windDescriptor.direction} ${windDescriptor.strengthPercent.toFixed(1)}%`
+              : windDescriptor.label}
+          </span>
+        </div>
       </div>
 
-      <div className="status-bar-divider" aria-hidden="true" />
-
-      <div className="status-bar-group">
-        <span className="status-bar-group-label">Modifiers</span>
-        <span>
-          Gravity: {isGravityReversed ? "Reverse " : ""}
-          {activeGravityPreset.label}{" "}
-          {activeGravityPreset.gravityMultiplier.toFixed(2)}g
-        </span>
-        <span>
-          Wind:{" "}
-          {windDescriptor.direction
-            ? `${windDescriptor.label} ${windDescriptor.direction} ${windDescriptor.strengthPercent.toFixed(1)}%`
-            : windDescriptor.label}
-        </span>
+      <div className="status-bar-pill status-bar-fps">
+        <span className="status-bar-group-label">FPS</span>
+        <span>{fps}</span>
       </div>
     </footer>
   );
