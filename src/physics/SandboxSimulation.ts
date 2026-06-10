@@ -104,13 +104,19 @@ export function getGravityMultiplier(type?: GravitySimulationType): number {
 }
 
 export function getWindDescriptor(force: number): WindDescriptor {
+  const percentPrecisionFactor =
+    10 ** SimulationConfig.wind.strengthPercentDecimalPlaces;
   const strengthPercent =
-    Math.round((Math.abs(force) / SimulationConfig.wind.maxForce) * 1000) / 10;
+    Math.round(
+      (Math.abs(force) / SimulationConfig.wind.maxForce) *
+        SimulationConfig.wind.percentScale *
+        percentPrecisionFactor,
+    ) / percentPrecisionFactor;
 
-  if (strengthPercent === 0) {
+  if (force === 0) {
     return {
       label: "None",
-      strengthPercent,
+      strengthPercent: 0,
     };
   }
 
@@ -124,21 +130,9 @@ export function getWindDescriptor(force: number): WindDescriptor {
 }
 
 function getWindStrengthLabel(strengthPercent: number): string {
-  if (strengthPercent < 20) {
-    return "Light Breeze";
-  }
-
-  if (strengthPercent < 45) {
-    return "Mild Wind";
-  }
-
-  if (strengthPercent < 70) {
-    return "Gusty Wind";
-  }
-
-  if (strengthPercent < 90) {
-    return "Strong Wind";
-  }
-
-  return "Storm Force";
+  return (
+    SimulationConfig.wind.strengthLabels.find(
+      ({ maxPercent }) => strengthPercent < maxPercent,
+    )?.label ?? "Storm Force"
+  );
 }

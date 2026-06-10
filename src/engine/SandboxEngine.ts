@@ -37,6 +37,7 @@ export class SandboxEngine implements ISandboxEngine {
   public init(): void {
     this.physics.init();
 
+    // TODO: Construct a better method for initial world creation
     this.createObject(new Vector2(0, 580), SandboxObjectType.Platform);
   }
 
@@ -205,7 +206,8 @@ export class SandboxEngine implements ISandboxEngine {
       .getAll()
       .filter(
         (object) =>
-          (object.flags & (SandboxObjectFlags.Locked | SandboxObjectFlags.Static)) ===
+          (object.flags &
+            (SandboxObjectFlags.Locked | SandboxObjectFlags.Static)) ===
           0,
       )
       .filter((object) => {

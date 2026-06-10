@@ -4,6 +4,7 @@ import Matter from "matter-js";
 
 import { PhysicsConfig } from "../config/PhysicsConfig";
 import { SandboxObjectConfig } from "../config/SandboxObjectConfig";
+import { SimulationConfig } from "../config/SimulationConfig";
 import { Vector2 } from "../maths/Vector2";
 import {
   SandboxObjectRadialForceMode,
@@ -30,8 +31,8 @@ export class PhysicsWorld {
 
   private readonly draggedBodies: IDraggedBody[] = [];
   private readonly moveToPosition = new Vector2();
-  private lastGravityY = 0;
-  private lastWindForce = 0;
+  private lastGravityY: number = 0;
+  private lastWindForce: number = SimulationConfig.wind.defaultWindForce;
 
   public init(): void {
     this._engine = Matter.Engine.create();
@@ -342,7 +343,10 @@ export class PhysicsWorld {
     }
 
     if (isSimulationRunning || this.draggedBodies.length > 0) {
-      Matter.Engine.update(this._engine, PhysicsConfig.simulation.fixedTimeStepMs);
+      Matter.Engine.update(
+        this._engine,
+        PhysicsConfig.simulation.fixedTimeStepMs,
+      );
     }
   }
 

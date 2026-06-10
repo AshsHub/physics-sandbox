@@ -69,7 +69,10 @@ export function SimluationPanel({ onClose }: SimulationPanelProps) {
             {activeGravityPreset.label}
           </span>
           <span className="simulation-slider-meta">
-            {activeGravityPreset.gravityMultiplier.toFixed(2)}g
+            {activeGravityPreset.gravityMultiplier.toFixed(
+              SimulationConfig.display.gravityDecimalPlaces,
+            )}
+            g
           </span>
         </div>
 
@@ -84,7 +87,7 @@ export function SimluationPanel({ onClose }: SimulationPanelProps) {
 
             setGravitySimulation(preset.type);
           }}
-          step={1}
+          step={SimulationConfig.gravity.sliderStep}
           type="range"
           value={activeGravityIndex}
         />
@@ -102,7 +105,7 @@ export function SimluationPanel({ onClose }: SimulationPanelProps) {
             className="simulation-reset-button"
             data-tooltip="Remove wind force"
             data-tooltip-position="left"
-            onClick={() => setWindForce(0)}
+            onClick={() => setWindForce(SimulationConfig.wind.defaultWindForce)}
             type="button"
           >
             Reset
@@ -116,7 +119,10 @@ export function SimluationPanel({ onClose }: SimulationPanelProps) {
               : windDescriptor.label}
           </span>
           <span className="simulation-slider-meta">
-            {windDescriptor.strengthPercent.toFixed(1)}%
+            {windDescriptor.strengthPercent.toFixed(
+              SimulationConfig.display.windDecimalPlaces,
+            )}
+            %
           </span>
         </div>
 

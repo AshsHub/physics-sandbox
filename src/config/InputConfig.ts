@@ -1,5 +1,11 @@
 import { CameraConfig } from "../config/CameraConfig";
 
+export enum MouseButton {
+  Primary,
+  Middle,
+  Secondary,
+}
+
 export const InputConfig = {
   keyboard: {
     rotationStep: Math.PI / 18,

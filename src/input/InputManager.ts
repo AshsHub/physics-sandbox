@@ -3,7 +3,7 @@ import type Matter from "matter-js";
 import { Vector2 } from "../maths/Vector2";
 import { SandboxObjectFlags } from "../sandbox/SandboxObjectType";
 import { useEditorStore } from "../store/editorStore";
-import { InputConfig } from "../config/InputConfig";
+import { InputConfig, MouseButton } from "../config/InputConfig";
 import { InteractionMode } from "./InteractionMode";
 
 type Action = (modifiers: KeyModifiers) => void;
@@ -201,14 +201,15 @@ export class InputManager {
     this.lastPointerPosition = pos.clone();
 
     if (
-      button === 1 ||
-      (button === 0 && this.getInteractionMode() === InteractionMode.Camera)
+      button === MouseButton.Middle ||
+      (button === MouseButton.Primary &&
+        this.getInteractionMode() === InteractionMode.Camera)
     ) {
       this.setActivePointerMode(InteractionMode.Camera);
       return;
     }
 
-    if (button !== 0) {
+    if (button !== MouseButton.Primary) {
       return;
     }
 

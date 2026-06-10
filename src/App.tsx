@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import "./App.css";
 import { Application } from "./application/Application";
 import { CanvasView } from "./canvas/CanvasView";
+import { AppConfig } from "./config/AppConfig";
 import { Vector2 } from "./maths/Vector2";
 import { useEditorStore } from "./store/editorStore";
 import { CanvasContextMenu } from "./ui/context/CanvasContextMenu";
@@ -48,8 +49,12 @@ export default function App() {
 
       const elapsed = time - lastSampleTime;
 
-      if (elapsed >= 500) {
-        setFps(Math.round((frameCount * 1000) / elapsed));
+      if (elapsed >= AppConfig.fps.sampleIntervalMs) {
+        setFps(
+          Math.round(
+            (frameCount * AppConfig.fps.millisecondsPerSecond) / elapsed,
+          ),
+        );
         frameCount = 0;
         lastSampleTime = time;
       }

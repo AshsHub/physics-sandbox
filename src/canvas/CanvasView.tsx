@@ -6,6 +6,7 @@ import type { IApplication } from "../application/IApplication";
 import { InteractionMode } from "../input/InteractionMode";
 import { useEditorStore } from "../store/editorStore";
 import { SelectionBoxOverlay } from "./SelectionBoxOverlay";
+import { MouseButton } from "../config/InputConfig";
 
 export interface CanvasViewProps {
   app: IApplication;
@@ -42,11 +43,11 @@ export function CanvasView({
     let frameId = 0;
 
     const handlePointerDown = (e: PointerEvent) => {
-      if (e.button === 1) {
+      if (e.button === MouseButton.Middle) {
         e.preventDefault();
       }
 
-      if (e.button === 0 || e.button === 1) {
+      if (e.button === MouseButton.Primary || e.button === MouseButton.Middle) {
         canvas.setPointerCapture(e.pointerId);
       }
 

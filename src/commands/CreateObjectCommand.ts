@@ -1,5 +1,5 @@
-import type { ISandboxEngine } from "../engine/ISandboxEngine";
 import type { Camera } from "../camera/Camera";
+import type { ISandboxEngine } from "../engine/ISandboxEngine";
 import { Vector2 } from "../maths/Vector2";
 import type { ISandboxObjectSnapshot } from "../sandbox/SandboxObject";
 import type { SandboxObjectType } from "../sandbox/SandboxObjectType";
@@ -27,6 +27,8 @@ export class CreateObjectCommand implements ICommand {
       };
     }
 
+    // TODO: Find a better way to handle initial object creation
+    // Possibly drag or stamp method
     const object = this.engine.createObject(
       this.options.position ??
         this.camera.getViewportCenterPosition().subtract(0, 200),

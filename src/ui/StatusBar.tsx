@@ -2,6 +2,7 @@ import {
   getGravitySimulationPreset,
   getWindDescriptor,
 } from "../physics/SandboxSimulation";
+import { SimulationConfig } from "../config/SimulationConfig";
 import { useEditorStore } from "../store/editorStore";
 
 export interface StatusBarProps {
@@ -44,12 +45,17 @@ export function StatusBar({
           <span>
             Gravity: {isGravityReversed ? "Reverse " : ""}
             {activeGravityPreset.label}{" "}
-            {activeGravityPreset.gravityMultiplier.toFixed(2)}g
+            {activeGravityPreset.gravityMultiplier.toFixed(
+              SimulationConfig.display.gravityDecimalPlaces,
+            )}
+            g
           </span>
           <span>
             Wind:{" "}
             {windDescriptor.direction
-              ? `${windDescriptor.label} ${windDescriptor.direction} ${windDescriptor.strengthPercent.toFixed(1)}%`
+              ? `${windDescriptor.label} ${windDescriptor.direction} ${windDescriptor.strengthPercent.toFixed(
+                  SimulationConfig.display.windDecimalPlaces,
+                )}%`
               : windDescriptor.label}
           </span>
         </div>

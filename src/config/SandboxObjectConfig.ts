@@ -40,6 +40,9 @@ export const SandboxObjectConfig = {
   defaultRadialForce: {
     ...defaultRadialForce,
   },
+  naming: {
+    idPreviewLength: 5,
+  },
   metadataConstraints: {
     width: {
       min: 4,

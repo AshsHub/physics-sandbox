@@ -42,7 +42,10 @@ export class SandboxObjectManager {
       body,
       name:
         name ??
-        `${type.charAt(0).toUpperCase()}${type.slice(1)} ${objectId.slice(0, 5)}`,
+        `${type.charAt(0).toUpperCase()}${type.slice(1)} ${objectId.slice(
+          0,
+          SandboxObjectConfig.naming.idPreviewLength,
+        )}`,
       metadata,
       flags,
     };

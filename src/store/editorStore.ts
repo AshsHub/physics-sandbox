@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import { type ViewportSize } from "../camera/Camera";
+import { CameraConfig } from "../config/CameraConfig";
+import { SimulationConfig } from "../config/SimulationConfig";
 import { InteractionMode } from "../input/InteractionMode";
 import { GravitySimulationType } from "../physics/SandboxSimulation";
 import { SidebarPanel } from "../ui/panels/SidebarPanel";
@@ -72,7 +74,7 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
     x: 0,
     y: 0,
   },
-  cameraZoom: 1,
+  cameraZoom: CameraConfig.zoom.initial,
   viewportSize: {
     width: 0,
     height: 0,
@@ -85,7 +87,7 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
   activeGravitySimulation: GravitySimulationType.Earth,
   isGravityReversed: false,
   showForceRadius: true,
-  windForce: 0,
+  windForce: SimulationConfig.wind.defaultWindForce,
 
   select(id: string) {
     set((state) => ({
@@ -231,7 +233,7 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
     set({
       activeGravitySimulation: undefined,
       isGravityReversed: false,
-      windForce: 0,
+      windForce: SimulationConfig.wind.defaultWindForce,
     });
   },
 }));
