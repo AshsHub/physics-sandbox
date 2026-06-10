@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { MouseEvent, ReactNode } from "react";
 import type { ICommandBus } from "../../commands/ICommands";
+import { SandboxObjectConfig } from "../../config/SandboxObjectConfig";
 import {
   SandboxObjectBorderStyle,
   SandboxObjectRadialForceMode,
@@ -42,6 +43,7 @@ export function InspectorListItem({
   const isLocked = (entity.flags & SandboxObjectFlags.Locked) !== 0;
   const isHidden = (entity.flags & SandboxObjectFlags.Hidden) !== 0;
   const metadata = entity.metadata;
+  const constraints = SandboxObjectConfig.metadataConstraints;
 
   useEffect(() => {
     if (!shouldScrollIntoView) {
@@ -163,14 +165,16 @@ export function InspectorListItem({
             <EditableNumber
               key={`width:${metadata.width}`}
               label="Width"
-              min={4}
+              min={constraints.width.min}
+              step={constraints.width.step}
               value={metadata.width}
               onCommit={(width) => updateMetadata({ width })}
             />
             <EditableNumber
               key={`height:${metadata.height}`}
               label="Height"
-              min={4}
+              min={constraints.height.min}
+              step={constraints.height.step}
               value={metadata.height}
               onCommit={(height) => updateMetadata({ height })}
             />
@@ -183,9 +187,9 @@ export function InspectorListItem({
             <EditableNumber
               key={`opacity:${metadata.opacity}`}
               label="Opacity"
-              max={1}
-              min={0}
-              step={0.05}
+              max={constraints.opacity.max}
+              min={constraints.opacity.min}
+              step={constraints.opacity.step}
               value={metadata.opacity}
               onCommit={(opacity) => updateMetadata({ opacity })}
             />
@@ -198,8 +202,8 @@ export function InspectorListItem({
             <EditableNumber
               key={`borderWidth:${metadata.borderWidth}`}
               label="Border px"
-              min={0}
-              step={1}
+              min={constraints.borderWidth.min}
+              step={constraints.borderWidth.step}
               value={metadata.borderWidth}
               onCommit={(borderWidth) => updateMetadata({ borderWidth })}
             />
@@ -225,7 +229,9 @@ export function InspectorListItem({
                 updateFlags(nextFlags);
 
                 if (!nextIsStatic && metadata.mass <= 0) {
-                  updateMetadata({ mass: 10 });
+                  updateMetadata({
+                    mass: constraints.mass.fallbackDynamicValue,
+                  });
                 }
               }}
             />
@@ -235,8 +241,8 @@ export function InspectorListItem({
               <EditableNumber
                 key={`mass:${metadata.mass}`}
                 label="Mass"
-                min={0.1}
-                step={0.1}
+                min={constraints.mass.min}
+                step={constraints.mass.step}
                 value={metadata.mass}
                 onCommit={(mass) => updateMetadata({ mass })}
               />
@@ -244,18 +250,18 @@ export function InspectorListItem({
             <EditableNumber
               key={`bounce:${metadata.bounce}`}
               label="Bounce"
-              max={1}
-              min={0}
-              step={0.05}
+              max={constraints.bounce.max}
+              min={constraints.bounce.min}
+              step={constraints.bounce.step}
               value={metadata.bounce}
               onCommit={(bounce) => updateMetadata({ bounce })}
             />
             <EditableNumber
               key={`friction:${metadata.friction}`}
               label="Friction"
-              max={1}
-              min={0}
-              step={0.05}
+              max={constraints.friction.max}
+              min={constraints.friction.min}
+              step={constraints.friction.step}
               value={metadata.friction}
               onCommit={(friction) => updateMetadata({ friction })}
             />
@@ -272,8 +278,8 @@ export function InspectorListItem({
                 <EditableNumber
                   key={`radialForceRadius:${metadata.radialForceRadius}`}
                   label="Radius"
-                  min={0}
-                  step={10}
+                  min={constraints.radialForceRadius.min}
+                  step={constraints.radialForceRadius.step}
                   value={metadata.radialForceRadius}
                   onCommit={(radialForceRadius) =>
                     updateMetadata({ radialForceRadius })
@@ -282,8 +288,8 @@ export function InspectorListItem({
                 <EditableNumber
                   key={`radialForceStrength:${metadata.radialForceStrength}`}
                   label="Strength"
-                  min={0}
-                  step={0.0001}
+                  min={constraints.radialForceStrength.min}
+                  step={constraints.radialForceStrength.step}
                   value={metadata.radialForceStrength}
                   onCommit={(radialForceStrength) =>
                     updateMetadata({ radialForceStrength })

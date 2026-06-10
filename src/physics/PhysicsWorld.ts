@@ -180,8 +180,16 @@ export class PhysicsWorld {
       shouldWakeBody = true;
     }
 
-    body.friction = Maths.clamp(nextMetadata.friction, 0, 1);
-    body.restitution = Maths.clamp(nextMetadata.bounce, 0, 1);
+    body.friction = Maths.clamp(
+      nextMetadata.friction,
+      SandboxObjectConfig.metadataConstraints.friction.min,
+      SandboxObjectConfig.metadataConstraints.friction.max,
+    );
+    body.restitution = Maths.clamp(
+      nextMetadata.bounce,
+      SandboxObjectConfig.metadataConstraints.bounce.min,
+      SandboxObjectConfig.metadataConstraints.bounce.max,
+    );
 
     if (!body.isStatic) {
       const nextMass = Math.max(

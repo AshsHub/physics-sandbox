@@ -40,6 +40,48 @@ export const SandboxObjectConfig = {
   defaultRadialForce: {
     ...defaultRadialForce,
   },
+  metadataConstraints: {
+    width: {
+      min: 4,
+      step: 1,
+    },
+    height: {
+      min: 4,
+      step: 1,
+    },
+    opacity: {
+      min: 0,
+      max: 1,
+      step: 0.05,
+    },
+    borderWidth: {
+      min: 0,
+      step: 1,
+    },
+    mass: {
+      min: 0.1,
+      fallbackDynamicValue: 10,
+      step: 0.1,
+    },
+    bounce: {
+      min: 0,
+      max: 1,
+      step: 0.05,
+    },
+    friction: {
+      min: 0,
+      max: 1,
+      step: 0.05,
+    },
+    radialForceRadius: {
+      min: 0,
+      step: 10,
+    },
+    radialForceStrength: {
+      min: 0,
+      step: 0.0001,
+    },
+  },
   defaults: {
     [SandboxObjectType.Platform]: {
       flags: SandboxObjectFlags.Static,
