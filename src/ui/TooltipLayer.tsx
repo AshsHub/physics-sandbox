@@ -159,8 +159,25 @@ export function TooltipLayer() {
         visibility: placement ? "visible" : "hidden",
       }}
     >
-      {activeTooltip.text}
+      {formatTooltipText(activeTooltip.text)}
     </div>
+  );
+}
+
+function formatTooltipText(text: string) {
+  const shortcutMatch = text.match(/^(.*)\s+\(([^)]+)\)$/);
+
+  if (!shortcutMatch) {
+    return text;
+  }
+
+  const [, label, shortcut] = shortcutMatch;
+
+  return (
+    <>
+      <span>{label}</span>
+      <kbd className="app-tooltip-key">{shortcut}</kbd>
+    </>
   );
 }
 

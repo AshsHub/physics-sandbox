@@ -40,3 +40,12 @@
 .fit-view-button {
   padding: 6px 10px;
 }
+
+.toolbar-toggle-button {
+  padding: 6px 10px;
+}
+
+.toolbar-toggle-button.selected {
+  background: #4f8cff;
+  border-color: #6a9fff;
+}

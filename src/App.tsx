@@ -3,7 +3,6 @@ import "./App.css";
 import { Application } from "./application/Application";
 import { CanvasView } from "./canvas/CanvasView";
 import { Vector2 } from "./maths/Vector2";
-import { SandboxObjectFlags } from "./sandbox/SandboxObjectType";
 import { useEditorStore } from "./store/editorStore";
 import { CanvasContextMenu } from "./ui/context/CanvasContextMenu";
 import { ObjectContextMenu } from "./ui/context/ObjectContextMenu";
@@ -66,7 +65,8 @@ export default function App() {
   const selectedIds = useEditorStore((s) => s.selectedIds);
   const objectRevision = useEditorStore((s) => s.objectRevision);
   const viewportSize = useEditorStore((s) => s.viewportSize);
-  const state = useEditorStore.getState();
+  const staticObjectCount = useEditorStore((s) => s.staticObjectCount);
+  const dynamicObjectCount = useEditorStore((s) => s.dynamicObjectCount);
 
   const openObjectContextMenu = useCallback(
     (objectId: string, position: { x: number; y: number }) => {
@@ -95,36 +95,8 @@ export default function App() {
   );
 
   const fitView = useCallback(() => {
-    const objects = app.engine
-      .getAllObjects()
-      .filter((object) => (object.flags & SandboxObjectFlags.Hidden) === 0);
-
-    if (
-      objects.length === 0 ||
-      viewportSize.width <= 0 ||
-      viewportSize.height <= 0
-    ) {
-      app.camera.setView({ x: 0, y: 0 }, 1);
-      return;
-    }
-
-    const sceneBounds = objects.reduce(
-      (bounds, object) => ({
-        minX: Math.min(bounds.minX, object.body.bounds.min.x),
-        maxX: Math.max(bounds.maxX, object.body.bounds.max.x),
-        minY: Math.min(bounds.minY, object.body.bounds.min.y),
-        maxY: Math.max(bounds.maxY, object.body.bounds.max.y),
-      }),
-      {
-        minX: Number.POSITIVE_INFINITY,
-        maxX: Number.NEGATIVE_INFINITY,
-        minY: Number.POSITIVE_INFINITY,
-        maxY: Number.NEGATIVE_INFINITY,
-      },
-    );
-
-    app.camera.fitBounds(sceneBounds, 64, 1);
-  }, [app, viewportSize]);
+    app.fitView();
+  }, [app]);
 
   useEffect(() => {
     if (
@@ -147,8 +119,8 @@ export default function App() {
 
         <StatusBar
           fps={fps}
-          staticObjectCount={state.dynamicObjectCount}
-          dynamicObjectCount={state.staticObjectCount}
+          staticObjectCount={staticObjectCount}
+          dynamicObjectCount={dynamicObjectCount}
           selectedCount={selectedCount}
         />
       </header>

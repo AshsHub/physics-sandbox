@@ -85,6 +85,15 @@ export class Application implements IApplication {
     );
   }
 
+  public fitView(): void {
+    const visibleBounds = this.engine
+      .getAllObjects()
+      .filter((object) => (object.flags & SandboxObjectFlags.Hidden) === 0)
+      .map((object) => object.body.bounds);
+
+    this.camera.fitBoundsCollection(visibleBounds, 64, 1);
+  }
+
   update(width: number, height: number) {
     this.engine.update();
     this.engine.cullObjectsOutsideViewport(width, height);

@@ -18,6 +18,11 @@ export interface WorldBounds {
   maxY: number;
 }
 
+export interface CameraFitBounds {
+  min: VectorLike;
+  max: VectorLike;
+}
+
 export interface ViewportWorldBounds {
   left: number;
   right: number;
@@ -180,6 +185,40 @@ export class Camera {
       ),
       nextZoom,
     );
+  }
+
+  public fitBoundsCollection(
+    boundsCollection: Iterable<CameraFitBounds>,
+    padding = 64,
+    maxZoom = MAX_CAMERA_ZOOM,
+  ): void {
+    const bounds = [...boundsCollection];
+
+    if (
+      bounds.length === 0 ||
+      this.viewportSize.width <= 0 ||
+      this.viewportSize.height <= 0
+    ) {
+      this.setView(Vector2.zero(), 1);
+      return;
+    }
+
+    const sceneBounds = bounds.reduce(
+      (currentBounds, objectBounds) => ({
+        minX: Math.min(currentBounds.minX, objectBounds.min.x),
+        maxX: Math.max(currentBounds.maxX, objectBounds.max.x),
+        minY: Math.min(currentBounds.minY, objectBounds.min.y),
+        maxY: Math.max(currentBounds.maxY, objectBounds.max.y),
+      }),
+      {
+        minX: Number.POSITIVE_INFINITY,
+        maxX: Number.NEGATIVE_INFINITY,
+        minY: Number.POSITIVE_INFINITY,
+        maxY: Number.NEGATIVE_INFINITY,
+      },
+    );
+
+    this.fitBounds(sceneBounds, padding, maxZoom);
   }
 
   private emitChange(): void {

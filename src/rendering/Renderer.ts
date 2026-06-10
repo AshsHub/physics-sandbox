@@ -23,8 +23,10 @@ export class Renderer {
     ctx.translate(cameraOffset.x, cameraOffset.y);
     ctx.scale(cameraZoom, cameraZoom);
 
-    for (const object of objects) {
-      this.drawForceRadius(ctx, object, cameraZoom);
+    if (editorState.showForceRadius) {
+      for (const object of objects) {
+        this.drawForceRadius(ctx, object, cameraZoom);
+      }
     }
 
     for (const object of objects) {

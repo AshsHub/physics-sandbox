@@ -29,6 +29,8 @@ export function Toolbar({ onFitView }: ToolbarProps) {
   const cameraZoom = useEditorStore((s) => s.cameraZoom);
   const isSimulationRunning = useEditorStore((s) => s.isSimulationRunning);
   const setSimulationRunning = useEditorStore((s) => s.setSimulationRunning);
+  const showForceRadius = useEditorStore((s) => s.showForceRadius);
+  const setShowForceRadius = useEditorStore((s) => s.setShowForceRadius);
 
   return (
     <header className="toolbar">
@@ -55,7 +57,7 @@ export function Toolbar({ onFitView }: ToolbarProps) {
 
       <button
         className="fit-view-button"
-        data-tooltip="Fit objects to view"
+        data-tooltip="Fit objects to view (F)"
         data-tooltip-position="bottom"
         onClick={onFitView}
         type="button"
@@ -63,11 +65,32 @@ export function Toolbar({ onFitView }: ToolbarProps) {
         Fit {Math.round(cameraZoom * 100)}%
       </button>
 
+      <button
+        aria-pressed={showForceRadius}
+        className={
+          showForceRadius
+            ? "toolbar-toggle-button selected"
+            : "toolbar-toggle-button"
+        }
+        data-tooltip={
+          showForceRadius
+            ? "Hide force radius overlays (R)"
+            : "Show force radius overlays"
+        }
+        data-tooltip-position="bottom"
+        onClick={() => setShowForceRadius(!showForceRadius)}
+        type="button"
+      >
+        Force Radius
+      </button>
+
       <div
         className="simulation-controls"
         aria-label="Simulation controls"
         data-tooltip={
-          isSimulationRunning ? "Pause simulation" : "Play simulation"
+          isSimulationRunning
+            ? "Pause simulation (Space)"
+            : "Play simulation (Space)"
         }
         data-tooltip-position="bottom"
       >

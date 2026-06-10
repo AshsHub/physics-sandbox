@@ -7,6 +7,11 @@ import { InteractionMode } from "./InteractionMode";
 
 type Action = (modifiers: KeyModifiers) => void;
 
+interface KeyAction {
+  action: Action;
+  repeat: boolean;
+}
+
 enum KeyModifiers {
   None = 0,
   Control = 1 << 0,
@@ -31,7 +36,7 @@ interface SelectionGesture {
 
 export class InputManager {
   private readonly pressedKeys = new Set<string>();
-  private readonly keyActions = new Map<string, Action[]>();
+  private readonly keyActions = new Map<string, KeyAction[]>();
   private activePointerMode?: InteractionMode;
   private lastPointerPosition?: Vector2;
   private selectionGesture?: SelectionGesture;
@@ -80,6 +85,16 @@ export class InputManager {
     this.registerAction(["e"], () => {
       this.rotateHeldObjects(KEY_ROTATION_STEP);
     });
+
+    this.registerAction(["r"], () => {
+      const state = useEditorStore.getState();
+      state.setShowForceRadius(!state.showForceRadius);
+    });
+
+    this.registerAction(["f"], () => {
+      this.app.fitView();
+    });
+
     this.registerAction(["delete", "backspace"], () => {
       this.app.commands.execute("deleteObject", {
         ids: Array.from(useEditorStore.getState().selectedIds),
@@ -96,16 +111,24 @@ export class InputManager {
     });
   }
 
-  private registerAction(keys: string[], action: Action): void {
+  private registerAction(
+    keys: string[],
+    action: Action,
+    options: { repeat?: boolean } = {},
+  ): void {
     for (const key of keys) {
       const normalizedKey = key.toLowerCase();
+      const keyAction = {
+        action,
+        repeat: options.repeat ?? false,
+      };
 
       const actions = this.keyActions.get(normalizedKey);
 
       if (actions) {
-        actions.push(action);
+        actions.push(keyAction);
       } else {
-        this.keyActions.set(normalizedKey, [action]);
+        this.keyActions.set(normalizedKey, [keyAction]);
       }
     }
   }
@@ -126,6 +149,7 @@ export class InputManager {
     }
 
     const normalizedKey = e.key.toLowerCase();
+    const wasPressed = this.pressedKeys.has(normalizedKey);
     this.pressedKeys.add(normalizedKey);
     const actions = this.keyActions.get(normalizedKey);
 
@@ -133,7 +157,11 @@ export class InputManager {
       return;
     }
 
-    actions.forEach((action) => {
+    actions.forEach(({ action, repeat }) => {
+      if (wasPressed && !repeat) {
+        return;
+      }
+
       let modifier = KeyModifiers.None;
 
       if (e.shiftKey) modifier |= KeyModifiers.Shift;

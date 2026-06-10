@@ -31,6 +31,7 @@ export interface IEditorStore {
   activePanel?: SidebarPanel;
   activeGravitySimulation?: GravitySimulationType;
   isGravityReversed: boolean;
+  showForceRadius: boolean;
   windForce: number;
 
   select(id: string): void;
@@ -45,6 +46,7 @@ export interface IEditorStore {
   setSimulationRunning(isRunning: boolean): void;
   setGravitySimulation(sim?: GravitySimulationType): void;
   setGravityReversed(isReversed: boolean): void;
+  setShowForceRadius(isVisible: boolean): void;
   setWindForce(force: number): void;
   clearSimulations(): void;
   setInteractionMode(mode: InteractionMode): void;
@@ -82,6 +84,7 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
   activePanel: SidebarPanel.Create,
   activeGravitySimulation: GravitySimulationType.Earth,
   isGravityReversed: false,
+  showForceRadius: true,
   windForce: 0,
 
   select(id: string) {
@@ -209,6 +212,12 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
   setGravityReversed(isReversed) {
     set({
       isGravityReversed: isReversed,
+    });
+  },
+
+  setShowForceRadius(isVisible) {
+    set({
+      showForceRadius: isVisible,
     });
   },
 

@@ -10,6 +10,7 @@ export interface IApplication {
   engine: ISandboxEngine;
   events: IEventBus;
 
+  fitView(): void;
   update(width: number, height: number): void;
   render(ctx: CanvasRenderingContext2D, width: number, height: number): void;
   pointerDown(pos: Vector2, button: number): void;
