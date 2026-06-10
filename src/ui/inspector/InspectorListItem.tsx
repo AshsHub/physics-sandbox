@@ -1,21 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import type { MouseEvent, ReactNode } from "react";
+import type { MouseEvent } from "react";
 import type { ICommandBus } from "../../commands/ICommands";
-import { SandboxObjectConfig } from "../../config/SandboxObjectConfig";
 import {
-  SandboxObjectBorderStyle,
-  SandboxObjectRadialForceMode,
   type ISandboxObject,
   type ISandboxObjectMetadata,
 } from "../../sandbox/SandboxObject";
 import { SandboxObjectFlags } from "../../sandbox/SandboxObjectType";
 import { useEditorStore } from "../../store/editorStore";
-import {
-  EditableColor,
-  EditableNumber,
-  EditableSelect,
-  ReadOnlyRow,
-} from "./InspectorFields";
+import { InspectorPhysicsSection } from "./InspectorPhysicsSection";
+import { InspectorReadOnlySection } from "./InspectorReadOnlySection";
+import { InspectorVisualSection } from "./InspectorVisualSection";
 
 export interface InspectorListItemProps {
   commands: ICommandBus;
@@ -39,11 +33,7 @@ export function InspectorListItem({
   const [isEditingName, setIsEditingName] = useState(false);
   const [draftName, setDraftName] = useState(entity.name);
   const shouldCancelCommit = useRef(false);
-  const isStatic = (entity.flags & SandboxObjectFlags.Static) !== 0;
-  const isLocked = (entity.flags & SandboxObjectFlags.Locked) !== 0;
-  const isHidden = (entity.flags & SandboxObjectFlags.Hidden) !== 0;
   const metadata = entity.metadata;
-  const constraints = SandboxObjectConfig.metadataConstraints;
 
   useEffect(() => {
     if (!shouldScrollIntoView) {
@@ -161,195 +151,19 @@ export function InspectorListItem({
 
       {isOpen && (
         <div className="inspector-item-content">
-          <InspectorSection title="Visual">
-            <EditableNumber
-              key={`width:${metadata.width}`}
-              label="Width"
-              min={constraints.width.min}
-              step={constraints.width.step}
-              value={metadata.width}
-              onCommit={(width) => updateMetadata({ width })}
-            />
-            <EditableNumber
-              key={`height:${metadata.height}`}
-              label="Height"
-              min={constraints.height.min}
-              step={constraints.height.step}
-              value={metadata.height}
-              onCommit={(height) => updateMetadata({ height })}
-            />
-            <EditableColor
-              key={`color:${metadata.color}`}
-              label="Fill"
-              value={metadata.color}
-              onCommit={(color) => updateMetadata({ color })}
-            />
-            <EditableNumber
-              key={`opacity:${metadata.opacity}`}
-              label="Opacity"
-              max={constraints.opacity.max}
-              min={constraints.opacity.min}
-              step={constraints.opacity.step}
-              value={metadata.opacity}
-              onCommit={(opacity) => updateMetadata({ opacity })}
-            />
-            <EditableColor
-              key={`borderColor:${metadata.borderColor}`}
-              label="Border"
-              value={metadata.borderColor}
-              onCommit={(borderColor) => updateMetadata({ borderColor })}
-            />
-            <EditableNumber
-              key={`borderWidth:${metadata.borderWidth}`}
-              label="Border px"
-              min={constraints.borderWidth.min}
-              step={constraints.borderWidth.step}
-              value={metadata.borderWidth}
-              onCommit={(borderWidth) => updateMetadata({ borderWidth })}
-            />
-            <EditableSelect
-              label="Border style"
-              value={metadata.borderStyle}
-              options={Object.values(SandboxObjectBorderStyle)}
-              onCommit={(borderStyle) => updateMetadata({ borderStyle })}
-            />
-          </InspectorSection>
-
-          <InspectorSection title="Physics">
-            <EditableSelect
-              label="State"
-              value={isStatic ? "Static" : "Dynamic"}
-              options={["Static", "Dynamic"]}
-              onCommit={(state) => {
-                const nextIsStatic = state === "Static";
-                const nextFlags = nextIsStatic
-                  ? entity.flags | SandboxObjectFlags.Static
-                  : entity.flags & ~SandboxObjectFlags.Static;
-
-                updateFlags(nextFlags);
-
-                if (!nextIsStatic && metadata.mass <= 0) {
-                  updateMetadata({
-                    mass: constraints.mass.fallbackDynamicValue,
-                  });
-                }
-              }}
-            />
-            {isStatic ? (
-              <ReadOnlyRow label="Mass" value="Static" />
-            ) : (
-              <EditableNumber
-                key={`mass:${metadata.mass}`}
-                label="Mass"
-                min={constraints.mass.min}
-                step={constraints.mass.step}
-                value={metadata.mass}
-                onCommit={(mass) => updateMetadata({ mass })}
-              />
-            )}
-            <EditableNumber
-              key={`bounce:${metadata.bounce}`}
-              label="Bounce"
-              max={constraints.bounce.max}
-              min={constraints.bounce.min}
-              step={constraints.bounce.step}
-              value={metadata.bounce}
-              onCommit={(bounce) => updateMetadata({ bounce })}
-            />
-            <EditableNumber
-              key={`friction:${metadata.friction}`}
-              label="Friction"
-              max={constraints.friction.max}
-              min={constraints.friction.min}
-              step={constraints.friction.step}
-              value={metadata.friction}
-              onCommit={(friction) => updateMetadata({ friction })}
-            />
-            <EditableSelect
-              label="Force"
-              value={metadata.radialForceMode}
-              options={Object.values(SandboxObjectRadialForceMode)}
-              onCommit={(radialForceMode) =>
-                updateMetadata({ radialForceMode })
-              }
-            />
-            {metadata.radialForceMode !== SandboxObjectRadialForceMode.None && (
-              <>
-                <EditableNumber
-                  key={`radialForceRadius:${metadata.radialForceRadius}`}
-                  label="Radius"
-                  min={constraints.radialForceRadius.min}
-                  step={constraints.radialForceRadius.step}
-                  value={metadata.radialForceRadius}
-                  onCommit={(radialForceRadius) =>
-                    updateMetadata({ radialForceRadius })
-                  }
-                />
-                <EditableNumber
-                  key={`radialForceStrength:${metadata.radialForceStrength}`}
-                  label="Strength"
-                  min={constraints.radialForceStrength.min}
-                  step={constraints.radialForceStrength.step}
-                  value={metadata.radialForceStrength}
-                  onCommit={(radialForceStrength) =>
-                    updateMetadata({ radialForceStrength })
-                  }
-                />
-              </>
-            )}
-          </InspectorSection>
-
-          <InspectorSection title="Read-only">
-            <ReadOnlyRow label="Type" value={entity.type} />
-            <ReadOnlyRow
-              label="Visible"
-              value={isHidden ? "Hidden" : "Visible"}
-            />
-            <ReadOnlyRow
-              label="State"
-              value={isStatic ? "Static" : "Dynamic"}
-            />
-            <ReadOnlyRow label="Locked" value={isLocked ? "Yes" : "No"} />
-            <ReadOnlyRow label="Selected" value={isSelected ? "Yes" : "No"} />
-            <ReadOnlyRow label="ID" value={entity.id} />
-          </InspectorSection>
+          <InspectorVisualSection
+            metadata={metadata}
+            onUpdateMetadata={updateMetadata}
+          />
+          <InspectorPhysicsSection
+            flags={entity.flags}
+            metadata={metadata}
+            onUpdateFlags={updateFlags}
+            onUpdateMetadata={updateMetadata}
+          />
+          <InspectorReadOnlySection entity={entity} isSelected={isSelected} />
         </div>
       )}
     </div>
-  );
-}
-
-function InspectorSection({
-  children,
-  title,
-}: {
-  children: ReactNode;
-  title: string;
-}) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <section className="inspector-section">
-      <button
-        className="inspector-section-header"
-        onClick={(event) => {
-          event.stopPropagation();
-          setIsOpen((current) => !current);
-        }}
-        type="button"
-      >
-        <span className="inspector-section-title">{title}</span>
-        <span
-          className="chevron"
-          style={{
-            transform: isOpen ? "rotate(0deg)" : "rotate(180deg)",
-          }}
-        >
-          v
-        </span>
-      </button>
-
-      {isOpen && <div className="inspector-section-content">{children}</div>}
-    </section>
   );
 }
