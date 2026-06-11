@@ -1,4 +1,5 @@
 import { describe, expect, it, jest } from "@jest/globals";
+import { ThemeMode } from "../theme/Theme";
 import { AppStorage, type IStorageAdapter } from "./AppStorage";
 
 const appStorageKey = "physics-sandbox-settings";
@@ -6,14 +7,14 @@ const appStorageKey = "physics-sandbox-settings";
 describe("AppStorage", () => {
   it("reads stored settings from the root settings object", () => {
     const adapter: IStorageAdapter = {
-      getItem: jest.fn(() => JSON.stringify({ themeMode: "Dark" })),
+      getItem: jest.fn(() => JSON.stringify({ themeMode: ThemeMode.Dark })),
       removeItem: jest.fn(),
       setItem: jest.fn(),
     };
     const storage = new AppStorage(adapter);
 
     expect(storage.readSettings()).toEqual({
-      themeMode: "Dark",
+      themeMode: ThemeMode.Dark,
     });
     expect(adapter.getItem).toHaveBeenCalledWith(appStorageKey);
   });
@@ -27,12 +28,12 @@ describe("AppStorage", () => {
     const storage = new AppStorage(adapter);
 
     storage.writeSettings({
-      themeMode: "Light",
+      themeMode: ThemeMode.Light,
     });
 
     expect(adapter.setItem).toHaveBeenCalledWith(
       appStorageKey,
-      JSON.stringify({ themeMode: "Light" }),
+      JSON.stringify({ themeMode: ThemeMode.Light }),
     );
   });
 
@@ -50,17 +51,17 @@ describe("AppStorage", () => {
 
     expect(
       storage.updateSettings({
-        themeMode: "System",
+        themeMode: ThemeMode.System,
       }),
     ).toEqual({
       futureSetting: true,
-      themeMode: "System",
+      themeMode: ThemeMode.System,
     });
     expect(adapter.setItem).toHaveBeenCalledWith(
       appStorageKey,
       JSON.stringify({
         futureSetting: true,
-        themeMode: "System",
+        themeMode: ThemeMode.System,
       }),
     );
   });

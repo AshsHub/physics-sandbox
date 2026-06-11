@@ -6,6 +6,24 @@ export interface CreatorShapeAction {
   preview: string;
 }
 
+export const celestialShapes: CreatorShapeAction[] = [
+  {
+    label: "Black Hole",
+    type: SandboxObjectType.BlackHole,
+    preview: "black-hole",
+  },
+  {
+    label: "Sun",
+    type: SandboxObjectType.Sun,
+    preview: "sun",
+  },
+  {
+    label: "White Hole",
+    type: SandboxObjectType.WhiteHole,
+    preview: "white-hole",
+  },
+];
+
 export const dynamicShapes: CreatorShapeAction[] = [
   {
     label: "Box",
@@ -54,7 +72,8 @@ export const staticShapes: CreatorShapeAction[] = [
 
 export function getCreatorShapePreview(type: SandboxObjectType): string {
   return (
-    [...dynamicShapes, ...staticShapes].find((shape) => shape.type === type)
-      ?.preview ?? "box"
+    [...celestialShapes, ...dynamicShapes, ...staticShapes].find(
+      (shape) => shape.type === type,
+    )?.preview ?? "box"
   );
 }

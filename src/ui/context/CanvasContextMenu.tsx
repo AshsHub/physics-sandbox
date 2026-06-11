@@ -3,6 +3,7 @@ import type { IApplication } from "../../application/IApplication";
 import type { Vector2 } from "../../maths/Vector2";
 import type { SandboxObjectType } from "../../sandbox/SandboxObjectType";
 import {
+  celestialShapes,
   type CreatorShapeAction,
   dynamicShapes,
   staticShapes,
@@ -85,6 +86,11 @@ export function CanvasContextMenu({
           <CanvasContextMenuGroup
             label="Static"
             shapes={staticShapes}
+            onCreate={createObject}
+          />
+          <CanvasContextMenuGroup
+            label="Celestial"
+            shapes={celestialShapes}
             onCreate={createObject}
           />
         </div>

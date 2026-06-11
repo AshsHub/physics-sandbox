@@ -67,6 +67,27 @@ export class PhysicsWorld {
     let body: Matter.Body;
 
     switch (type) {
+      case SandboxObjectType.BlackHole:
+        body = Matter.Bodies.circle(
+          position.x,
+          position.y,
+          SandboxObjectConfig.bodyGeometry.blackHoleRadius,
+        );
+        break;
+      case SandboxObjectType.Sun:
+        body = Matter.Bodies.circle(
+          position.x,
+          position.y,
+          SandboxObjectConfig.bodyGeometry.sunRadius,
+        );
+        break;
+      case SandboxObjectType.WhiteHole:
+        body = Matter.Bodies.circle(
+          position.x,
+          position.y,
+          SandboxObjectConfig.bodyGeometry.whiteHoleRadius,
+        );
+        break;
       case SandboxObjectType.Circle:
         body = Matter.Bodies.circle(
           position.x,

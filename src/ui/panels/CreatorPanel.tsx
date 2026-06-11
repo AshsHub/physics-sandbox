@@ -1,9 +1,11 @@
 // CreatePanel.tsx
 
 import type { IApplication } from "../../application/IApplication";
+import { SandboxObjectConfig } from "../../config/SandboxObjectConfig";
 import { SandboxObjectType } from "../../sandbox/SandboxObjectType";
 import { useEditorStore } from "../../store/editorStore";
 import {
+  celestialShapes,
   type CreatorShapeAction,
   dynamicShapes,
   staticShapes,
@@ -37,6 +39,13 @@ export function CreatorPanel({ app, onClose }: CreatorPanelProps) {
         shapes={staticShapes}
         onCreate={createObject}
       />
+
+      <CreatorGroup
+        label="Celestial"
+        activeType={activePlacementType}
+        shapes={celestialShapes}
+        onCreate={createObject}
+      />
     </Panel>
   );
 }
@@ -67,6 +76,10 @@ function CreatorGroup({
                 ? "create-shape-button selected"
                 : "create-shape-button"
             }
+            data-tooltip={
+              SandboxObjectConfig.defaults[shape.type].metadata.description
+            }
+            data-tooltip-position="right"
             key={shape.type}
             onClick={() => onCreate(shape.type)}
             type="button"

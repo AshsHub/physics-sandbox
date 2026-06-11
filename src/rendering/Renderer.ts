@@ -149,8 +149,8 @@ export class Renderer {
     }
 
     const isPull = radialForceMode === SandboxObjectRadialForceMode.Pull;
-    const fillColor = isPull ? "#4f8cff20" : "#ff6c5c20";
-    const strokeColor = isPull ? "#4f8cff8c" : "#ff6c5c8c";
+    const fillColor = isPull ? "#ff6c5c20" : "#4f8cff20";
+    const strokeColor = isPull ? "#ff6c5c8c" : "#4f8cff8c";
 
     ctx.save();
     ctx.beginPath();
@@ -225,6 +225,36 @@ export class Renderer {
     metadata: ISandboxObjectMetadata,
   ): void {
     switch (type) {
+      case SandboxObjectType.BlackHole:
+        ctx.beginPath();
+        ctx.arc(
+          0,
+          0,
+          SandboxObjectConfig.bodyGeometry.blackHoleRadius,
+          0,
+          Math.PI * 2,
+        );
+        return;
+      case SandboxObjectType.Sun:
+        ctx.beginPath();
+        ctx.arc(
+          0,
+          0,
+          SandboxObjectConfig.bodyGeometry.sunRadius,
+          0,
+          Math.PI * 2,
+        );
+        return;
+      case SandboxObjectType.WhiteHole:
+        ctx.beginPath();
+        ctx.arc(
+          0,
+          0,
+          SandboxObjectConfig.bodyGeometry.whiteHoleRadius,
+          0,
+          Math.PI * 2,
+        );
+        return;
       case SandboxObjectType.Circle:
         ctx.beginPath();
         ctx.arc(

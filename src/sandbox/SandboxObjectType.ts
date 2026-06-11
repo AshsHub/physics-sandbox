@@ -7,6 +7,9 @@ export enum SandboxObjectType {
   Platform = "Platform",
   Wall = "Wall",
   Ramp = "Ramp",
+  Sun = "Sun",
+  BlackHole = "BlackHole",
+  WhiteHole = "WhiteHole",
 }
 
 export enum SandboxObjectFlags {

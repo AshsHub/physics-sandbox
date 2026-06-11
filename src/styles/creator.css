@@ -73,6 +73,35 @@
   border-color: #b8d0ff;
 }
 
+.shape-preview.black-hole {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #2a103f;
+  border-color: #8f5bd1;
+  box-shadow: inset 0 0 0 8px #12051f;
+}
+
+.shape-preview.sun {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #f6c453;
+  border-color: #fff0a8;
+  box-shadow: 0 0 10px rgba(246, 196, 83, 0.45);
+}
+
+.shape-preview.white-hole {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #f5f7ff;
+  border-color: #88b8ff;
+  box-shadow:
+    inset 0 0 0 6px rgba(79, 140, 255, 0.25),
+    0 0 10px rgba(136, 184, 255, 0.5);
+}
+
 .shape-preview.triangle {
   width: 34px;
   height: 32px;
