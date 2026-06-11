@@ -57,6 +57,7 @@ export class PhysicsWorld {
   public createBody(
     position: Vector2,
     type: SandboxObjectType = SandboxObjectType.Box,
+    angle = 0,
   ): Matter.Body {
     if (!this._world) {
       throw new Error("PhysicsWorld not initialized");
@@ -136,6 +137,10 @@ export class PhysicsWorld {
           SandboxObjectConfig.defaults.Box.metadata.width,
           SandboxObjectConfig.defaults.Box.metadata.height,
         );
+    }
+
+    if (angle !== 0) {
+      Matter.Body.rotate(body, angle);
     }
 
     Matter.World.add(this._world, body);

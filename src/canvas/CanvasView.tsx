@@ -27,10 +27,12 @@ export function CanvasView({
   onObjectContextMenu,
 }: CanvasViewProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const shouldSuppressNextContextMenu = useRef(false);
   const interactionMode = useEditorStore((s) => s.interactionMode);
   const activePointerMode = useEditorStore((s) => s.activePointerMode);
   const hoveredObjectId = useEditorStore((s) => s.hoveredObjectId);
   const selectionBox = useEditorStore((s) => s.selectionBox);
+  const objectPlacement = useEditorStore((s) => s.objectPlacement);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -48,8 +50,18 @@ export function CanvasView({
     });
 
     const handlePointerDown = (e: PointerEvent) => {
-      if (e.button === MouseButton.Middle) {
+      const isPlacingObject =
+        useEditorStore.getState().objectPlacement !== undefined;
+
+      if (
+        e.button === MouseButton.Middle ||
+        (e.button === MouseButton.Secondary && isPlacingObject)
+      ) {
         e.preventDefault();
+      }
+
+      if (e.button === MouseButton.Secondary && isPlacingObject) {
+        shouldSuppressNextContextMenu.current = true;
       }
 
       if (e.button === MouseButton.Primary || e.button === MouseButton.Middle) {
@@ -80,6 +92,12 @@ export function CanvasView({
     };
 
     const handleContextMenu = (e: MouseEvent) => {
+      if (shouldSuppressNextContextMenu.current) {
+        shouldSuppressNextContextMenu.current = false;
+        e.preventDefault();
+        return;
+      }
+
       contextMenuController.open(e, canvas);
     };
 
@@ -145,6 +163,7 @@ export function CanvasView({
             interactionMode,
             activePointerMode,
             hoveredObjectId,
+            objectPlacement !== undefined,
           ),
           touchAction: "none",
           width: "100%",
@@ -161,7 +180,12 @@ function getCanvasCursor(
   interactionMode: InteractionMode,
   activePointerMode: InteractionMode | undefined,
   hoveredObjectId: string | undefined,
+  isPlacingObject: boolean,
 ): string {
+  if (isPlacingObject) {
+    return "none";
+  }
+
   if (activePointerMode === InteractionMode.Play) {
     return "grabbing";
   }

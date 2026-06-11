@@ -31,7 +31,9 @@ describe("Commands", () => {
         name: "Object 1",
         position,
       }),
-      body: undefined,
+      body: {
+        angle: 0,
+      },
     };
     const engine = createMockSandboxEngine({
       createObject: jest.fn(() => object),
@@ -50,6 +52,7 @@ describe("Commands", () => {
     expect(engine.createObject).toHaveBeenCalledWith(
       position,
       SandboxObjectType.Box,
+      undefined,
     );
 
     expect(commands.undo()).toEqual({ success: true });
@@ -61,6 +64,7 @@ describe("Commands", () => {
       name: "Object 1",
       type: SandboxObjectType.Box,
       position,
+      angle: 0,
       flags: SandboxObjectFlags.None,
       metadata: testSandboxObjectMetadata,
     });

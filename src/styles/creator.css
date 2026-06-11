@@ -29,6 +29,21 @@
   padding: var(--space-xs);
 }
 
+.create-shape-button.selected {
+  background: var(--accent);
+  border-color: var(--accent-border);
+  color: var(--text-on-accent);
+}
+
+.create-shape-button.selected:not(:disabled):hover {
+  background: var(--accent);
+  border-color: var(--accent-border);
+}
+
+.create-shape-button.selected .create-shape-label {
+  color: var(--text-on-accent);
+}
+
 .create-shape-preview {
   display: flex;
   align-items: center;

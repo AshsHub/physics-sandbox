@@ -75,6 +75,7 @@ export class PasteObjectsCommand implements ICommand {
       name: `${snapshot.name} Copy`,
       type: snapshot.type,
       position: snapshot.position.clone().add(this._options.offset),
+      angle: snapshot.angle,
       flags: snapshot.flags,
       metadata: {
         ...snapshot.metadata,

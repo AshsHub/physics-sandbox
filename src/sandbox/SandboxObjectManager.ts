@@ -12,6 +12,7 @@ import { SandboxObjectFlags, SandboxObjectType } from "./SandboxObjectType";
 export interface CreateSandboxObjectOptions {
   position: Vector2;
   type: SandboxObjectType;
+  angle?: number;
   flags?: SandboxObjectFlags;
   id?: string;
   name?: string;
@@ -25,10 +26,10 @@ export class SandboxObjectManager {
   public constructor(private readonly _physics: PhysicsWorld) {}
 
   public create(options: CreateSandboxObjectOptions): ISandboxObject {
-    const { position, type, id, name } = options;
+    const { angle = 0, position, type, id, name } = options;
     const objectId = id ?? crypto.randomUUID();
 
-    const body = this._physics.createBody(position, type);
+    const body = this._physics.createBody(position, type, angle);
     const defaultMetadata = SandboxObjectConfig.defaults[type].metadata;
     const flags = options.flags ?? SandboxObjectConfig.defaults[type].flags;
     const metadata = {
@@ -71,6 +72,7 @@ export class SandboxObjectManager {
       name: object.name,
       type: object.type,
       position: new Vector2(object.body.position.x, object.body.position.y),
+      angle: object.body.angle,
       flags: object.flags,
       metadata: {
         ...object.metadata,

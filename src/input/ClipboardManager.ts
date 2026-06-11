@@ -124,6 +124,7 @@ export class ClipboardManager {
       name: snapshot.name,
       type: snapshot.type,
       position: snapshot.position.clone(),
+      angle: snapshot.angle,
       flags: snapshot.flags,
       metadata: {
         ...snapshot.metadata,

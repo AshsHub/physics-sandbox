@@ -7,6 +7,7 @@ import type {
   ClipboardAction,
   ClipboardSelectionAction,
 } from "../input/ClipboardAction";
+import type { SandboxObjectType } from "../sandbox/SandboxObjectType";
 
 export interface IApplication {
   camera: Camera;
@@ -22,6 +23,7 @@ export interface IApplication {
   pointerWheel(deltaY: number, pos: Vector2): void;
   pointerUp(button: number): void;
   pointerLeave(): void;
+  startObjectPlacement(type: SandboxObjectType): void;
 
   executeClipboardAction(action: ClipboardAction.Paste): boolean;
   executeClipboardAction(

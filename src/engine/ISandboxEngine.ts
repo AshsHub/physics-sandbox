@@ -18,7 +18,11 @@ export interface ISandboxEngine {
     property: T,
     value: ISandboxObject[T],
   ): void;
-  createObject(position: Vector2, type?: SandboxObjectType): ISandboxObject;
+  createObject(
+    position: Vector2,
+    type?: SandboxObjectType,
+    angle?: number,
+  ): ISandboxObject;
   createObjectFromSnapshot(snapshot: ISandboxObjectSnapshot): ISandboxObject;
   createSnapshot(id: string): ISandboxObjectSnapshot | undefined;
 

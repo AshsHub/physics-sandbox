@@ -1,5 +1,6 @@
 import type { IApplication } from "../application/IApplication";
 import { Vector2 } from "../maths/Vector2";
+import { useEditorStore } from "../store/editorStore";
 
 export interface CanvasContextMenuCallbacks {
   onCanvasContextMenu(
@@ -20,6 +21,11 @@ export class CanvasContextMenuController {
 
   public open(event: MouseEvent, canvas: HTMLCanvasElement): void {
     event.preventDefault();
+
+    if (useEditorStore.getState().objectPlacement) {
+      useEditorStore.getState().clearObjectPlacement();
+      return;
+    }
 
     const rect = canvas.getBoundingClientRect();
     const canvasPosition = new Vector2(

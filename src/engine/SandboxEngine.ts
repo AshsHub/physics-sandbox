@@ -56,8 +56,10 @@ export class SandboxEngine implements ISandboxEngine {
   public createObject(
     position: Vector2,
     type: SandboxObjectType = SandboxObjectType.Box,
+    angle = 0,
   ): ISandboxObject {
     const object = this._objects.create({
+      angle,
       position,
       type,
     });

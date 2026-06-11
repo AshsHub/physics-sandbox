@@ -2,6 +2,7 @@
 
 import type { IApplication } from "../../application/IApplication";
 import { SandboxObjectType } from "../../sandbox/SandboxObjectType";
+import { useEditorStore } from "../../store/editorStore";
 import {
   type CreatorShapeAction,
   dynamicShapes,
@@ -15,22 +16,23 @@ export interface CreatorPanelProps {
 }
 
 export function CreatorPanel({ app, onClose }: CreatorPanelProps) {
+  const activePlacementType = useEditorStore((s) => s.objectPlacement?.type);
   const createObject = (type: SandboxObjectType) => {
-    app.commands.execute("createObject", {
-      type,
-    });
+    app.startObjectPlacement(type);
   };
 
   return (
     <Panel title="Creator" onClose={onClose}>
       <CreatorGroup
         label="Dynamic"
+        activeType={activePlacementType}
         shapes={dynamicShapes}
         onCreate={createObject}
       />
 
       <CreatorGroup
         label="Static"
+        activeType={activePlacementType}
         shapes={staticShapes}
         onCreate={createObject}
       />
@@ -39,12 +41,18 @@ export function CreatorPanel({ app, onClose }: CreatorPanelProps) {
 }
 
 interface CreatorGroupProps {
+  activeType?: SandboxObjectType;
   label: string;
   shapes: CreatorShapeAction[];
   onCreate: (type: SandboxObjectType) => void;
 }
 
-function CreatorGroup({ label, shapes, onCreate }: CreatorGroupProps) {
+function CreatorGroup({
+  activeType,
+  label,
+  shapes,
+  onCreate,
+}: CreatorGroupProps) {
   return (
     <section className="create-group">
       <h3 className="create-group-title">{label}</h3>
@@ -52,7 +60,12 @@ function CreatorGroup({ label, shapes, onCreate }: CreatorGroupProps) {
       <div className="create-shape-grid">
         {shapes.map((shape) => (
           <button
-            className="create-shape-button"
+            aria-pressed={activeType === shape.type}
+            className={
+              activeType === shape.type
+                ? "create-shape-button selected"
+                : "create-shape-button"
+            }
             key={shape.type}
             onClick={() => onCreate(shape.type)}
             type="button"

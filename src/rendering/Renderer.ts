@@ -1,12 +1,19 @@
 import type { ISandboxEngine } from "../engine/ISandboxEngine";
 import type Matter from "matter-js";
+import { PhysicsConfig } from "../config/PhysicsConfig";
+import { SandboxObjectConfig } from "../config/SandboxObjectConfig";
 import {
   type ISandboxObject,
+  type ISandboxObjectMetadata,
   SandboxObjectBorderStyle,
   SandboxObjectRadialForceMode,
 } from "../sandbox/SandboxObject";
-import { SandboxObjectFlags } from "../sandbox/SandboxObjectType";
+import {
+  SandboxObjectFlags,
+  SandboxObjectType,
+} from "../sandbox/SandboxObjectType";
 import { useEditorStore } from "../store/editorStore";
+import { InteractionMode } from "../input/InteractionMode";
 
 export class Renderer {
   public constructor(private _engine: ISandboxEngine) {}
@@ -32,6 +39,8 @@ export class Renderer {
     for (const object of objects) {
       this._drawSandboxObject(ctx, object);
     }
+
+    this._drawObjectPlacementPreview(ctx, editorState, cameraZoom);
 
     ctx.restore();
   }
@@ -114,6 +123,140 @@ export class Renderer {
     ctx.stroke();
     ctx.setLineDash([]);
     ctx.restore();
+  }
+
+  private _drawObjectPlacementPreview(
+    ctx: CanvasRenderingContext2D,
+    editorState: ReturnType<typeof useEditorStore.getState>,
+    cameraZoom: number,
+  ): void {
+    const placement = editorState.objectPlacement;
+
+    if (
+      !placement?.screenPosition ||
+      editorState.activePointerMode === InteractionMode.Camera
+    ) {
+      return;
+    }
+
+    const worldPosition = {
+      x: (placement.screenPosition.x - editorState.cameraOffset.x) /
+        cameraZoom,
+      y: (placement.screenPosition.y - editorState.cameraOffset.y) /
+        cameraZoom,
+    };
+    const metadata = SandboxObjectConfig.defaults[placement.type].metadata;
+    const borderStyle = metadata.borderStyle as SandboxObjectBorderStyle;
+
+    ctx.save();
+    ctx.translate(worldPosition.x, worldPosition.y);
+    ctx.rotate(
+      placement.type === SandboxObjectType.Ramp
+        ? placement.angle + PhysicsConfig.body.rampAngle
+        : placement.angle,
+    );
+    ctx.globalAlpha = 0.58;
+    ctx.fillStyle = metadata.color;
+    ctx.strokeStyle = metadata.borderColor;
+    ctx.lineWidth = Math.max(1 / cameraZoom, metadata.borderWidth);
+
+    this._traceObjectTypePreviewPath(ctx, placement.type, metadata);
+    ctx.fill();
+
+    if (
+      borderStyle !== SandboxObjectBorderStyle.None &&
+      metadata.borderWidth > 0
+    ) {
+      ctx.setLineDash(this._getLineDash(borderStyle, ctx.lineWidth));
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    ctx.restore();
+  }
+
+  private _traceObjectTypePreviewPath(
+    ctx: CanvasRenderingContext2D,
+    type: SandboxObjectType,
+    metadata: ISandboxObjectMetadata,
+  ): void {
+    switch (type) {
+      case SandboxObjectType.Circle:
+        ctx.beginPath();
+        ctx.arc(
+          0,
+          0,
+          SandboxObjectConfig.bodyGeometry.circleRadius,
+          0,
+          Math.PI * 2,
+        );
+        return;
+      case SandboxObjectType.Oval:
+        ctx.beginPath();
+        ctx.ellipse(
+          0,
+          0,
+          SandboxObjectConfig.bodyGeometry.ovalRadius *
+            SandboxObjectConfig.bodyGeometry.ovalScaleX,
+          SandboxObjectConfig.bodyGeometry.ovalRadius *
+            SandboxObjectConfig.bodyGeometry.ovalScaleY,
+          0,
+          0,
+          Math.PI * 2,
+        );
+        return;
+      case SandboxObjectType.Triangle:
+        this._tracePolygonPreviewPath(
+          ctx,
+          3,
+          SandboxObjectConfig.bodyGeometry.triangleRadius,
+        );
+        return;
+      case SandboxObjectType.Pentagon:
+        this._tracePolygonPreviewPath(
+          ctx,
+          5,
+          SandboxObjectConfig.bodyGeometry.pentagonRadius,
+        );
+        return;
+      case SandboxObjectType.Box:
+      case SandboxObjectType.Platform:
+      case SandboxObjectType.Wall:
+      case SandboxObjectType.Ramp:
+      default:
+        ctx.beginPath();
+        ctx.rect(
+          metadata.width / -2,
+          metadata.height / -2,
+          metadata.width,
+          metadata.height,
+        );
+    }
+  }
+
+  private _tracePolygonPreviewPath(
+    ctx: CanvasRenderingContext2D,
+    sides: number,
+    radius: number,
+  ): void {
+    const theta = (Math.PI * 2) / sides;
+    const offset = theta * 0.5;
+
+    ctx.beginPath();
+
+    for (let index = 0; index < sides; index++) {
+      const angle = offset + index * theta;
+      const x = Math.cos(angle) * radius;
+      const y = Math.sin(angle) * radius;
+
+      if (index === 0) {
+        ctx.moveTo(x, y);
+      } else {
+        ctx.lineTo(x, y);
+      }
+    }
+
+    ctx.closePath();
   }
 
   private _traceBodyPath(ctx: CanvasRenderingContext2D, body: Matter.Body) {

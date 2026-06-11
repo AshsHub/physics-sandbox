@@ -12,6 +12,7 @@ import {
   ClipboardAction,
   type ClipboardSelectionAction,
 } from "../input/ClipboardAction";
+import type { SandboxObjectType } from "../sandbox/SandboxObjectType";
 
 export class Application implements IApplication {
   public readonly camera: Camera;
@@ -125,6 +126,10 @@ export class Application implements IApplication {
 
   public pointerLeave() {
     this.inputManager.pointerLeave();
+  }
+
+  public startObjectPlacement(type: SandboxObjectType): void {
+    this.inputManager.startObjectPlacement(type);
   }
 
   public executeClipboardAction(action: ClipboardAction.Paste): boolean;

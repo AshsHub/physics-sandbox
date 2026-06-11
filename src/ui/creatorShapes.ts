@@ -51,3 +51,10 @@ export const staticShapes: CreatorShapeAction[] = [
     preview: "ramp",
   },
 ];
+
+export function getCreatorShapePreview(type: SandboxObjectType): string {
+  return (
+    [...dynamicShapes, ...staticShapes].find((shape) => shape.type === type)
+      ?.preview ?? "box"
+  );
+}

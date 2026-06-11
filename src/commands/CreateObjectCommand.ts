@@ -8,6 +8,7 @@ import type { ICommand, ICommandResult } from "./ICommands";
 export interface CreateObjectCommandOptions {
   type: SandboxObjectType;
   position?: Vector2;
+  angle?: number;
 }
 
 export class CreateObjectCommand implements ICommand {
@@ -27,12 +28,11 @@ export class CreateObjectCommand implements ICommand {
       };
     }
 
-    // TODO: Find a better way to handle initial object creation
-    // Possibly drag or stamp method
     const object = this._engine.createObject(
       this._options.position ??
         this._camera.getViewportCenterPosition().subtract(0, 200),
       this._options.type,
+      this._options.angle,
     );
     const position = this._engine.getObjectPosition(object.id);
 
@@ -48,6 +48,7 @@ export class CreateObjectCommand implements ICommand {
       name: object.name,
       type: object.type,
       position,
+      angle: object.body.angle,
       flags: object.flags,
       metadata: {
         ...object.metadata,

@@ -4,6 +4,7 @@ import { CameraConfig } from "../config/CameraConfig";
 import { SimulationConfig } from "../config/SimulationConfig";
 import { InteractionMode } from "../input/InteractionMode";
 import { GravitySimulationType } from "../physics/SandboxSimulation";
+import { SandboxObjectType } from "../sandbox/SandboxObjectType";
 import { readStoredThemeMode, ThemeMode } from "../theme/Theme";
 import { SidebarPanel } from "../ui/panels/SidebarPanel";
 
@@ -15,6 +16,12 @@ export interface CameraOffset {
 export interface SelectionBox {
   start: CameraOffset;
   current: CameraOffset;
+}
+
+export interface ObjectPlacementState {
+  angle: number;
+  screenPosition?: CameraOffset;
+  type: SandboxObjectType;
 }
 
 export interface IEditorStore {
@@ -31,6 +38,7 @@ export interface IEditorStore {
   hoveredObjectId?: string;
   inspectorScrollTargetId?: string;
   selectionBox?: SelectionBox;
+  objectPlacement?: ObjectPlacementState;
   selectedIds: Set<string>;
   activePanel?: SidebarPanel;
   activeGravitySimulation?: GravitySimulationType;
@@ -60,6 +68,10 @@ export interface IEditorStore {
   setHoveredObject(id?: string): void;
   setInspectorScrollTarget(id?: string): void;
   setSelectionBox(selectionBox?: SelectionBox): void;
+  setObjectPlacement(type: SandboxObjectType): void;
+  setObjectPlacementPosition(position?: CameraOffset): void;
+  rotateObjectPlacement(angle: number): void;
+  clearObjectPlacement(): void;
   setCameraState(state: {
     offset: CameraOffset;
     zoom: number;
@@ -88,6 +100,7 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
   hoveredObjectId: undefined,
   inspectorScrollTargetId: undefined,
   selectionBox: undefined,
+  objectPlacement: undefined,
   selectedIds: new Set<string>(),
   activePanel: SidebarPanel.Creator,
   activeGravitySimulation: GravitySimulationType.Earth,
@@ -201,6 +214,51 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
   setSelectionBox(selectionBox) {
     set({
       selectionBox,
+    });
+  },
+
+  setObjectPlacement(type) {
+    set({
+      objectPlacement: {
+        angle: 0,
+        type,
+      },
+    });
+  },
+
+  setObjectPlacementPosition(position) {
+    set((state) => {
+      if (!state.objectPlacement) {
+        return state;
+      }
+
+      return {
+        objectPlacement: {
+          ...state.objectPlacement,
+          screenPosition: position,
+        },
+      };
+    });
+  },
+
+  rotateObjectPlacement(angle) {
+    set((state) => {
+      if (!state.objectPlacement) {
+        return state;
+      }
+
+      return {
+        objectPlacement: {
+          ...state.objectPlacement,
+          angle: state.objectPlacement.angle + angle,
+        },
+      };
+    });
+  },
+
+  clearObjectPlacement() {
+    set({
+      objectPlacement: undefined,
     });
   },
 

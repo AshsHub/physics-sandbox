@@ -41,6 +41,7 @@ export function createTestSandboxObjectSnapshot(
     name: `Object ${id.toUpperCase()}`,
     type: SandboxObjectType.Box,
     position: new Vector2(id === "a" ? 10 : 20, id === "a" ? 30 : 40),
+    angle: 0,
     flags: SandboxObjectFlags.None,
     metadata: testSandboxObjectMetadata,
     ...overrides,

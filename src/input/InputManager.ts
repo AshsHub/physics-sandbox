@@ -2,7 +2,10 @@ import type { IApplication } from "../application/IApplication";
 import type Matter from "matter-js";
 import { InputConfig, MouseButton } from "../config/InputConfig";
 import { Vector2 } from "../maths/Vector2";
-import { SandboxObjectFlags } from "../sandbox/SandboxObjectType";
+import {
+  SandboxObjectFlags,
+  type SandboxObjectType,
+} from "../sandbox/SandboxObjectType";
 import { useEditorStore } from "../store/editorStore";
 import {
   ClipboardAction,
@@ -64,8 +67,34 @@ export class InputManager {
     return this._keyboard.isKeyPressed(key);
   }
 
+  public startObjectPlacement(type: SandboxObjectType): void {
+    const state = useEditorStore.getState();
+
+    state.setObjectPlacement(type);
+    state.clearSelection();
+    state.setHoveredObject(undefined);
+  }
+
   public pointerDown(pos: Vector2, button: number): void {
     this._lastPointerPosition = pos.clone();
+
+    const placement = this._getObjectPlacement();
+
+    if (placement) {
+      if (button === MouseButton.Middle) {
+        useEditorStore.getState().setObjectPlacementPosition(undefined);
+        this._setActivePointerMode(InteractionMode.Camera);
+        return;
+      }
+
+      if (button === MouseButton.Primary) {
+        this._stampObject(pos);
+      } else if (button === MouseButton.Secondary) {
+        useEditorStore.getState().clearObjectPlacement();
+      }
+
+      return;
+    }
 
     if (
       button === MouseButton.Middle ||
@@ -131,6 +160,14 @@ export class InputManager {
   }
 
   public pointerMove(pos: Vector2): void {
+    if (
+      this._getObjectPlacement() &&
+      this._activePointerMode !== InteractionMode.Camera
+    ) {
+      useEditorStore.getState().setObjectPlacementPosition(pos.toObject());
+      return;
+    }
+
     if (this._activePointerMode === InteractionMode.Camera) {
       if (this._lastPointerPosition) {
         this._app.camera.pan({
@@ -188,6 +225,11 @@ export class InputManager {
   }
 
   public pointerLeave(): void {
+    if (this._getObjectPlacement()) {
+      useEditorStore.getState().setObjectPlacementPosition(undefined);
+      return;
+    }
+
     if (!this._activePointerMode && !this._selectionGesture) {
       useEditorStore.getState().setHoveredObject(undefined);
     }
@@ -198,7 +240,10 @@ export class InputManager {
     action: ClipboardSelectionAction,
     ids?: string[],
   ): boolean;
-  public executeClipboardAction(action: ClipboardAction, ids?: string[]): boolean {
+  public executeClipboardAction(
+    action: ClipboardAction,
+    ids?: string[],
+  ): boolean {
     if (action === ClipboardAction.Paste) {
       return this._clipboard.execute(action);
     }
@@ -220,11 +265,23 @@ export class InputManager {
       const state = useEditorStore.getState();
       state.setSimulationRunning(!state.isSimulationRunning);
     });
-    this._keyboard.registerAction(["q"], () => {
-      this._rotateHeldObjects(-InputConfig.keyboard.rotationStep);
-    });
-    this._keyboard.registerAction(["e"], () => {
-      this._rotateHeldObjects(InputConfig.keyboard.rotationStep);
+    this._keyboard.registerAction(
+      ["q"],
+      () => {
+        this._rotatePlacementOrHeld(-InputConfig.keyboard.rotationStep);
+      },
+      { repeat: true },
+    );
+    this._keyboard.registerAction(
+      ["e"],
+      () => {
+        this._rotatePlacementOrHeld(InputConfig.keyboard.rotationStep);
+      },
+      { repeat: true },
+    );
+
+    this._keyboard.registerAction(["escape"], () => {
+      useEditorStore.getState().clearObjectPlacement();
     });
 
     this._keyboard.registerAction(
@@ -322,6 +379,15 @@ export class InputManager {
     this._app.engine.rotateDrag(angle);
   }
 
+  private _rotatePlacementOrHeld(angle: number): void {
+    if (this._getObjectPlacement()) {
+      useEditorStore.getState().rotateObjectPlacement(angle);
+      return;
+    }
+
+    this._rotateHeldObjects(angle);
+  }
+
   private _zoomFromKeyboard(delta: number, mods: KeyModifiers): void {
     if (this._hasPrimaryModifier(mods)) {
       return;
@@ -334,6 +400,28 @@ export class InputManager {
 
   private _getInteractionMode(): InteractionMode {
     return useEditorStore.getState().interactionMode;
+  }
+
+  private _getObjectPlacement() {
+    return useEditorStore.getState().objectPlacement;
+  }
+
+  private _stampObject(screenPosition: Vector2): void {
+    const placement = this._getObjectPlacement();
+
+    if (!placement) {
+      return;
+    }
+
+    this._app.commands.execute("createObject", {
+      type: placement.type,
+      position: this._screenToWorld(screenPosition),
+      angle: placement.angle,
+    });
+
+    useEditorStore
+      .getState()
+      .setObjectPlacementPosition(screenPosition.toObject());
   }
 
   private _screenToWorld(pos: Vector2): Vector2 {

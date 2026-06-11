@@ -41,6 +41,7 @@ export interface ISandboxObjectSnapshot {
   name: string;
   type: SandboxObjectType;
   position: Vector2;
+  angle: number;
   flags: SandboxObjectFlags;
   metadata: ISandboxObjectMetadata;
 }
