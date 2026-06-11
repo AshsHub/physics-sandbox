@@ -2,6 +2,7 @@ import { SandboxEngine } from "../engine/SandboxEngine";
 import type { Camera } from "../camera/Camera";
 import { CreateObjectCommand } from "./CreateObjectCommand";
 import { DeleteObjectCommand } from "./DeleteObjectCommand";
+import { PasteObjectsCommand } from "./PasteObjectsCommand";
 import type {
   CommandAction,
   CommandLogEntry,
@@ -35,6 +36,7 @@ export class Commands implements ICommandBus {
     createObject: (options) =>
       new CreateObjectCommand(this._engine, this._camera, options),
     deleteObject: (options) => new DeleteObjectCommand(this._engine, options),
+    pasteObjects: (options) => new PasteObjectsCommand(this._engine, options),
   };
 
   public constructor(

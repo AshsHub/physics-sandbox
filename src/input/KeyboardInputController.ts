@@ -1,3 +1,5 @@
+import { isTypingTarget } from "./InputTarget";
+
 export type KeyboardAction = (modifiers: KeyModifiers) => void;
 
 interface KeyAction {
@@ -61,7 +63,7 @@ export class KeyboardInputController {
   }
 
   public keyDown(event: KeyboardEvent): void {
-    if (this._isTypingTarget(event.target)) {
+    if (isTypingTarget(event.target)) {
       return;
     }
 
@@ -91,18 +93,6 @@ export class KeyboardInputController {
 
   public isKeyPressed(key: string): boolean {
     return this._pressedKeys.has(key.toLowerCase());
-  }
-
-  private _isTypingTarget(target: EventTarget | null): boolean {
-    if (!(target instanceof HTMLElement)) {
-      return false;
-    }
-
-    return (
-      target instanceof HTMLInputElement ||
-      target instanceof HTMLTextAreaElement ||
-      target.isContentEditable
-    );
   }
 
   private _getKeyModifiers(event: KeyboardEvent): KeyModifiers {

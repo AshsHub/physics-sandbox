@@ -4,6 +4,7 @@ import { InputConfig, MouseButton } from "../config/InputConfig";
 import { Vector2 } from "../maths/Vector2";
 import { SandboxObjectFlags } from "../sandbox/SandboxObjectType";
 import { useEditorStore } from "../store/editorStore";
+import { ClipboardManager } from "./ClipboardManager";
 import { InteractionMode } from "./InteractionMode";
 import {
   KeyboardInputController,
@@ -21,19 +22,24 @@ interface SelectionGesture {
 }
 
 export class InputManager {
+  private readonly _clipboard: ClipboardManager;
   private readonly _keyboard = new KeyboardInputController();
   private _activePointerMode?: InteractionMode;
   private _lastPointerPosition?: Vector2;
   private _selectionGesture?: SelectionGesture;
 
-  public constructor(private readonly _app: IApplication) {}
+  public constructor(private readonly _app: IApplication) {
+    this._clipboard = new ClipboardManager(_app);
+  }
 
   public init(): void {
     this._registerKeyActions();
+    this._clipboard.init();
     this._keyboard.init();
   }
 
   public destroy(): void {
+    this._clipboard.destroy();
     this._keyboard.destroy();
     useEditorStore.getState().setHoveredObject(undefined);
     useEditorStore.getState().setSelectionBox(undefined);
