@@ -18,6 +18,12 @@ export enum SandboxObjectRadialForceMode {
   Push = "Push",
 }
 
+export enum SandboxObjectCollisionRole {
+  None = 0,
+  Victim = 1 << 0,
+  Killer = 1 << 1,
+}
+
 export interface ISandboxObjectMetadata {
   width: number;
   height: number;
@@ -34,6 +40,7 @@ export interface ISandboxObjectMetadata {
   radialForceMode: SandboxObjectRadialForceMode;
   radialForceRadius: number;
   radialForceStrength: number;
+  collisionRole: SandboxObjectCollisionRole;
 }
 
 export interface ISandboxObjectSnapshot {

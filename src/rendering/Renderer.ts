@@ -1,11 +1,13 @@
 import type { ISandboxEngine } from "../engine/ISandboxEngine";
 import type Matter from "matter-js";
 import { PhysicsConfig } from "../config/PhysicsConfig";
+import { RendererConfig } from "../config/RendererConfig";
 import { SandboxObjectConfig } from "../config/SandboxObjectConfig";
 import {
   type ISandboxObject,
   type ISandboxObjectMetadata,
   SandboxObjectBorderStyle,
+  SandboxObjectCollisionRole,
   SandboxObjectRadialForceMode,
 } from "../sandbox/SandboxObject";
 import {
@@ -38,7 +40,7 @@ export class Renderer {
     }
 
     for (const object of objects) {
-      this._drawSandboxObject(ctx, object, selectedIds);
+      this._drawSandboxObject(ctx, object, selectedIds, cameraZoom);
     }
 
     this._drawObjectPlacementPreview(ctx, editorState, cameraZoom);
@@ -50,6 +52,7 @@ export class Renderer {
     ctx: CanvasRenderingContext2D,
     entity: ISandboxObject,
     selectedIds: Set<string>,
+    cameraZoom: number,
   ) {
     if (entity.flags & SandboxObjectFlags.Hidden) return;
 
@@ -82,6 +85,48 @@ export class Renderer {
       ctx.stroke();
       ctx.setLineDash([]);
       ctx.restore();
+    }
+
+    if ((metadata.collisionRole & SandboxObjectCollisionRole.Killer) !== 0) {
+      this._drawKillerIndicator(ctx, entity, cameraZoom);
+    }
+
+    ctx.restore();
+  }
+
+  private _drawKillerIndicator(
+    ctx: CanvasRenderingContext2D,
+    entity: ISandboxObject,
+    cameraZoom: number,
+  ): void {
+    const bounds = this._getLocalBodyBounds(entity.body);
+    const { killerIndicator } = RendererConfig;
+    const stripeGap = killerIndicator.stripeGap / cameraZoom;
+    const stripePadding = killerIndicator.stripePadding / cameraZoom;
+    const stripeExtent =
+      Math.hypot(bounds.maxX - bounds.minX, bounds.maxY - bounds.minY) +
+      stripePadding * 2;
+
+    ctx.save();
+    this._traceBodyPath(ctx, entity.body);
+    ctx.clip();
+    ctx.translate(entity.body.position.x, entity.body.position.y);
+    ctx.rotate(entity.body.angle + killerIndicator.stripeAngleRadians);
+
+    ctx.globalAlpha = killerIndicator.alpha;
+    ctx.strokeStyle = killerIndicator.color;
+    ctx.fillStyle = killerIndicator.color;
+    ctx.lineWidth = killerIndicator.stripeWidth / cameraZoom;
+
+    for (
+      let startX = -stripeExtent;
+      startX <= stripeExtent;
+      startX += stripeGap
+    ) {
+      ctx.beginPath();
+      ctx.moveTo(startX, -stripeExtent);
+      ctx.lineTo(startX, stripeExtent);
+      ctx.stroke();
     }
 
     ctx.restore();
@@ -141,10 +186,8 @@ export class Renderer {
     }
 
     const worldPosition = {
-      x: (placement.screenPosition.x - editorState.cameraOffset.x) /
-        cameraZoom,
-      y: (placement.screenPosition.y - editorState.cameraOffset.y) /
-        cameraZoom,
+      x: (placement.screenPosition.x - editorState.cameraOffset.x) / cameraZoom,
+      y: (placement.screenPosition.y - editorState.cameraOffset.y) / cameraZoom,
     };
     const metadata = SandboxObjectConfig.defaults[placement.type].metadata;
     const borderStyle = metadata.borderStyle as SandboxObjectBorderStyle;
@@ -271,6 +314,34 @@ export class Renderer {
     }
 
     ctx.closePath();
+  }
+
+  private _getLocalBodyBounds(body: Matter.Body): {
+    maxX: number;
+    maxY: number;
+    minX: number;
+    minY: number;
+  } {
+    const cos = Math.cos(-body.angle);
+    const sin = Math.sin(-body.angle);
+    let minX = Number.POSITIVE_INFINITY;
+    let maxX = Number.NEGATIVE_INFINITY;
+    let minY = Number.POSITIVE_INFINITY;
+    let maxY = Number.NEGATIVE_INFINITY;
+
+    for (const vertex of body.vertices) {
+      const dx = vertex.x - body.position.x;
+      const dy = vertex.y - body.position.y;
+      const localX = dx * cos - dy * sin;
+      const localY = dx * sin + dy * cos;
+
+      minX = Math.min(minX, localX);
+      maxX = Math.max(maxX, localX);
+      minY = Math.min(minY, localY);
+      maxY = Math.max(maxY, localY);
+    }
+
+    return { maxX, maxY, minX, minY };
   }
 
   private _getLineDash(

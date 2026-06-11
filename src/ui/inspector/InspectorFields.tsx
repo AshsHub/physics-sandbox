@@ -231,6 +231,90 @@ export function EditableSelect<T extends string>({
   );
 }
 
+interface EditableOption<T extends string | number> {
+  label: string;
+  value: T;
+}
+
+interface EditableOptionSelectProps<T extends string | number> {
+  label: string;
+  options: readonly EditableOption<T>[];
+  value: T;
+  onCommit: (value: T) => void;
+}
+
+export function EditableOptionSelect<T extends string | number>({
+  label,
+  options,
+  value,
+  onCommit,
+}: EditableOptionSelectProps<T>) {
+  const inputId = useId();
+
+  return (
+    <div
+      className="inspector-field"
+      onClick={(event) => event.stopPropagation()}
+    >
+      <label className="entity-meta-label" htmlFor={inputId}>
+        {label}
+      </label>
+      <select
+        className="inspector-field-control"
+        id={inputId}
+        value={String(value)}
+        onChange={(event) => {
+          const selected = options.find(
+            (option) => String(option.value) === event.currentTarget.value,
+          );
+
+          if (selected) {
+            onCommit(selected.value);
+          }
+        }}
+      >
+        {options.map((option) => (
+          <option key={String(option.value)} value={String(option.value)}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
+interface EditableCheckboxProps {
+  label: string;
+  value: boolean;
+  onCommit: (value: boolean) => void;
+}
+
+export function EditableCheckbox({
+  label,
+  value,
+  onCommit,
+}: EditableCheckboxProps) {
+  const inputId = useId();
+
+  return (
+    <div
+      className="inspector-field"
+      onClick={(event) => event.stopPropagation()}
+    >
+      <label className="entity-meta-label" htmlFor={inputId}>
+        {label}
+      </label>
+      <input
+        checked={value}
+        className="inspector-checkbox-control"
+        id={inputId}
+        type="checkbox"
+        onChange={(event) => onCommit(event.currentTarget.checked)}
+      />
+    </div>
+  );
+}
+
 export function ReadOnlyRow({
   label,
   value,

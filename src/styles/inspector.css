@@ -160,6 +160,13 @@
   opacity: 0.6;
 }
 
+.inspector-checkbox-control {
+  justify-self: start;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+}
+
 .inspector-number-control {
   display: grid;
   grid-template-columns: 26px minmax(0, 1fr) 26px;

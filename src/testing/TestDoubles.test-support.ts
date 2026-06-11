@@ -5,6 +5,7 @@ import type { SandboxEngine } from "../engine/SandboxEngine";
 import { Vector2 } from "../maths/Vector2";
 import {
   SandboxObjectBorderStyle,
+  SandboxObjectCollisionRole,
   SandboxObjectRadialForceMode,
   type ISandboxObjectMetadata,
   type ISandboxObjectSnapshot,
@@ -30,6 +31,7 @@ export const testSandboxObjectMetadata: ISandboxObjectMetadata = {
   radialForceMode: SandboxObjectRadialForceMode.None,
   radialForceRadius: 0,
   radialForceStrength: 0,
+  collisionRole: SandboxObjectCollisionRole.Victim,
 };
 
 export function createTestSandboxObjectSnapshot(

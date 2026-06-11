@@ -1,10 +1,16 @@
 import { SandboxObjectConfig } from "../../config/SandboxObjectConfig";
 import {
+  SandboxObjectCollisionRole,
   SandboxObjectRadialForceMode,
   type ISandboxObjectMetadata,
 } from "../../sandbox/SandboxObject";
 import { SandboxObjectFlags } from "../../sandbox/SandboxObjectType";
-import { EditableNumber, EditableSelect, ReadOnlyRow } from "./InspectorFields";
+import {
+  EditableNumber,
+  EditableOptionSelect,
+  EditableSelect,
+  ReadOnlyRow,
+} from "./InspectorFields";
 import { InspectorSection } from "./InspectorSection";
 
 export interface InspectorPhysicsSectionProps {
@@ -13,6 +19,12 @@ export interface InspectorPhysicsSectionProps {
   onUpdateFlags: (flags: SandboxObjectFlags) => void;
   onUpdateMetadata: (partial: Partial<ISandboxObjectMetadata>) => void;
 }
+
+const collisionRoleOptions = [
+  { label: "None", value: SandboxObjectCollisionRole.None },
+  { label: "Victim", value: SandboxObjectCollisionRole.Victim },
+  { label: "Killer", value: SandboxObjectCollisionRole.Killer },
+] as const;
 
 export function InspectorPhysicsSection({
   flags,
@@ -73,6 +85,12 @@ export function InspectorPhysicsSection({
         step={constraints.friction.step}
         value={metadata.friction}
         onCommit={(friction) => onUpdateMetadata({ friction })}
+      />
+      <EditableOptionSelect
+        label="Contact"
+        value={metadata.collisionRole}
+        options={collisionRoleOptions}
+        onCommit={(collisionRole) => onUpdateMetadata({ collisionRole })}
       />
       <EditableSelect
         label="Force"

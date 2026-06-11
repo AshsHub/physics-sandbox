@@ -50,7 +50,11 @@ export class SandboxEngine implements ISandboxEngine {
   }
 
   public update(): void {
-    this._physics.update(this._objects.getAll());
+    const killedIds = this._physics.update(this._objects.getAll());
+
+    if (killedIds.length > 0) {
+      this.destroyObject(killedIds);
+    }
   }
 
   public createObject(

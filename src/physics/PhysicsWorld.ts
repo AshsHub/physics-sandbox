@@ -7,6 +7,7 @@ import { SandboxObjectConfig } from "../config/SandboxObjectConfig";
 import { SimulationConfig } from "../config/SimulationConfig";
 import { Vector2 } from "../maths/Vector2";
 import {
+  SandboxObjectCollisionRole,
   SandboxObjectRadialForceMode,
   type ISandboxObject,
   type ISandboxObjectMetadata,
@@ -273,9 +274,9 @@ export class PhysicsWorld {
     this._draggedBodies.length = 0;
   }
 
-  public update(objects: ISandboxObject[] = []): void {
+  public update(objects: ISandboxObject[] = []): string[] {
     if (!this._engine) {
-      return;
+      return [];
     }
 
     const editorState = useEditorStore.getState();
@@ -341,6 +342,59 @@ export class PhysicsWorld {
         PhysicsConfig.simulation.fixedTimeStepMs,
       );
     }
+
+    return this._getKilledObjectIds(objects);
+  }
+
+  private _getKilledObjectIds(objects: ISandboxObject[]): string[] {
+    if (!this._engine) {
+      return [];
+    }
+
+    const objectByBody = new Map<Matter.Body, ISandboxObject>();
+    const killedIds = new Set<string>();
+
+    for (const object of objects) {
+      objectByBody.set(object.body, object);
+    }
+
+    for (const pair of this._engine.pairs.list) {
+      if (!pair.isActive) {
+        continue;
+      }
+
+      const objectA = objectByBody.get(pair.bodyA);
+      const objectB = objectByBody.get(pair.bodyB);
+
+      if (!objectA || !objectB) {
+        continue;
+      }
+
+      this._collectKilledObjectId(objectA, objectB, killedIds);
+      this._collectKilledObjectId(objectB, objectA, killedIds);
+    }
+
+    return [...killedIds];
+  }
+
+  private _collectKilledObjectId(
+    possibleVictim: ISandboxObject,
+    possibleKiller: ISandboxObject,
+    killedIds: Set<string>,
+  ): void {
+    const victimRole = possibleVictim.metadata.collisionRole;
+    const killerRole = possibleKiller.metadata.collisionRole;
+
+    if (
+      (victimRole & SandboxObjectCollisionRole.Victim) === 0 ||
+      (killerRole & SandboxObjectCollisionRole.Killer) === 0 ||
+      (possibleVictim.flags & SandboxObjectFlags.Hidden) !== 0 ||
+      (possibleKiller.flags & SandboxObjectFlags.Hidden) !== 0
+    ) {
+      return;
+    }
+
+    killedIds.add(possibleVictim.id);
   }
 
   private _applyWind(force: number): void {

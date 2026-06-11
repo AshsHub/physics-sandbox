@@ -1,6 +1,7 @@
 import {
   type ISandboxObjectMetadata,
   SandboxObjectBorderStyle,
+  SandboxObjectCollisionRole,
   SandboxObjectRadialForceMode,
 } from "../sandbox/SandboxObject";
 import {
@@ -100,6 +101,7 @@ export const SandboxObjectConfig = {
         description: "Static platform body",
         ...defaultPhysics,
         ...defaultRadialForce,
+        collisionRole: SandboxObjectCollisionRole.None,
       },
     },
     [SandboxObjectType.Wall]: {
@@ -116,6 +118,7 @@ export const SandboxObjectConfig = {
         description: "Static vertical wall body",
         ...defaultPhysics,
         ...defaultRadialForce,
+        collisionRole: SandboxObjectCollisionRole.None,
       },
     },
     [SandboxObjectType.Ramp]: {
@@ -132,6 +135,7 @@ export const SandboxObjectConfig = {
         description: "Static angled ramp body",
         ...defaultPhysics,
         ...defaultRadialForce,
+        collisionRole: SandboxObjectCollisionRole.None,
       },
     },
     [SandboxObjectType.Circle]: {
@@ -148,6 +152,7 @@ export const SandboxObjectConfig = {
         description: "Dynamic circular body",
         ...defaultPhysics,
         ...defaultRadialForce,
+        collisionRole: SandboxObjectCollisionRole.Victim,
       },
     },
     [SandboxObjectType.Triangle]: {
@@ -164,6 +169,7 @@ export const SandboxObjectConfig = {
         description: "Dynamic triangular body",
         ...defaultPhysics,
         ...defaultRadialForce,
+        collisionRole: SandboxObjectCollisionRole.Victim,
       },
     },
     [SandboxObjectType.Pentagon]: {
@@ -180,6 +186,7 @@ export const SandboxObjectConfig = {
         description: "Dynamic pentagonal body",
         ...defaultPhysics,
         ...defaultRadialForce,
+        collisionRole: SandboxObjectCollisionRole.Victim,
       },
     },
     [SandboxObjectType.Oval]: {
@@ -196,6 +203,7 @@ export const SandboxObjectConfig = {
         description: "Dynamic oval body",
         ...defaultPhysics,
         ...defaultRadialForce,
+        collisionRole: SandboxObjectCollisionRole.Victim,
       },
     },
     [SandboxObjectType.Box]: {
@@ -212,6 +220,7 @@ export const SandboxObjectConfig = {
         description: "Dynamic rectangular body",
         ...defaultPhysics,
         ...defaultRadialForce,
+        collisionRole: SandboxObjectCollisionRole.Victim,
       },
     },
   } satisfies Record<SandboxObjectType, SandboxObjectDefault>,
