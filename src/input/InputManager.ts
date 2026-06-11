@@ -243,15 +243,34 @@ export class InputManager {
         ids: Array.from(useEditorStore.getState().selectedIds),
       });
     });
-    this._keyboard.registerAction(["z"], (mods) => {
+    this._keyboard.registerAction(["d"], (mods, event) => {
       if (this._hasPrimaryModifier(mods)) {
-        if (mods & KeyModifiers.Shift) {
-          this._app.commands.redo();
-        } else {
-          this._app.commands.undo();
-        }
+        event.preventDefault();
+        this._clipboard.duplicate();
       }
     });
+    this._keyboard.registerAction(
+      ["z"],
+      (mods) => {
+        if (this._hasPrimaryModifier(mods)) {
+          if (mods & KeyModifiers.Shift) {
+            this._app.commands.redo();
+          } else {
+            this._app.commands.undo();
+          }
+        }
+      },
+      { repeat: true },
+    );
+    this._keyboard.registerAction(
+      ["y"],
+      (mods) => {
+        if (this._hasPrimaryModifier(mods)) {
+          this._app.commands.redo();
+        }
+      },
+      { repeat: true },
+    );
   }
 
   private _isMultiSelectHeld(): boolean {

@@ -1,6 +1,7 @@
 import type { ISandboxEngine } from "../engine/ISandboxEngine";
 import { Vector2 } from "../maths/Vector2";
 import type { ISandboxObjectSnapshot } from "../sandbox/SandboxObject";
+import { useEditorStore } from "../store/editorStore";
 import type { ICommand, ICommandResult } from "./ICommands";
 
 export interface PasteObjectsCommandOptions {
@@ -35,6 +36,10 @@ export class PasteObjectsCommand implements ICommand {
     for (const snapshot of this._createdSnapshots) {
       this._engine.createObjectFromSnapshot(snapshot);
     }
+
+    useEditorStore
+      .getState()
+      .setSelection(this._createdSnapshots.map((snapshot) => snapshot.id));
 
     return {
       success: true,

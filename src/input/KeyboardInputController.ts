@@ -1,9 +1,13 @@
 import { isTypingTarget } from "./InputTarget";
 
-export type KeyboardAction = (modifiers: KeyModifiers) => void;
+export type KeyboardAction = (
+  modifiers: KeyModifiers,
+  event: KeyboardEvent,
+) => void;
 
 interface KeyAction {
   action: KeyboardAction;
+  preventDefault: boolean;
   repeat: boolean;
 }
 
@@ -43,12 +47,13 @@ export class KeyboardInputController {
   public registerAction(
     keys: string[],
     action: KeyboardAction,
-    options: { repeat?: boolean } = {},
+    options: { preventDefault?: boolean; repeat?: boolean } = {},
   ): void {
     for (const key of keys) {
       const normalizedKey = key.toLowerCase();
       const keyAction = {
         action,
+        preventDefault: options.preventDefault ?? false,
         repeat: options.repeat ?? false,
       };
 
@@ -78,12 +83,16 @@ export class KeyboardInputController {
 
     const modifiers = this._getKeyModifiers(event);
 
-    actions.forEach(({ action, repeat }) => {
+    actions.forEach(({ action, preventDefault, repeat }) => {
       if (wasPressed && !repeat) {
         return;
       }
 
-      action(modifiers);
+      if (preventDefault) {
+        event.preventDefault();
+      }
+
+      action(modifiers, event);
     });
   }
 

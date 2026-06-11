@@ -95,6 +95,10 @@ export class ClipboardManager {
     return true;
   }
 
+  public duplicate(): boolean {
+    return this.copy() && this.paste();
+  }
+
   private _cloneSnapshots(
     snapshots: ISandboxObjectSnapshot[],
   ): ISandboxObjectSnapshot[] {
