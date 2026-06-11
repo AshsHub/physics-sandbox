@@ -28,9 +28,9 @@
   min-width: 0;
   flex: 1;
   padding: 4px 6px;
-  border: 1px solid #4f8cff;
+  border: 1px solid var(--accent);
   border-radius: 2px;
-  background: #1f1f1f;
+  background: var(--bg-input);
   color: var(--text-primary);
   font: inherit;
 }
@@ -39,7 +39,7 @@
   border: none;
   background: transparent;
   padding: 0;
-  color: white;
+  color: var(--text-primary);
   font-size: 12px;
   transition: transform 0.2s ease;
   user-select: none;
@@ -63,8 +63,9 @@
 }
 
 .inspector-filter-button.selected {
-  background: #4f8cff;
-  border-color: #6a9fff;
+  background: var(--accent);
+  border-color: var(--accent-border);
+  color: var(--text-on-accent);
 }
 
 .inspector-list-item {
@@ -82,12 +83,12 @@
 }
 
 .inspector-list-item.selected {
-  border-color: #4f8cff;
+  border-color: var(--accent);
 }
 
 .entity-inspector-info {
   font-size: 14px;
-  color: #aaa;
+  color: var(--text-secondary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -148,7 +149,7 @@
   padding: 5px 6px;
   border: 1px solid var(--border);
   border-radius: 2px;
-  background: #1f1f1f;
+  background: var(--bg-input);
   color: var(--text-primary);
   font: inherit;
   font-size: 12px;
@@ -179,7 +180,7 @@
   padding: 0;
   border-color: var(--border);
   border-radius: 0;
-  background: #292929;
+  background: var(--bg-control);
   color: var(--text-primary);
   font-size: 14px;
   line-height: 1;

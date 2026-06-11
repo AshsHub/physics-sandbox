@@ -22,20 +22,67 @@ h6 {
   --space-lg: 16px;
   --space-xl: 24px;
 
+  --accent: #4f8cff;
+  --accent-border: #6a9fff;
+  --accent-soft: rgba(79, 140, 255, 0.16);
+
+  --bg-body: #1f1f1f;
   --bg-app: #181818;
   --bg-panel: #222222;
   --bg-card: #2f2f2f;
   --bg-card-hover: #3a3a3a;
+  --bg-control: #3a3a3a;
+  --bg-control-hover: #424242;
+  --bg-input: #1f1f1f;
+  --bg-status: #2b2b2b;
+  --bg-scrollbar-track: #252525;
+  --bg-scrollbar-thumb: #555555;
+  --bg-scrollbar-thumb-hover: #666666;
 
   --border: #3a3a3a;
+  --border-strong: #444444;
+  --shadow-overlay: rgba(0, 0, 0, 0.35);
 
   --text-primary: #f5f5f5;
   --text-secondary: #9a9a9a;
+  --text-on-accent: #ffffff;
+  --text-on-control: #ffffff;
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --accent: #2f6feb;
+  --accent-border: #5f8ff1;
+  --accent-soft: rgba(47, 111, 235, 0.14);
+
+  --bg-body: #eef1f5;
+  --bg-app: #f6f7f9;
+  --bg-panel: #ffffff;
+  --bg-card: #f1f4f8;
+  --bg-card-hover: #e7edf6;
+  --bg-control: #ffffff;
+  --bg-control-hover: #f3f5f8;
+  --bg-input: #ffffff;
+  --bg-status: #e2e8f0;
+  --bg-scrollbar-track: #e6ebf2;
+  --bg-scrollbar-thumb: #b6c0cf;
+  --bg-scrollbar-thumb-hover: #98a5b8;
+
+  --border: #cbd3df;
+  --border-strong: #aeb8c8;
+  --shadow-overlay: rgba(20, 30, 45, 0.16);
+
+  --text-primary: #161a22;
+  --text-secondary: #5d6878;
+  --text-on-accent: #ffffff;
+  --text-on-control: #161a22;
+  color-scheme: light;
 }
 
 body {
   font-family: Inter, system-ui, sans-serif;
-  background: #1f1f1f;
+  background: var(--bg-body);
+  color: var(--text-primary);
 }
 
 * {
@@ -44,15 +91,15 @@ body {
 
 button {
   padding: 10px 14px;
-  border: 1px solid #444;
+  border: 1px solid var(--border-strong);
   border-radius: 4px;
-  background: #3a3a3a;
-  color: white;
+  background: var(--bg-control);
+  color: var(--text-on-control);
   cursor: pointer;
 }
 
 button:not(:disabled):hover {
-  background: #4a4a4a;
+  background: var(--bg-control-hover);
 }
 
 button:disabled {
@@ -64,6 +111,6 @@ button:disabled {
 .property {
   padding: 12px;
   border-radius: 6px;
-  background: #303030;
-  color: white;
+  background: var(--bg-card);
+  color: var(--text-primary);
 }

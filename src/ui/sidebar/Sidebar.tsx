@@ -4,11 +4,12 @@ import { CreatorPanel } from "../panels/CreatorPanel";
 import { InspectorPanel } from "../panels/InspectorPanel";
 import { SidebarPanel } from "../panels/SidebarPanel";
 import { SimulationPanel } from "../panels/SimulationPanel";
+import { ThemeControl } from "../ThemeControl";
 
 const sidebarTabs = [
   {
-    label: "Create",
-    panel: SidebarPanel.Create,
+    label: "Creator",
+    panel: SidebarPanel.Creator,
     tooltip: "Creator",
   },
   {
@@ -70,11 +71,15 @@ export function Sidebar({ app, onObjectContextMenu }: SidebarProps) {
             </button>
           ))}
         </div>
+
+        <div className="sidebar-footer">
+          <ThemeControl />
+        </div>
       </div>
 
       {hasActivePanel && (
         <div className="sidebar-content">
-          {activePanel === SidebarPanel.Create && (
+          {activePanel === SidebarPanel.Creator && (
             <CreatorPanel app={app} onClose={closePanel} />
           )}
           {activePanel === SidebarPanel.Inspector && (

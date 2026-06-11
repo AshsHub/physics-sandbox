@@ -88,18 +88,20 @@ export function Toolbar() {
         />
 
         <button
-          aria-pressed={isSimulationRunning}
+          aria-pressed={!isSimulationRunning}
           className="simulation-control-button"
-          onClick={() => setSimulationRunning(!isSimulationRunning)}
+          disabled={!isSimulationRunning}
+          onClick={() => setSimulationRunning(false)}
           type="button"
         >
           ||
         </button>
 
         <button
-          aria-pressed={!isSimulationRunning}
+          aria-pressed={isSimulationRunning}
           className="simulation-control-button"
-          onClick={() => setSimulationRunning(!isSimulationRunning)}
+          disabled={isSimulationRunning}
+          onClick={() => setSimulationRunning(true)}
           type="button"
         >
           {">"}

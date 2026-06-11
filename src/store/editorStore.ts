@@ -4,6 +4,7 @@ import { CameraConfig } from "../config/CameraConfig";
 import { SimulationConfig } from "../config/SimulationConfig";
 import { InteractionMode } from "../input/InteractionMode";
 import { GravitySimulationType } from "../physics/SandboxSimulation";
+import { readStoredThemeMode, ThemeMode } from "../theme/Theme";
 import { SidebarPanel } from "../ui/panels/SidebarPanel";
 
 export interface CameraOffset {
@@ -36,6 +37,7 @@ export interface IEditorStore {
   isGravityReversed: boolean;
   showForceRadius: boolean;
   windForce: number;
+  themeMode: ThemeMode;
 
   select(id: string): void;
   deselect(id: string): void;
@@ -52,6 +54,7 @@ export interface IEditorStore {
   setShowForceRadius(isVisible: boolean): void;
   setWindForce(force: number): void;
   clearSimulations(): void;
+  setThemeMode(mode: ThemeMode): void;
   setInteractionMode(mode: InteractionMode): void;
   setActivePointerMode(mode?: InteractionMode): void;
   setHoveredObject(id?: string): void;
@@ -86,11 +89,12 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
   inspectorScrollTargetId: undefined,
   selectionBox: undefined,
   selectedIds: new Set<string>(),
-  activePanel: SidebarPanel.Create,
+  activePanel: SidebarPanel.Creator,
   activeGravitySimulation: GravitySimulationType.Earth,
   isGravityReversed: false,
   showForceRadius: true,
   windForce: SimulationConfig.wind.defaultWindForce,
+  themeMode: readStoredThemeMode(),
 
   select(id: string) {
     set((state) => ({
@@ -243,6 +247,12 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
       activeGravitySimulation: undefined,
       isGravityReversed: false,
       windForce: SimulationConfig.wind.defaultWindForce,
+    });
+  },
+
+  setThemeMode(mode) {
+    set({
+      themeMode: mode,
     });
   },
 }));

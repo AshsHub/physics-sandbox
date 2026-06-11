@@ -3,6 +3,8 @@
   flex-direction: column;
   width: 100%;
   height: 100%;
+  background: var(--bg-app);
+  color: var(--text-primary);
 }
 
 .workspace {
@@ -17,19 +19,25 @@
   flex: 1;
   justify-content: center;
   align-items: center;
-  background: #181818;
+  background: var(--bg-app);
   overflow: hidden;
 }
 
 .headerbar {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: var(--space-md);
+  min-height: 48px;
+  padding-right: 360px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
 }
 
 .headerbar-title {
   margin: 0;
   padding: 12px 16px;
   font-size: 18px;
-  color: white;
+  color: var(--text-primary);
 }

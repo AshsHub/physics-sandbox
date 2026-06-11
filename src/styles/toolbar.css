@@ -22,8 +22,14 @@
 }
 
 .interaction-mode-button.selected {
-  background: #4f8cff;
-  border-color: #6a9fff;
+  background: var(--accent);
+  border-color: var(--accent-border);
+  color: var(--text-on-accent);
+}
+
+.interaction-mode-button.selected:not(:disabled):hover {
+  background: var(--accent);
+  border-color: var(--accent-border);
 }
 
 .interaction-mode-key {
@@ -44,8 +50,14 @@
 }
 
 .toolbar-toggle-button.selected {
-  background: #4f8cff;
-  border-color: #6a9fff;
+  background: var(--accent);
+  border-color: var(--accent-border);
+  color: var(--text-on-accent);
+}
+
+.toolbar-toggle-button.selected:not(:disabled):hover {
+  background: var(--accent);
+  border-color: var(--accent-border);
 }
 
 .zoom-control {
@@ -58,10 +70,10 @@
   gap: var(--space-xs);
   width: 360px;
   padding: 6px 8px;
-  border: 1px solid #444;
+  border: 1px solid var(--border-strong);
   border-radius: 4px;
-  background: rgba(42, 42, 42, 0.94);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  background: color-mix(in srgb, var(--bg-panel) 94%, transparent);
+  box-shadow: 0 8px 24px var(--shadow-overlay);
 }
 
 .zoom-fit-button {
@@ -91,5 +103,5 @@
 .zoom-control-slider {
   flex: 1;
   min-width: 0;
-  accent-color: #4f8cff;
+  accent-color: var(--accent);
 }

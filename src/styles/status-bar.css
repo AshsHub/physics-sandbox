@@ -3,7 +3,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: var(--space-xs);
-  color: #aaa;
+  color: var(--text-secondary);
   font-size: 12px;
   right: 10px;
   position: absolute;
@@ -15,9 +15,9 @@
   flex-wrap: wrap;
   gap: var(--space-sm);
   padding: 6px 12px;
-  border-top: 1px solid #333;
+  border: 1px solid var(--border-strong);
   border-radius: 4px;
-  background: #222;
+  background: var(--bg-status);
 }
 
 .status-bar-group {

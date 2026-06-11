@@ -1,7 +1,7 @@
 // SidebarPanel.ts
 
 export enum SidebarPanel {
-  Create = "create",
+  Creator = "creator",
   Inspector = "inspector",
   Simulation = "simulation",
 }

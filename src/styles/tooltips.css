@@ -7,10 +7,10 @@
   align-items: center;
   gap: var(--space-sm);
   padding: 6px 8px;
-  border: 1px solid #4a4a4a;
+  border: 1px solid var(--border-strong);
   border-radius: 4px;
-  background: #1f1f1f;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  background: var(--bg-input);
+  box-shadow: 0 8px 24px var(--shadow-overlay);
   color: var(--text-primary);
   font-size: 12px;
   font-weight: 500;
@@ -27,9 +27,9 @@
   min-width: 18px;
   height: 18px;
   padding: 0 5px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid color-mix(in srgb, var(--text-primary) 14%, transparent);
   border-radius: 2px;
-  background: rgba(0, 0, 0, 0.24);
+  background: color-mix(in srgb, var(--text-primary) 12%, transparent);
   color: var(--text-primary);
   font-family: inherit;
   font-size: 11px;
@@ -42,10 +42,10 @@
   position: absolute;
   width: 8px;
   height: 8px;
-  border: 1px solid #4a4a4a;
+  border: 1px solid var(--border-strong);
   border-top: 0;
   border-left: 0;
-  background: #1f1f1f;
+  background: var(--bg-input);
 }
 
 .app-tooltip-bottom::before {

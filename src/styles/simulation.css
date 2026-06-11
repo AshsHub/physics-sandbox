@@ -30,8 +30,9 @@
 }
 
 .simulation-reset-button.selected {
-  background: #4f8cff;
-  border-color: #6a9fff;
+  background: var(--accent);
+  border-color: var(--accent-border);
+  color: var(--text-on-accent);
 }
 
 .simulation-slider-value {
@@ -61,7 +62,7 @@
 
 .simulation-slider {
   width: 100%;
-  accent-color: #4f8cff;
+  accent-color: var(--accent);
 }
 
 .simulation-slider-range-labels {
@@ -78,9 +79,9 @@
   width: 72px;
   height: 32px;
   padding: 2px;
-  border: 1px solid #444;
+  border: 1px solid var(--border-strong);
   border-radius: 4px;
-  background: #3a3a3a;
+  background: var(--bg-control);
   overflow: visible;
 }
 
@@ -93,13 +94,18 @@
   border: 0;
   border-radius: 2px;
   background: transparent;
-  color: white;
+  color: var(--text-on-control);
   font-size: 13px;
   line-height: 1;
 }
 
-.simulation-control-button:hover {
+.simulation-control-button:hover,
+.simulation-control-button:disabled {
   background: transparent;
+}
+
+.simulation-control-button:disabled {
+  opacity: 1;
 }
 
 .simulation-control-indicator {
@@ -108,7 +114,7 @@
   bottom: 2px;
   width: calc(50% - 2px);
   border-radius: 2px;
-  background: #4f8cff;
+  background: var(--accent);
   transition: transform 0.18s ease;
 }
 

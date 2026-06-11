@@ -5,6 +5,7 @@ import { CanvasView } from "./canvas/CanvasView";
 import { AppConfig } from "./config/AppConfig";
 import { Vector2 } from "./maths/Vector2";
 import { useEditorStore } from "./store/editorStore";
+import { resolveThemeMode, writeStoredThemeMode } from "./theme/Theme";
 import { CanvasContextMenu } from "./ui/context/CanvasContextMenu";
 import { ObjectContextMenu } from "./ui/context/ObjectContextMenu";
 import { Sidebar } from "./ui/sidebar/Sidebar";
@@ -16,6 +17,9 @@ import { ZoomControl } from "./ui/ZoomControl";
 export default function App() {
   const [app] = useState(() => new Application());
   const [fps, setFps] = useState(0);
+  const [prefersDark, setPrefersDark] = useState(() =>
+    window.matchMedia("(prefers-color-scheme: dark)").matches,
+  );
   const [contextMenu, setContextMenu] = useState<
     | {
         type: "object";
@@ -73,6 +77,27 @@ export default function App() {
   const viewportSize = useEditorStore((s) => s.viewportSize);
   const staticObjectCount = useEditorStore((s) => s.staticObjectCount);
   const dynamicObjectCount = useEditorStore((s) => s.dynamicObjectCount);
+  const themeMode = useEditorStore((s) => s.themeMode);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const updatePreference = () => setPrefersDark(mediaQuery.matches);
+
+    updatePreference();
+    mediaQuery.addEventListener("change", updatePreference);
+
+    return () => {
+      mediaQuery.removeEventListener("change", updatePreference);
+    };
+  }, []);
+
+  useEffect(() => {
+    const resolvedTheme = resolveThemeMode(themeMode, prefersDark);
+
+    document.documentElement.dataset.theme = resolvedTheme.toLowerCase();
+    document.documentElement.dataset.themeMode = themeMode.toLowerCase();
+    writeStoredThemeMode(themeMode);
+  }, [prefersDark, themeMode]);
 
   const openObjectContextMenu = useCallback(
     (objectId: string, position: { x: number; y: number }) => {
