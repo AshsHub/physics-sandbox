@@ -3,6 +3,7 @@ import type { IApplication } from "../../application/IApplication";
 import type { Vector2 } from "../../maths/Vector2";
 import { useEditorStore } from "../../store/editorStore";
 import { SidebarPanel } from "../panels/SidebarPanel";
+import { ClipboardContextSubmenu } from "./ClipboardContextSubmenu";
 
 export interface ObjectContextMenuProps {
   app: IApplication;
@@ -126,6 +127,12 @@ export function ObjectContextMenu({
       >
         Show in Inspector
       </button>
+
+      <ClipboardContextSubmenu
+        app={app}
+        targetIds={targetIds}
+        onClose={onClose}
+      />
 
       <button
         className="object-context-menu-action"

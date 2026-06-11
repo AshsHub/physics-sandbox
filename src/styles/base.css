@@ -51,8 +51,14 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+button:not(:disabled):hover {
   background: #4a4a4a;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: default;
+  pointer-events: none;
 }
 
 .property {

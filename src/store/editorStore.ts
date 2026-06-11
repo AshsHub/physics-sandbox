@@ -25,6 +25,7 @@ export interface IEditorStore {
   activePointerMode?: InteractionMode;
   cameraOffset: CameraOffset;
   cameraZoom: number;
+  clipboardObjectCount: number;
   viewportSize: ViewportSize;
   hoveredObjectId?: string;
   inspectorScrollTargetId?: string;
@@ -61,6 +62,7 @@ export interface IEditorStore {
     zoom: number;
     viewportSize: ViewportSize;
   }): void;
+  setClipboardObjectCount(count: number): void;
 }
 
 export const useEditorStore = create<IEditorStore>((set, get) => ({
@@ -75,6 +77,7 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
     y: 0,
   },
   cameraZoom: CameraConfig.zoom.initial,
+  clipboardObjectCount: 0,
   viewportSize: {
     width: 0,
     height: 0,
@@ -202,6 +205,12 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
       cameraOffset: cameraState.offset,
       cameraZoom: cameraState.zoom,
       viewportSize: cameraState.viewportSize,
+    });
+  },
+
+  setClipboardObjectCount(count) {
+    set({
+      clipboardObjectCount: count,
     });
   },
 

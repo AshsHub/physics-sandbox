@@ -4,6 +4,10 @@ import { InputConfig, MouseButton } from "../config/InputConfig";
 import { Vector2 } from "../maths/Vector2";
 import { SandboxObjectFlags } from "../sandbox/SandboxObjectType";
 import { useEditorStore } from "../store/editorStore";
+import {
+  ClipboardAction,
+  type ClipboardSelectionAction,
+} from "./ClipboardAction";
 import { ClipboardManager } from "./ClipboardManager";
 import { InteractionMode } from "./InteractionMode";
 import {
@@ -189,6 +193,19 @@ export class InputManager {
     }
   }
 
+  public executeClipboardAction(action: ClipboardAction.Paste): boolean;
+  public executeClipboardAction(
+    action: ClipboardSelectionAction,
+    ids?: string[],
+  ): boolean;
+  public executeClipboardAction(action: ClipboardAction, ids?: string[]): boolean {
+    if (action === ClipboardAction.Paste) {
+      return this._clipboard.execute(action);
+    }
+
+    return this._clipboard.execute(action, ids);
+  }
+
   private _registerKeyActions(): void {
     this._keyboard.registerAction(["1"], () => {
       useEditorStore.getState().setInteractionMode(InteractionMode.Play);
@@ -246,7 +263,7 @@ export class InputManager {
     this._keyboard.registerAction(["d"], (mods, event) => {
       if (this._hasPrimaryModifier(mods)) {
         event.preventDefault();
-        this._clipboard.duplicate();
+        this._clipboard.execute(ClipboardAction.Duplicate);
       }
     });
     this._keyboard.registerAction(

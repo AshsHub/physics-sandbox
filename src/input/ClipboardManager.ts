@@ -3,6 +3,10 @@ import { ClipboardConfig } from "../config/ClipboardConfig";
 import { Vector2 } from "../maths/Vector2";
 import type { ISandboxObjectSnapshot } from "../sandbox/SandboxObject";
 import { useEditorStore } from "../store/editorStore";
+import {
+  ClipboardAction,
+  type ClipboardSelectionAction,
+} from "./ClipboardAction";
 import { isTypingTarget } from "./InputTarget";
 
 export class ClipboardManager {
@@ -10,15 +14,15 @@ export class ClipboardManager {
   private _snapshots: ISandboxObjectSnapshot[] = [];
 
   private readonly _handleCopy = (event: ClipboardEvent) => {
-    this.copy(event);
+    this._copy(undefined, event);
   };
 
   private readonly _handleCut = (event: ClipboardEvent) => {
-    this.cut(event);
+    this._cut(undefined, event);
   };
 
   private readonly _handlePaste = (event: ClipboardEvent) => {
-    this.paste(event);
+    this._paste(event);
   };
 
   public constructor(private readonly _app: IApplication) {}
@@ -36,44 +40,62 @@ export class ClipboardManager {
 
     this._snapshots = [];
     this._pasteCount = 0;
+    this._setClipboardObjectCount();
   }
 
-  public copy(event?: ClipboardEvent): boolean {
+  public execute(action: ClipboardAction.Paste): boolean;
+  public execute(action: ClipboardSelectionAction, ids?: string[]): boolean;
+  public execute(action: ClipboardAction, ids?: string[]): boolean {
+    switch (action) {
+      case ClipboardAction.Copy:
+        return this._copy(ids);
+      case ClipboardAction.Cut:
+        return this._cut(ids);
+      case ClipboardAction.Paste:
+        return this._paste();
+      case ClipboardAction.Duplicate:
+        return this._duplicate(ids);
+    }
+  }
+
+  private _copy(ids?: string[], event?: ClipboardEvent): boolean {
     if (isTypingTarget(event?.target ?? null)) {
       return false;
     }
 
-    const snapshots = this._getSelectedSnapshots();
+    const snapshots = this._getSnapshots(this._resolveTargetIds(ids));
 
     if (snapshots.length === 0) {
       return false;
     }
 
     event?.preventDefault();
+    const objectCount = snapshots.length;
     event?.clipboardData?.setData(
       "text/plain",
-      `${snapshots.length} sandbox object${snapshots.length === 1 ? "" : "s"}`,
+      `${objectCount} sandbox object${objectCount === 1 ? "" : "s"}`,
     );
 
-    this._snapshots = snapshots;
-    this._pasteCount = 0;
+    this._setSnapshots(snapshots);
 
     return true;
   }
 
-  public cut(event?: ClipboardEvent): boolean {
-    if (!this.copy(event)) {
+  private _cut(ids?: string[], event?: ClipboardEvent): boolean {
+    const targetIds = this._resolveTargetIds(ids);
+
+    if (!this._copy(targetIds, event)) {
       return false;
     }
 
     this._app.commands.execute("deleteObject", {
-      ids: Array.from(useEditorStore.getState().selectedIds),
+      ids: targetIds,
     });
 
     return true;
   }
 
-  public paste(event?: ClipboardEvent): boolean {
+  private _paste(event?: ClipboardEvent): boolean {
     if (isTypingTarget(event?.target ?? null)) {
       return false;
     }
@@ -85,24 +107,19 @@ export class ClipboardManager {
     event?.preventDefault();
     this._pasteCount++;
 
-    this._app.commands.execute("pasteObjects", {
-      offset: new Vector2(ClipboardConfig.pasteOffset).multiply(
-        this._pasteCount,
-      ),
-      snapshots: this._cloneSnapshots(this._snapshots),
-    });
-
-    return true;
+    return this._pasteSnapshots(this._snapshots, this._pasteCount);
   }
 
-  public duplicate(): boolean {
-    return this.copy() && this.paste();
+  private _duplicate(ids?: string[]): boolean {
+    return this._pasteSnapshots(
+      this._getSnapshots(this._resolveTargetIds(ids)),
+    );
   }
 
-  private _cloneSnapshots(
-    snapshots: ISandboxObjectSnapshot[],
-  ): ISandboxObjectSnapshot[] {
-    return snapshots.map((snapshot) => ({
+  private _cloneSnapshot(
+    snapshot: ISandboxObjectSnapshot,
+  ): ISandboxObjectSnapshot {
+    return {
       id: snapshot.id,
       name: snapshot.name,
       type: snapshot.type,
@@ -111,22 +128,60 @@ export class ClipboardManager {
       metadata: {
         ...snapshot.metadata,
       },
-    }));
+    };
   }
 
-  private _getSelectedSnapshots(): ISandboxObjectSnapshot[] {
-    return Array.from(useEditorStore.getState().selectedIds)
+  private _cloneSnapshots(
+    snapshots: ISandboxObjectSnapshot[],
+  ): ISandboxObjectSnapshot[] {
+    return snapshots.map((snapshot) => this._cloneSnapshot(snapshot));
+  }
+
+  private _getSnapshots(ids: string[]): ISandboxObjectSnapshot[] {
+    return ids
       .map((id) => this._app.engine.createSnapshot(id))
       .filter(
-        (snapshot): snapshot is ISandboxObjectSnapshot => snapshot !== undefined,
+        (snapshot): snapshot is ISandboxObjectSnapshot =>
+          snapshot !== undefined,
       )
-      .map((snapshot) => ({
-        ...snapshot,
-        position: snapshot.position.clone(),
-        metadata: {
-          ...snapshot.metadata,
-        },
-      }));
+      .map((snapshot) => this._cloneSnapshot(snapshot));
   }
 
+  private _resolveTargetIds(ids?: string[]): string[] {
+    return ids ?? Array.from(useEditorStore.getState().selectedIds);
+  }
+
+  private _pasteSnapshots(
+    snapshots: ISandboxObjectSnapshot[],
+    offsetMultiplier: number = ClipboardConfig.pasteOffset.multiplier,
+  ): boolean {
+    if (snapshots.length === 0) {
+      return false;
+    }
+
+    this._app.commands.execute("pasteObjects", {
+      offset: new Vector2(ClipboardConfig.pasteOffset).multiply(
+        offsetMultiplier,
+      ),
+      snapshots: this._cloneSnapshots(snapshots),
+    });
+
+    return true;
+  }
+
+  private _setSnapshots(snapshots: ISandboxObjectSnapshot[]): boolean {
+    if (snapshots.length === 0) {
+      return false;
+    }
+
+    this._snapshots = snapshots;
+    this._pasteCount = 0;
+    this._setClipboardObjectCount();
+
+    return true;
+  }
+
+  private _setClipboardObjectCount(): void {
+    useEditorStore.getState().setClipboardObjectCount(this._snapshots.length);
+  }
 }

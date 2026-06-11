@@ -197,8 +197,6 @@
 
 .inspector-stepper-button:disabled {
   color: var(--text-secondary);
-  cursor: not-allowed;
-  opacity: 0.55;
 }
 
 .inspector-field-control[type="number"] {

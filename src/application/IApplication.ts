@@ -3,6 +3,10 @@ import type { Camera } from "../camera/Camera";
 import type { IEventBus } from "../events/IEventBus";
 import type { ISandboxEngine } from "../engine/ISandboxEngine";
 import type { ICommandBus } from "../commands/ICommands";
+import type {
+  ClipboardAction,
+  ClipboardSelectionAction,
+} from "../input/ClipboardAction";
 
 export interface IApplication {
   camera: Camera;
@@ -18,4 +22,10 @@ export interface IApplication {
   pointerWheel(deltaY: number, pos: Vector2): void;
   pointerUp(button: number): void;
   pointerLeave(): void;
+
+  executeClipboardAction(action: ClipboardAction.Paste): boolean;
+  executeClipboardAction(
+    action: ClipboardSelectionAction,
+    ids?: string[],
+  ): boolean;
 }

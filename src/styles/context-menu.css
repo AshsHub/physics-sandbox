@@ -80,8 +80,22 @@
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
 }
 
-.canvas-context-menu-submenu:hover .canvas-context-menu-subpanel,
-.canvas-context-menu-submenu:focus-within .canvas-context-menu-subpanel {
+.clipboard-context-subpanel {
+  width: 170px;
+}
+
+.canvas-context-menu-submenu:has(
+    .canvas-context-menu-submenu-trigger:not(:disabled):hover
+  )
+  .canvas-context-menu-subpanel,
+.canvas-context-menu-submenu:has(
+    .canvas-context-menu-submenu-trigger:not(:disabled)
+  ):hover
+  .canvas-context-menu-subpanel,
+.canvas-context-menu-submenu:has(
+    .canvas-context-menu-submenu-trigger:not(:disabled)
+  ):focus-within
+  .canvas-context-menu-subpanel {
   display: flex;
 }
 

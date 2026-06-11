@@ -7,6 +7,7 @@ import {
   dynamicShapes,
   staticShapes,
 } from "../creatorShapes";
+import { ClipboardContextSubmenu } from "./ClipboardContextSubmenu";
 
 export interface CanvasContextMenuProps {
   app: IApplication;
@@ -71,7 +72,7 @@ export function CanvasContextMenu({
       <div className="canvas-context-menu-submenu">
         <button className="canvas-context-menu-submenu-trigger" type="button">
           <span>Create</span>
-          <span aria-hidden="true">›</span>
+          <span aria-hidden="true">&gt;</span>
         </button>
 
         <div className="canvas-context-menu-subpanel">
@@ -87,6 +88,8 @@ export function CanvasContextMenu({
           />
         </div>
       </div>
+
+      <ClipboardContextSubmenu app={app} onClose={onClose} />
     </div>
   );
 }

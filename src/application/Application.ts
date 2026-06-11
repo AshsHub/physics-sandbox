@@ -8,6 +8,10 @@ import { EventBus } from "../events/EventBus";
 import { SandboxEngine } from "../engine/SandboxEngine";
 import type { IApplication } from "./IApplication";
 import { SandboxObjectFlags } from "../sandbox/SandboxObjectType";
+import {
+  ClipboardAction,
+  type ClipboardSelectionAction,
+} from "../input/ClipboardAction";
 
 export class Application implements IApplication {
   public readonly camera: Camera;
@@ -121,5 +125,21 @@ export class Application implements IApplication {
 
   public pointerLeave() {
     this.inputManager.pointerLeave();
+  }
+
+  public executeClipboardAction(action: ClipboardAction.Paste): boolean;
+  public executeClipboardAction(
+    action: ClipboardSelectionAction,
+    ids?: string[],
+  ): boolean;
+  public executeClipboardAction(
+    action: ClipboardAction,
+    ids?: string[],
+  ): boolean {
+    if (action === ClipboardAction.Paste) {
+      return this.inputManager.executeClipboardAction(action);
+    }
+
+    return this.inputManager.executeClipboardAction(action, ids);
   }
 }
