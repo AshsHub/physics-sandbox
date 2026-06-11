@@ -17,6 +17,7 @@ import {
   SandboxObjectType,
 } from "../sandbox/SandboxObjectType";
 import { useEditorStore } from "../store/editorStore";
+import { SandboxBodyFactory } from "./SandboxBodyFactory";
 import { getGravityMultiplier } from "./SandboxSimulation";
 import { Maths } from "../maths/Maths";
 
@@ -30,6 +31,7 @@ export class PhysicsWorld {
   private _engine?: Matter.Engine;
   private _world?: Matter.World;
 
+  private readonly _bodyFactory = new SandboxBodyFactory();
   private readonly _draggedBodies: IDraggedBody[] = [];
   private readonly _moveToPosition = new Vector2();
   private _lastGravityY: number = 0;
@@ -64,102 +66,7 @@ export class PhysicsWorld {
       throw new Error("PhysicsWorld not initialized");
     }
 
-    let body: Matter.Body;
-
-    switch (type) {
-      case SandboxObjectType.BlackHole:
-        body = Matter.Bodies.circle(
-          position.x,
-          position.y,
-          SandboxObjectConfig.bodyGeometry.blackHoleRadius,
-        );
-        break;
-      case SandboxObjectType.Sun:
-        body = Matter.Bodies.circle(
-          position.x,
-          position.y,
-          SandboxObjectConfig.bodyGeometry.sunRadius,
-        );
-        break;
-      case SandboxObjectType.WhiteHole:
-        body = Matter.Bodies.circle(
-          position.x,
-          position.y,
-          SandboxObjectConfig.bodyGeometry.whiteHoleRadius,
-        );
-        break;
-      case SandboxObjectType.Circle:
-        body = Matter.Bodies.circle(
-          position.x,
-          position.y,
-          SandboxObjectConfig.bodyGeometry.circleRadius,
-        );
-        break;
-      case SandboxObjectType.Triangle:
-        body = Matter.Bodies.polygon(
-          position.x,
-          position.y,
-          3,
-          SandboxObjectConfig.bodyGeometry.triangleRadius,
-        );
-        break;
-      case SandboxObjectType.Pentagon:
-        body = Matter.Bodies.polygon(
-          position.x,
-          position.y,
-          5,
-          SandboxObjectConfig.bodyGeometry.pentagonRadius,
-        );
-        break;
-      case SandboxObjectType.Oval:
-        body = Matter.Bodies.circle(
-          position.x,
-          position.y,
-          SandboxObjectConfig.bodyGeometry.ovalRadius,
-          {
-            slop: 0.02,
-          },
-        );
-        Matter.Body.scale(
-          body,
-          SandboxObjectConfig.bodyGeometry.ovalScaleX,
-          SandboxObjectConfig.bodyGeometry.ovalScaleY,
-        );
-        break;
-      case SandboxObjectType.Platform:
-        body = Matter.Bodies.rectangle(
-          position.x,
-          position.y,
-          SandboxObjectConfig.defaults.Platform.metadata.width,
-          SandboxObjectConfig.defaults.Platform.metadata.height,
-        );
-        break;
-      case SandboxObjectType.Wall:
-        body = Matter.Bodies.rectangle(
-          position.x,
-          position.y,
-          SandboxObjectConfig.defaults.Wall.metadata.width,
-          SandboxObjectConfig.defaults.Wall.metadata.height,
-        );
-        break;
-      case SandboxObjectType.Ramp:
-        body = Matter.Bodies.rectangle(
-          position.x,
-          position.y,
-          SandboxObjectConfig.defaults.Ramp.metadata.width,
-          SandboxObjectConfig.defaults.Ramp.metadata.height,
-        );
-        Matter.Body.rotate(body, PhysicsConfig.body.rampAngle);
-        break;
-      case SandboxObjectType.Box:
-      default:
-        body = Matter.Bodies.rectangle(
-          position.x,
-          position.y,
-          SandboxObjectConfig.defaults.Box.metadata.width,
-          SandboxObjectConfig.defaults.Box.metadata.height,
-        );
-    }
+    const body = this._bodyFactory.create(position, type);
 
     if (angle !== 0) {
       Matter.Body.rotate(body, angle);
