@@ -86,6 +86,7 @@ export function ObjectContextMenu({
 
     editorStore.setSelection([object.id]);
     editorStore.setActivePanel(SidebarPanel.Inspector);
+    editorStore.setInspectorItemOpen(object.id, true);
     editorStore.setInspectorScrollTarget(object.id);
     onClose();
   };

@@ -3,12 +3,15 @@
   justify-content: space-between;
   align-items: center;
   gap: var(--space-md);
+  min-height: 30px;
+  cursor: pointer;
 }
 
 .entity-name {
   min-width: 0;
-  flex: 1;
-  padding: 0;
+  flex: 0 1 auto;
+  max-width: calc(100% - 40px);
+  padding: 2px 4px;
   border: 0;
   background: transparent;
   color: var(--text-primary);
@@ -36,13 +39,29 @@
 }
 
 .chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
   border: none;
   background: transparent;
+  min-width: 28px;
+  min-height: 28px;
   padding: 0;
   color: var(--text-primary);
   font-size: 12px;
-  transition: transform 0.2s ease;
   user-select: none;
+}
+
+.chevron:hover {
+  background: transparent;
+}
+
+.chevron-icon {
+  display: block;
+  line-height: 1;
+  transform-origin: center;
+  transition: transform 0.2s ease;
 }
 
 .inspector-list {

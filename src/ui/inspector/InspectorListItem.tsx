@@ -14,8 +14,10 @@ import { InspectorVisualSection } from "./InspectorVisualSection";
 export interface InspectorListItemProps {
   commands: ICommandBus;
   entity: ISandboxObject;
+  isOpen: boolean;
   isSelected: boolean;
   shouldScrollIntoView: boolean;
+  onOpenChange: (isOpen: boolean) => void;
   onSelect: (event: MouseEvent) => void;
   onContextMenu: (event: MouseEvent) => void;
 }
@@ -23,13 +25,14 @@ export interface InspectorListItemProps {
 export function InspectorListItem({
   commands,
   entity,
+  isOpen,
   isSelected,
   shouldScrollIntoView,
+  onOpenChange,
   onSelect,
   onContextMenu,
 }: InspectorListItemProps) {
   const itemRef = useRef<HTMLDivElement>(null);
-  const [isOpen, setIsOpen] = useState(isSelected || shouldScrollIntoView);
   const [isEditingName, setIsEditingName] = useState(false);
   const [draftName, setDraftName] = useState(entity.name);
   const shouldCancelCommit = useRef(false);
@@ -104,7 +107,7 @@ export function InspectorListItem({
       onClick={onSelect}
       onContextMenu={onContextMenu}
     >
-      <div className="header" onClick={() => setIsOpen(!isOpen)}>
+      <div className="header" onClick={() => onOpenChange(!isOpen)}>
         {isEditingName ? (
           <input
             aria-label="Entity name"
@@ -139,14 +142,22 @@ export function InspectorListItem({
           </button>
         )}
 
-        <span
+        <button
+          aria-label={
+            isOpen ? "Collapse inspector item" : "Expand inspector item"
+          }
           className="chevron"
-          style={{
-            transform: isOpen ? "rotate(0deg)" : "rotate(180deg)",
-          }}
+          type="button"
         >
-          v
-        </span>
+          <span
+            className="chevron-icon"
+            style={{
+              transform: isOpen ? "rotate(0deg)" : "rotate(180deg)",
+            }}
+          >
+            v
+          </span>
+        </button>
       </div>
 
       {isOpen && (

@@ -22,11 +22,15 @@ export function InspectorSection({
         <span className="inspector-section-title">{title}</span>
         <span
           className="chevron"
-          style={{
-            transform: isOpen ? "rotate(0deg)" : "rotate(180deg)",
-          }}
         >
-          v
+          <span
+            className="chevron-icon"
+            style={{
+              transform: isOpen ? "rotate(0deg)" : "rotate(180deg)",
+            }}
+          >
+            v
+          </span>
         </span>
       </button>
 

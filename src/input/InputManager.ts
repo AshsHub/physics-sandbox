@@ -7,6 +7,7 @@ import {
   type SandboxObjectType,
 } from "../sandbox/SandboxObjectType";
 import { useEditorStore } from "../store/editorStore";
+import { SidebarPanel } from "../ui/panels/SidebarPanel";
 import {
   ClipboardAction,
   type ClipboardSelectionAction,
@@ -306,6 +307,16 @@ export class InputManager {
     this._keyboard.registerAction(["r"], () => {
       const state = useEditorStore.getState();
       state.setShowForceRadius(!state.showForceRadius);
+    });
+
+    this._keyboard.registerAction(["i"], () => {
+      const state = useEditorStore.getState();
+
+      state.setActivePanel(SidebarPanel.Inspector);
+
+      if (state.selectedIds.size > 0) {
+        state.toggleInspectorItems(state.selectedIds);
+      }
     });
 
     this._keyboard.registerAction(["f"], () => {

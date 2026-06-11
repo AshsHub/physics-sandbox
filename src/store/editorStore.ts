@@ -37,6 +37,7 @@ export interface IEditorStore {
   viewportSize: ViewportSize;
   hoveredObjectId?: string;
   inspectorScrollTargetId?: string;
+  openInspectorItemIds: Set<string>;
   selectionBox?: SelectionBox;
   objectPlacement?: ObjectPlacementState;
   selectedIds: Set<string>;
@@ -67,6 +68,8 @@ export interface IEditorStore {
   setActivePointerMode(mode?: InteractionMode): void;
   setHoveredObject(id?: string): void;
   setInspectorScrollTarget(id?: string): void;
+  setInspectorItemOpen(id: string, isOpen: boolean): void;
+  toggleInspectorItems(ids: Iterable<string>): void;
   setSelectionBox(selectionBox?: SelectionBox): void;
   setObjectPlacement(type: SandboxObjectType): void;
   setObjectPlacementPosition(position?: CameraOffset): void;
@@ -99,6 +102,7 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
   },
   hoveredObjectId: undefined,
   inspectorScrollTargetId: undefined,
+  openInspectorItemIds: new Set<string>(),
   selectionBox: undefined,
   objectPlacement: undefined,
   selectedIds: new Set<string>(),
@@ -208,6 +212,40 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
   setInspectorScrollTarget(id?: string) {
     set({
       inspectorScrollTargetId: id,
+    });
+  },
+
+  setInspectorItemOpen(id, isOpen) {
+    set((state) => ({
+      openInspectorItemIds: (() => {
+        const next = new Set(state.openInspectorItemIds);
+
+        if (isOpen) {
+          next.add(id);
+        } else {
+          next.delete(id);
+        }
+
+        return next;
+      })(),
+    }));
+  },
+
+  toggleInspectorItems(ids) {
+    set((state) => {
+      const next = new Set(state.openInspectorItemIds);
+
+      for (const id of ids) {
+        if (next.has(id)) {
+          next.delete(id);
+        } else {
+          next.add(id);
+        }
+      }
+
+      return {
+        openInspectorItemIds: next,
+      };
     });
   },
 

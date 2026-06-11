@@ -22,6 +22,8 @@ export function InspectorList({
   const inspectorScrollTargetId = useEditorStore(
     (s) => s.inspectorScrollTargetId,
   );
+  const openInspectorItemIds = useEditorStore((s) => s.openInspectorItemIds);
+  const setInspectorItemOpen = useEditorStore((s) => s.setInspectorItemOpen);
 
   const selectObject = (objectId: string, shouldToggle: boolean) => {
     if (shouldToggle) {
@@ -44,7 +46,12 @@ export function InspectorList({
           key={object.id}
           commands={commands}
           entity={object}
+          isOpen={
+            openInspectorItemIds.has(object.id) ||
+            inspectorScrollTargetId === object.id
+          }
           isSelected={selectedIds.has(object.id)}
+          onOpenChange={(isOpen) => setInspectorItemOpen(object.id, isOpen)}
           shouldScrollIntoView={inspectorScrollTargetId === object.id}
           onSelect={(event) =>
             selectObject(object.id, event.ctrlKey || event.metaKey || event.shiftKey)
