@@ -15,6 +15,7 @@
   flex-direction: column;
   justify-content: space-between;
   border-right: 1px solid var(--border);
+  user-select: none;
 }
 
 .sidebar-tabs {

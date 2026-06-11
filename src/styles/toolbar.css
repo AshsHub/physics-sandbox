@@ -6,6 +6,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-sm);
+  user-select: none;
 }
 
 .interaction-mode-controls {
@@ -74,6 +75,7 @@
   border-radius: 4px;
   background: color-mix(in srgb, var(--bg-panel) 94%, transparent);
   box-shadow: 0 8px 24px var(--shadow-overlay);
+  user-select: none;
 }
 
 .zoom-fit-button {

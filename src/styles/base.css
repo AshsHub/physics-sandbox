@@ -96,6 +96,7 @@ button {
   background: var(--bg-control);
   color: var(--text-on-control);
   cursor: pointer;
+  user-select: none;
 }
 
 button:not(:disabled):hover {

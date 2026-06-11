@@ -10,6 +10,7 @@
   font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
+  user-select: none;
 }
 
 .create-shape-grid {
@@ -50,6 +51,7 @@
   justify-content: center;
   width: 44px;
   height: 38px;
+  user-select: none;
 }
 
 .shape-preview {
@@ -127,4 +129,5 @@
 .create-shape-label {
   color: var(--text-primary);
   font-size: 13px;
+  user-select: none;
 }

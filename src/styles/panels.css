@@ -9,6 +9,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-md);
+  user-select: none;
 }
 
 .panel-title {

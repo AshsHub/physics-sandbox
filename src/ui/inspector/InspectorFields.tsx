@@ -39,6 +39,15 @@ export function EditableNumber({
     setDraft(String(normalizeValue(nextValue)));
   };
 
+  const parsedDraft = Number(draft);
+  const currentStepperValue = normalizeValue(
+    Number.isFinite(parsedDraft) ? parsedDraft : value,
+  );
+  const canDecrease =
+    !disabled && (min === undefined || currentStepperValue > min);
+  const canIncrease =
+    !disabled && (max === undefined || currentStepperValue < max);
+
   const commitValue = (nextValue: number) => {
     if (disabled) {
       return;
@@ -90,7 +99,7 @@ export function EditableNumber({
           className="inspector-stepper-button"
           data-tooltip={`Decrease ${label}`}
           data-tooltip-position="bottom"
-          disabled={disabled}
+          disabled={!canDecrease}
           onClick={() => {
             inputRef.current?.focus();
             setDraftValue((Number(draft) || value) - step);
@@ -131,7 +140,7 @@ export function EditableNumber({
           className="inspector-stepper-button"
           data-tooltip={`Increase ${label}`}
           data-tooltip-position="bottom"
-          disabled={disabled}
+          disabled={!canIncrease}
           onClick={() => {
             inputRef.current?.focus();
             setDraftValue((Number(draft) || value) + step);

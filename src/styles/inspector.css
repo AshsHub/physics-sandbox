@@ -5,6 +5,7 @@
   gap: var(--space-md);
   min-height: 30px;
   cursor: pointer;
+  user-select: none;
 }
 
 .entity-name {
@@ -111,6 +112,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  user-select: none;
 }
 
 .inspector-item-content {
@@ -160,6 +162,7 @@
   grid-template-columns: 72px minmax(0, 1fr);
   align-items: center;
   gap: var(--space-sm);
+  user-select: none;
 }
 
 .inspector-field-control {
@@ -172,6 +175,7 @@
   color: var(--text-primary);
   font: inherit;
   font-size: 12px;
+  user-select: none;
 }
 
 .inspector-field-control:disabled {
@@ -264,6 +268,7 @@
 .entity-meta-label {
   color: var(--text-secondary);
   font-size: 12px;
+  user-select: none;
 }
 
 .entity-state-badge {

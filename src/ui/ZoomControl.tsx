@@ -9,6 +9,8 @@ export interface ZoomControlProps {
 
 export function ZoomControl({ app }: ZoomControlProps) {
   const cameraZoom = useEditorStore((s) => s.cameraZoom);
+  const canZoomOut = cameraZoom > CameraConfig.zoom.min;
+  const canZoomIn = cameraZoom < CameraConfig.zoom.max;
   const setZoom = (nextZoom: number) => {
     app.camera.setZoomAtViewportCenter(nextZoom);
   };
@@ -32,6 +34,7 @@ export function ZoomControl({ app }: ZoomControlProps) {
         className="zoom-step-button"
         data-tooltip="Zoom out (-)"
         data-tooltip-position="top"
+        disabled={!canZoomOut}
         onClick={() => setZoom(cameraZoom - CameraConfig.zoom.buttonStep)}
         type="button"
       >
@@ -52,6 +55,7 @@ export function ZoomControl({ app }: ZoomControlProps) {
         className="zoom-step-button"
         data-tooltip="Zoom in (+)"
         data-tooltip-position="top"
+        disabled={!canZoomIn}
         onClick={() => setZoom(cameraZoom + CameraConfig.zoom.buttonStep)}
         type="button"
       >

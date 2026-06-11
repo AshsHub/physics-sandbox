@@ -10,6 +10,7 @@
   border-radius: 6px;
   background: var(--bg-panel);
   box-shadow: 0 12px 32px var(--shadow-overlay);
+  user-select: none;
 }
 
 .object-context-menu-input {
@@ -40,6 +41,7 @@
   border-radius: 6px;
   background: var(--bg-panel);
   box-shadow: 0 12px 32px var(--shadow-overlay);
+  user-select: none;
 }
 
 .canvas-context-menu-submenu {

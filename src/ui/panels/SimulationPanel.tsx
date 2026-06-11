@@ -29,6 +29,10 @@ export function SimulationPanel({ onClose }: SimulationPanelProps) {
   );
   const activeGravityPreset = gravitySimulationPresets[activeGravityIndex];
   const windDescriptor = getWindDescriptor(windForce);
+  const canResetGravity =
+    activeGravitySimulation !== GravitySimulationType.Earth ||
+    isGravityReversed;
+  const canResetWind = windForce !== SimulationConfig.wind.defaultWindForce;
 
   return (
     <Panel title="Simulation" onClose={onClose}>
@@ -54,6 +58,7 @@ export function SimulationPanel({ onClose }: SimulationPanelProps) {
               className="simulation-reset-button"
               data-tooltip="Reset gravity to Earth"
               data-tooltip-position="left"
+              disabled={!canResetGravity}
               onClick={() => {
                 setGravitySimulation(GravitySimulationType.Earth);
                 setGravityReversed(false);
@@ -106,6 +111,7 @@ export function SimulationPanel({ onClose }: SimulationPanelProps) {
             className="simulation-reset-button"
             data-tooltip="Remove wind force"
             data-tooltip-position="left"
+            disabled={!canResetWind}
             onClick={() => setWindForce(SimulationConfig.wind.defaultWindForce)}
             type="button"
           >
