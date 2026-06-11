@@ -6,6 +6,8 @@ export function isTypingTarget(target: EventTarget | null): boolean {
   return (
     target instanceof HTMLInputElement ||
     target instanceof HTMLTextAreaElement ||
-    target.isContentEditable
+    target.isContentEditable === true ||
+    target.contentEditable === "true" ||
+    target.getAttribute("contenteditable") === "true"
   );
 }

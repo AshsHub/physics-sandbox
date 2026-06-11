@@ -202,7 +202,9 @@ export class Camera {
       maxZoom,
     );
     const nextZoom =
-      Number.isFinite(zoom) && zoom > 0 ? zoom : CameraConfig.zoom.initial;
+      Number.isFinite(zoom) && zoom > 0
+        ? Maths.clamp(zoom, CameraConfig.zoom.min, CameraConfig.zoom.max)
+        : CameraConfig.zoom.initial;
     const sceneCenter = {
       x: bounds.minX + sceneWidth / 2,
       y: bounds.minY + sceneHeight / 2,
