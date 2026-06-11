@@ -1,0 +1,91 @@
+import { describe, expect, it, jest } from "@jest/globals";
+import { AppStorage, type IStorageAdapter } from "./AppStorage";
+
+const appStorageKey = "physics-sandbox-settings";
+
+describe("AppStorage", () => {
+  it("reads stored settings from the root settings object", () => {
+    const adapter: IStorageAdapter = {
+      getItem: jest.fn(() => JSON.stringify({ themeMode: "Dark" })),
+      removeItem: jest.fn(),
+      setItem: jest.fn(),
+    };
+    const storage = new AppStorage(adapter);
+
+    expect(storage.readSettings()).toEqual({
+      themeMode: "Dark",
+    });
+    expect(adapter.getItem).toHaveBeenCalledWith(appStorageKey);
+  });
+
+  it("writes settings to a single root settings object", () => {
+    const adapter: IStorageAdapter = {
+      getItem: jest.fn(() => null),
+      removeItem: jest.fn(),
+      setItem: jest.fn(),
+    };
+    const storage = new AppStorage(adapter);
+
+    storage.writeSettings({
+      themeMode: "Light",
+    });
+
+    expect(adapter.setItem).toHaveBeenCalledWith(
+      appStorageKey,
+      JSON.stringify({ themeMode: "Light" }),
+    );
+  });
+
+  it("updates settings without removing existing settings", () => {
+    const adapter: IStorageAdapter = {
+      getItem: jest.fn(() =>
+        JSON.stringify({
+          futureSetting: true,
+        }),
+      ),
+      removeItem: jest.fn(),
+      setItem: jest.fn(),
+    };
+    const storage = new AppStorage(adapter);
+
+    expect(
+      storage.updateSettings({
+        themeMode: "System",
+      }),
+    ).toEqual({
+      futureSetting: true,
+      themeMode: "System",
+    });
+    expect(adapter.setItem).toHaveBeenCalledWith(
+      appStorageKey,
+      JSON.stringify({
+        futureSetting: true,
+        themeMode: "System",
+      }),
+    );
+  });
+
+  it("falls back to empty settings when storage reads fail", () => {
+    const adapter: IStorageAdapter = {
+      getItem: jest.fn(() => {
+        throw new Error("blocked");
+      }),
+      removeItem: jest.fn(),
+      setItem: jest.fn(),
+    };
+    const storage = new AppStorage(adapter);
+
+    expect(storage.readSettings()).toEqual({});
+  });
+
+  it("falls back to empty settings for invalid stored json", () => {
+    const adapter: IStorageAdapter = {
+      getItem: jest.fn(() => "{"),
+      removeItem: jest.fn(),
+      setItem: jest.fn(),
+    };
+    const storage = new AppStorage(adapter);
+
+    expect(storage.readSettings()).toEqual({});
+  });
+});

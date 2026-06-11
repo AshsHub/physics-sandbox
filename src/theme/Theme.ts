@@ -1,3 +1,5 @@
+import { type IAppStorage, appStorage } from "../storage/AppStorage";
+
 export enum ThemeMode {
   System = "System",
   Light = "Light",
@@ -5,8 +7,6 @@ export enum ThemeMode {
 }
 
 export type ResolvedTheme = ThemeMode.Light | ThemeMode.Dark;
-
-const THEME_STORAGE_KEY = "physics-sandbox-theme-mode";
 
 export function resolveThemeMode(
   mode: ThemeMode,
@@ -19,17 +19,23 @@ export function resolveThemeMode(
   return mode;
 }
 
-export function readStoredThemeMode(storage = getThemeStorage()): ThemeMode {
-  const value = storage?.getItem(THEME_STORAGE_KEY) ?? null;
+export function readStoredThemeMode(storage = appStorage): ThemeMode {
+  const value = storage.readSettings().themeMode ?? null;
 
-  return isThemeMode(value) ? value : ThemeMode.System;
+  if (isThemeMode(value)) {
+    return value;
+  }
+
+  return ThemeMode.System;
 }
 
 export function writeStoredThemeMode(
   mode: ThemeMode,
-  storage = getThemeStorage(),
+  storage: IAppStorage = appStorage,
 ): void {
-  storage?.setItem(THEME_STORAGE_KEY, mode);
+  storage.updateSettings({
+    themeMode: mode,
+  });
 }
 
 function isThemeMode(value: string | null): value is ThemeMode {
@@ -38,12 +44,4 @@ function isThemeMode(value: string | null): value is ThemeMode {
     value === ThemeMode.Light ||
     value === ThemeMode.Dark
   );
-}
-
-function getThemeStorage(): Storage | undefined {
-  try {
-    return typeof localStorage === "undefined" ? undefined : localStorage;
-  } catch {
-    return undefined;
-  }
 }
