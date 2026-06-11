@@ -5,6 +5,24 @@ import { InspectorPanel } from "../panels/InspectorPanel";
 import { SidebarPanel } from "../panels/SidebarPanel";
 import { SimulationPanel } from "../panels/SimulationPanel";
 
+const sidebarTabs = [
+  {
+    label: "Create",
+    panel: SidebarPanel.Create,
+    tooltip: "Creator",
+  },
+  {
+    label: "Inspector",
+    panel: SidebarPanel.Inspector,
+    tooltip: "Inspector",
+  },
+  {
+    label: "Simulation",
+    panel: SidebarPanel.Simulation,
+    tooltip: "Simulation",
+  },
+] as const;
+
 export interface SidebarProps {
   app: IApplication;
   onObjectContextMenu: (
@@ -18,48 +36,40 @@ export function Sidebar({ app, onObjectContextMenu }: SidebarProps) {
   const setActivePanel = useEditorStore((s) => s.setActivePanel);
   const closePanel = () => setActivePanel(undefined);
   const hasActivePanel = activePanel !== undefined;
+  const activeTabIndex = sidebarTabs.findIndex(
+    ({ panel }) => panel === activePanel,
+  );
 
   return (
     <aside className={hasActivePanel ? "sidebar" : "sidebar collapsed"}>
       <div className="sidebar-nav">
-        <button
-          className={
-            activePanel === SidebarPanel.Create
-              ? "sidebar-button selected"
-              : "sidebar-button"
-          }
-          data-tooltip="Creator"
-          data-tooltip-position="right"
-          onClick={() => setActivePanel(SidebarPanel.Create)}
-        >
-          +
-        </button>
+        <div className="sidebar-tabs">
+          {activeTabIndex >= 0 && (
+            <span
+              className="sidebar-tab-indicator"
+              style={{
+                transform: `translateY(${activeTabIndex * 100}%)`,
+              }}
+            />
+          )}
 
-        <button
-          className={
-            activePanel === SidebarPanel.Inspector
-              ? "sidebar-button selected"
-              : "sidebar-button"
-          }
-          data-tooltip="Inspector"
-          data-tooltip-position="right"
-          onClick={() => setActivePanel(SidebarPanel.Inspector)}
-        >
-          I
-        </button>
-
-        <button
-          className={
-            activePanel === SidebarPanel.Simulation
-              ? "sidebar-button selected"
-              : "sidebar-button"
-          }
-          data-tooltip="Simulation"
-          data-tooltip-position="right"
-          onClick={() => setActivePanel(SidebarPanel.Simulation)}
-        >
-          S
-        </button>
+          {sidebarTabs.map(({ label, panel, tooltip }) => (
+            <button
+              className={
+                activePanel === panel
+                  ? "sidebar-button selected"
+                  : "sidebar-button"
+              }
+              data-tooltip={tooltip}
+              data-tooltip-position="right"
+              key={panel}
+              onClick={() => setActivePanel(panel)}
+              type="button"
+            >
+              <span className="sidebar-button-label">{label}</span>
+            </button>
+          ))}
+        </div>
       </div>
 
       {hasActivePanel && (
