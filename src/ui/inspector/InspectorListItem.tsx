@@ -7,6 +7,7 @@ import {
 } from "../../sandbox/SandboxObject";
 import { SandboxObjectFlags } from "../../sandbox/SandboxObjectType";
 import { useEditorStore } from "../../store/editorStore";
+import { AppButton } from "../common/AppButton";
 import { InspectorPhysicsSection } from "./InspectorPhysicsSection";
 import { InspectorReadOnlySection } from "./InspectorReadOnlySection";
 import { InspectorVisualSection } from "./InspectorVisualSection";
@@ -130,7 +131,7 @@ export function InspectorListItem({
             }}
           />
         ) : (
-          <button
+          <AppButton
             className="entity-name"
             type="button"
             onClick={(event) => {
@@ -139,10 +140,10 @@ export function InspectorListItem({
             }}
           >
             {entity.name}
-          </button>
+          </AppButton>
         )}
 
-        <button
+        <AppButton
           aria-label={
             isOpen ? "Collapse inspector item" : "Expand inspector item"
           }
@@ -157,7 +158,7 @@ export function InspectorListItem({
           >
             v
           </span>
-        </button>
+        </AppButton>
       </div>
 
       {isOpen && (

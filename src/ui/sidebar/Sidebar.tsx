@@ -1,5 +1,6 @@
 import type { IApplication } from "../../application/IApplication";
 import { useEditorStore } from "../../store/editorStore";
+import { AppButton } from "../common/AppButton";
 import { CreatorPanel } from "../panels/CreatorPanel";
 import { InspectorPanel } from "../panels/InspectorPanel";
 import { SidebarPanel } from "../panels/SidebarPanel";
@@ -55,7 +56,7 @@ export function Sidebar({ app, onObjectContextMenu }: SidebarProps) {
           )}
 
           {sidebarTabs.map(({ label, panel, tooltip }) => (
-            <button
+            <AppButton
               className={
                 activePanel === panel
                   ? "sidebar-button selected"
@@ -68,7 +69,7 @@ export function Sidebar({ app, onObjectContextMenu }: SidebarProps) {
               type="button"
             >
               <span className="sidebar-button-label">{label}</span>
-            </button>
+            </AppButton>
           ))}
         </div>
 

@@ -1,5 +1,6 @@
 import { InteractionMode } from "../input/InteractionMode";
 import { useEditorStore } from "../store/editorStore";
+import { AppButton } from "./common/AppButton";
 
 const modes = [
   {
@@ -31,7 +32,7 @@ export function Toolbar() {
     <header className="toolbar">
       <div className="interaction-mode-controls" aria-label="Interaction mode">
         {modes.map(({ label, mode, input }) => (
-          <button
+          <AppButton
             aria-pressed={interactionMode === mode}
             className={
               interactionMode === mode
@@ -46,11 +47,11 @@ export function Toolbar() {
           >
             <kbd className="interaction-mode-key">{input}</kbd>
             {label}
-          </button>
+          </AppButton>
         ))}
       </div>
 
-      <button
+      <AppButton
         aria-pressed={showForceRadius}
         className={
           showForceRadius
@@ -67,7 +68,7 @@ export function Toolbar() {
         type="button"
       >
         Force Radius
-      </button>
+      </AppButton>
 
       <div
         className="simulation-controls"
@@ -87,7 +88,7 @@ export function Toolbar() {
           }
         />
 
-        <button
+        <AppButton
           aria-pressed={!isSimulationRunning}
           className="simulation-control-button"
           disabled={!isSimulationRunning}
@@ -95,9 +96,9 @@ export function Toolbar() {
           type="button"
         >
           ||
-        </button>
+        </AppButton>
 
-        <button
+        <AppButton
           aria-pressed={isSimulationRunning}
           className="simulation-control-button"
           disabled={isSimulationRunning}
@@ -105,7 +106,7 @@ export function Toolbar() {
           type="button"
         >
           {">"}
-        </button>
+        </AppButton>
       </div>
     </header>
   );

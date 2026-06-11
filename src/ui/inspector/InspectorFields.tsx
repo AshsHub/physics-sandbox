@@ -1,5 +1,6 @@
 import { useId, useRef, useState } from "react";
 import { Maths } from "../../maths/Maths";
+import { AppButton } from "../common/AppButton";
 
 interface EditableNumberProps {
   disabled?: boolean;
@@ -84,7 +85,7 @@ export function EditableNumber({
       </label>
 
       <span className="inspector-number-control">
-        <button
+        <AppButton
           aria-label={`Decrease ${label}`}
           className="inspector-stepper-button"
           data-tooltip={`Decrease ${label}`}
@@ -101,7 +102,7 @@ export function EditableNumber({
           type="button"
         >
           -
-        </button>
+        </AppButton>
         <input
           className="inspector-field-control"
           disabled={disabled}
@@ -125,7 +126,7 @@ export function EditableNumber({
             }
           }}
         />
-        <button
+        <AppButton
           aria-label={`Increase ${label}`}
           className="inspector-stepper-button"
           data-tooltip={`Increase ${label}`}
@@ -142,7 +143,7 @@ export function EditableNumber({
           type="button"
         >
           +
-        </button>
+        </AppButton>
       </span>
     </div>
   );

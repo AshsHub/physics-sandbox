@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from "react";
+import { AppButton } from "../common/AppButton";
 
 export function InspectorSection({
   children,
@@ -11,7 +12,7 @@ export function InspectorSection({
 
   return (
     <section className="inspector-section">
-      <button
+      <AppButton
         className="inspector-section-header"
         onClick={(event) => {
           event.stopPropagation();
@@ -32,7 +33,7 @@ export function InspectorSection({
             v
           </span>
         </span>
-      </button>
+      </AppButton>
 
       {isOpen && <div className="inspector-section-content">{children}</div>}
     </section>

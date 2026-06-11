@@ -1,6 +1,7 @@
 // Panel.tsx
 
 import type { ReactNode } from "react";
+import { AppButton } from "../common/AppButton";
 
 export interface PanelProps {
   title: string;
@@ -15,7 +16,7 @@ export function Panel({ title, onClose, children }: PanelProps) {
         <h2 className="panel-title">{title}</h2>
 
         {onClose && (
-          <button
+          <AppButton
             aria-label={`Close ${title} panel`}
             className="panel-close-button"
             data-tooltip="Close panel"
@@ -24,7 +25,7 @@ export function Panel({ title, onClose, children }: PanelProps) {
             type="button"
           >
             x
-          </button>
+          </AppButton>
         )}
       </div>
 

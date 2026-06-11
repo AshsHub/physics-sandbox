@@ -5,6 +5,7 @@ import {
   GravitySimulationType,
 } from "../../physics/SandboxSimulation";
 import { useEditorStore } from "../../store/editorStore";
+import { AppButton } from "../common/AppButton";
 import { Panel } from "./Panel";
 
 export interface SimulationPanelProps {
@@ -35,7 +36,7 @@ export function SimulationPanel({ onClose }: SimulationPanelProps) {
         <div className="simulation-control-header">
           <h3 className="simulation-group-title">Gravity</h3>
           <div className="simulation-control-actions">
-            <button
+            <AppButton
               aria-pressed={isGravityReversed}
               className={
                 isGravityReversed
@@ -48,8 +49,8 @@ export function SimulationPanel({ onClose }: SimulationPanelProps) {
               type="button"
             >
               Reverse
-            </button>
-            <button
+            </AppButton>
+            <AppButton
               className="simulation-reset-button"
               data-tooltip="Reset gravity to Earth"
               data-tooltip-position="left"
@@ -60,7 +61,7 @@ export function SimulationPanel({ onClose }: SimulationPanelProps) {
               type="button"
             >
               Reset
-            </button>
+            </AppButton>
           </div>
         </div>
 
@@ -101,7 +102,7 @@ export function SimulationPanel({ onClose }: SimulationPanelProps) {
       <section className="simulation-group">
         <div className="simulation-control-header">
           <h3 className="simulation-group-title">Wind</h3>
-          <button
+          <AppButton
             className="simulation-reset-button"
             data-tooltip="Remove wind force"
             data-tooltip-position="left"
@@ -109,7 +110,7 @@ export function SimulationPanel({ onClose }: SimulationPanelProps) {
             type="button"
           >
             Reset
-          </button>
+          </AppButton>
         </div>
 
         <div className="simulation-slider-value">

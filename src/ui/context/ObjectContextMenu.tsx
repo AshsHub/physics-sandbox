@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { IApplication } from "../../application/IApplication";
 import type { Vector2 } from "../../maths/Vector2";
 import { useEditorStore } from "../../store/editorStore";
+import { AppButton } from "../common/AppButton";
 import { SidebarPanel } from "../panels/SidebarPanel";
 import { ClipboardContextSubmenu } from "./ClipboardContextSubmenu";
 
@@ -120,14 +121,14 @@ export function ObjectContextMenu({
         }}
       />
 
-      <button
+      <AppButton
         className="object-context-menu-action"
         onClick={revealInInspector}
         onPointerDown={(event) => event.preventDefault()}
         type="button"
       >
         Show in Inspector
-      </button>
+      </AppButton>
 
       <ClipboardContextSubmenu
         app={app}
@@ -135,14 +136,14 @@ export function ObjectContextMenu({
         onClose={onClose}
       />
 
-      <button
+      <AppButton
         className="object-context-menu-action"
         onClick={deleteObjects}
         onPointerDown={(event) => event.preventDefault()}
         type="button"
       >
         {targetIds.length > 1 ? `Delete ${targetIds.length} objects` : "Delete"}
-      </button>
+      </AppButton>
     </div>
   );
 }

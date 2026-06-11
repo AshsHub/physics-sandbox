@@ -7,6 +7,7 @@ import {
   dynamicShapes,
   staticShapes,
 } from "../creatorShapes";
+import { AppButton } from "../common/AppButton";
 import { ClipboardContextSubmenu } from "./ClipboardContextSubmenu";
 
 export interface CanvasContextMenuProps {
@@ -70,10 +71,10 @@ export function CanvasContextMenu({
       }}
     >
       <div className="canvas-context-menu-submenu">
-        <button className="canvas-context-menu-submenu-trigger" type="button">
+        <AppButton className="canvas-context-menu-submenu-trigger" type="button">
           <span>Create</span>
           <span aria-hidden="true">&gt;</span>
-        </button>
+        </AppButton>
 
         <div className="canvas-context-menu-subpanel">
           <CanvasContextMenuGroup
@@ -108,7 +109,7 @@ function CanvasContextMenuGroup({
       <h3 className="canvas-context-menu-group-title">{label}</h3>
       <div className="canvas-context-menu-grid">
         {shapes.map((shape) => (
-          <button
+          <AppButton
             className="canvas-context-menu-create-button"
             key={shape.type}
             onClick={() => onCreate(shape.type)}
@@ -119,7 +120,7 @@ function CanvasContextMenuGroup({
               <span className={`shape-preview ${shape.preview}`} />
             </span>
             <span className="create-shape-label">{shape.label}</span>
-          </button>
+          </AppButton>
         ))}
       </div>
     </section>

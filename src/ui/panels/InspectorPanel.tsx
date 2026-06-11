@@ -4,6 +4,7 @@ import type { ISandboxObject } from "../../sandbox/SandboxObject";
 import { SandboxObjectFlags } from "../../sandbox/SandboxObjectType";
 
 import { useEditorStore } from "../../store/editorStore";
+import { AppButton } from "../common/AppButton";
 import { InspectorList } from "../inspector/InspectorList";
 import { Panel } from "./Panel";
 
@@ -55,7 +56,7 @@ export function InspectorPanel({
     <Panel title="Inspector" onClose={onClose}>
       <div className="inspector-filters" aria-label="Object filters">
         {filters.map(({ label, value }) => (
-          <button
+          <AppButton
             aria-pressed={filter === value}
             className={
               filter === value
@@ -67,7 +68,7 @@ export function InspectorPanel({
             type="button"
           >
             {label}
-          </button>
+          </AppButton>
         ))}
       </div>
 

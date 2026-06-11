@@ -1,5 +1,6 @@
 import { ThemeMode } from "../theme/Theme";
 import { useEditorStore } from "../store/editorStore";
+import { AppButton } from "./common/AppButton";
 
 const themeOptions = [
   ThemeMode.System,
@@ -25,7 +26,7 @@ export function ThemeControl() {
   };
 
   return (
-    <button
+    <AppButton
       className="theme-control"
       aria-label={`Theme: ${themeMode}`}
       data-tooltip={`Theme: ${themeMode}`}
@@ -34,6 +35,6 @@ export function ThemeControl() {
       type="button"
     >
       {themeInitials[themeMode]}
-    </button>
+    </AppButton>
   );
 }

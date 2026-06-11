@@ -8,6 +8,7 @@ import {
   dynamicShapes,
   staticShapes,
 } from "../creatorShapes";
+import { AppButton } from "../common/AppButton";
 import { Panel } from "./Panel";
 
 export interface CreatorPanelProps {
@@ -59,7 +60,7 @@ function CreatorGroup({
 
       <div className="create-shape-grid">
         {shapes.map((shape) => (
-          <button
+          <AppButton
             aria-pressed={activeType === shape.type}
             className={
               activeType === shape.type
@@ -74,7 +75,7 @@ function CreatorGroup({
               <span className={`shape-preview ${shape.preview}`} />
             </span>
             <span className="create-shape-label">{shape.label}</span>
-          </button>
+          </AppButton>
         ))}
       </div>
     </section>
