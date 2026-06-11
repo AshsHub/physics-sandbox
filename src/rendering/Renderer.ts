@@ -25,6 +25,7 @@ export class Renderer {
     const editorState = useEditorStore.getState();
     const cameraOffset = editorState.cameraOffset;
     const cameraZoom = editorState.cameraZoom;
+    const selectedIds = editorState.selectedIds;
 
     ctx.save();
     ctx.translate(cameraOffset.x, cameraOffset.y);
@@ -37,7 +38,7 @@ export class Renderer {
     }
 
     for (const object of objects) {
-      this._drawSandboxObject(ctx, object);
+      this._drawSandboxObject(ctx, object, selectedIds);
     }
 
     this._drawObjectPlacementPreview(ctx, editorState, cameraZoom);
@@ -48,10 +49,10 @@ export class Renderer {
   private _drawSandboxObject(
     ctx: CanvasRenderingContext2D,
     entity: ISandboxObject,
+    selectedIds: Set<string>,
   ) {
     if (entity.flags & SandboxObjectFlags.Hidden) return;
 
-    const selectedIds = useEditorStore.getState().selectedIds;
     const metadata = entity.metadata;
 
     ctx.save();

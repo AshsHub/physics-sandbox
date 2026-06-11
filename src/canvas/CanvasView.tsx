@@ -32,7 +32,9 @@ export function CanvasView({
   const activePointerMode = useEditorStore((s) => s.activePointerMode);
   const hoveredObjectId = useEditorStore((s) => s.hoveredObjectId);
   const selectionBox = useEditorStore((s) => s.selectionBox);
-  const objectPlacement = useEditorStore((s) => s.objectPlacement);
+  const isPlacingObject = useEditorStore(
+    (s) => s.objectPlacement !== undefined,
+  );
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -163,7 +165,7 @@ export function CanvasView({
             interactionMode,
             activePointerMode,
             hoveredObjectId,
-            objectPlacement !== undefined,
+            isPlacingObject,
           ),
           touchAction: "none",
           width: "100%",

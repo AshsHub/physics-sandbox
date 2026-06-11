@@ -263,11 +263,20 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
   },
 
   setCameraState(cameraState) {
-    set({
+    set((state) => ({
       cameraOffset: cameraState.offset,
       cameraZoom: cameraState.zoom,
-      viewportSize: cameraState.viewportSize,
-    });
+      viewportSize: (() => {
+        const sameWidth =
+          state.viewportSize.width === cameraState.viewportSize.width;
+        const sameHeight =
+          state.viewportSize.height === cameraState.viewportSize.height;
+
+        return sameWidth && sameHeight
+          ? state.viewportSize
+          : cameraState.viewportSize;
+      })(),
+    }));
   },
 
   setClipboardObjectCount(count) {
