@@ -1,9 +1,8 @@
 import type { IEventBus } from "../events/IEventBus";
 import type { ISandboxEngine } from "./ISandboxEngine";
 
-import type { Camera } from "../camera/Camera";
-import { CameraConfig } from "../config/CameraConfig";
 import { InitialSceneConfig } from "../config/InitialSceneConfig";
+import { SandboxWorldConfig } from "../config/SandboxWorldConfig";
 import { Vector2 } from "../maths/Vector2";
 
 import { PhysicsWorld } from "../physics/PhysicsWorld";
@@ -28,10 +27,7 @@ export class SandboxEngine implements ISandboxEngine {
 
   private readonly _events: IEventBus;
 
-  public constructor(
-    events: IEventBus,
-    private readonly _camera: Camera,
-  ) {
+  public constructor(events: IEventBus) {
     this._events = events;
   }
 
@@ -203,13 +199,8 @@ export class SandboxEngine implements ISandboxEngine {
     this._physics.endDrag();
   }
 
-  public cullObjectsOutsideViewport(width: number, height: number): void {
-    if (width <= 0 || height <= 0) {
-      return;
-    }
-
-    const margin = CameraConfig.culling.viewportMargin;
-    const bounds = this._camera.getViewportBounds(margin);
+  public cullObjectsOutsideWorldBounds(): void {
+    const bounds = SandboxWorldConfig.bounds;
     const idsToCull = this._objects
       .getAll()
       .filter(
@@ -222,10 +213,10 @@ export class SandboxEngine implements ISandboxEngine {
         const bodyBounds = object.body.bounds;
 
         return (
-          bodyBounds.max.x < bounds.left ||
-          bodyBounds.min.x > bounds.right ||
-          bodyBounds.max.y < bounds.top ||
-          bodyBounds.min.y > bounds.bottom
+          bodyBounds.max.x < bounds.minX ||
+          bodyBounds.min.x > bounds.maxX ||
+          bodyBounds.max.y < bounds.minY ||
+          bodyBounds.min.y > bounds.maxY
         );
       })
       .map((object) => object.id);

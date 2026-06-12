@@ -30,7 +30,7 @@ export interface ISandboxEngine {
   updateDrag(pos: Vector2): void;
   rotateDrag(angle: number): void;
   endDrag(): void;
-  cullObjectsOutsideViewport(width: number, height: number): void;
+  cullObjectsOutsideWorldBounds(): void;
 
   update(): void;
 }

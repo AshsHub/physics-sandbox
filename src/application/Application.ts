@@ -28,7 +28,7 @@ export class Application implements IApplication {
     this.camera = new Camera(undefined, (view) => {
       useEditorStore.getState().setCameraState(view);
     });
-    this.engine = new SandboxEngine(this.events, this.camera);
+    this.engine = new SandboxEngine(this.events);
     this.commands = new Commands(this.engine, this.camera);
     this.inputManager = new InputManager(this);
     this.renderer = new Renderer(this.engine);
@@ -107,9 +107,9 @@ export class Application implements IApplication {
     this.camera.fitBoundsFromCollection(visibleBounds);
   }
 
-  public update(width: number, height: number) {
+  public update() {
     this.engine.update();
-    this.engine.cullObjectsOutsideViewport(width, height);
+    this.engine.cullObjectsOutsideWorldBounds();
   }
 
   public render(ctx: CanvasRenderingContext2D, width: number, height: number) {

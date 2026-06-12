@@ -1,5 +1,6 @@
 import { describe, expect, it, jest } from "@jest/globals";
 import { CameraConfig } from "../config/CameraConfig";
+import { SandboxWorldConfig } from "../config/SandboxWorldConfig";
 import { Vector2 } from "../maths/Vector2";
 import { Camera, type CameraChangeHandler } from "./Camera";
 
@@ -115,6 +116,19 @@ describe("Camera", () => {
       offset: new Vector2(1, 2),
       zoom: CameraConfig.zoom.initial,
       viewportSize: { width: 0, height: 0 },
+    });
+  });
+
+  it("constrains the viewport center to the configured world bounds", () => {
+    const camera = new Camera({
+      viewportSize: { width: 800, height: 600 },
+    });
+
+    camera.pan({ x: -100000, y: -100000 });
+
+    expect(camera.getViewportCenterPosition().toObject()).toEqual({
+      x: SandboxWorldConfig.bounds.maxX,
+      y: SandboxWorldConfig.bounds.maxY,
     });
   });
 });

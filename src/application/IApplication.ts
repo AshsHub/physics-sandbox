@@ -16,7 +16,7 @@ export interface IApplication {
   events: IEventBus;
 
   fitView(): void;
-  update(width: number, height: number): void;
+  update(): void;
   render(ctx: CanvasRenderingContext2D, width: number, height: number): void;
   pointerDown(pos: Vector2, button: number): void;
   pointerMove(pos: Vector2): void;

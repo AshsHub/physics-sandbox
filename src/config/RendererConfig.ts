@@ -1,4 +1,10 @@
 export const RendererConfig = {
+  worldBounds: {
+    color: "#ff4d4d",
+    dash: 28,
+    gap: 16,
+    lineWidth: 2,
+  },
   killerIndicator: {
     alpha: 0.55,
     color: "#ff4d4d",

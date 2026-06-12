@@ -3,6 +3,7 @@ import type Matter from "matter-js";
 import { PhysicsConfig } from "../config/PhysicsConfig";
 import { RendererConfig } from "../config/RendererConfig";
 import { SandboxObjectConfig } from "../config/SandboxObjectConfig";
+import { SandboxWorldConfig } from "../config/SandboxWorldConfig";
 import {
   type ISandboxObject,
   type ISandboxObjectMetadata,
@@ -33,6 +34,8 @@ export class Renderer {
     ctx.translate(cameraOffset.x, cameraOffset.y);
     ctx.scale(cameraZoom, cameraZoom);
 
+    this._drawWorldBounds(ctx, cameraZoom);
+
     if (editorState.showForceRadius) {
       for (const object of objects) {
         this._drawForceRadius(ctx, object, cameraZoom);
@@ -45,6 +48,30 @@ export class Renderer {
 
     this._drawObjectPlacementPreview(ctx, editorState, cameraZoom);
 
+    ctx.restore();
+  }
+
+  private _drawWorldBounds(
+    ctx: CanvasRenderingContext2D,
+    cameraZoom: number,
+  ): void {
+    const { bounds } = SandboxWorldConfig;
+    const { worldBounds } = RendererConfig;
+
+    ctx.save();
+    ctx.strokeStyle = worldBounds.color;
+    ctx.lineWidth = worldBounds.lineWidth / cameraZoom;
+    ctx.setLineDash([
+      worldBounds.dash / cameraZoom,
+      worldBounds.gap / cameraZoom,
+    ]);
+    ctx.strokeRect(
+      bounds.minX,
+      bounds.minY,
+      bounds.maxX - bounds.minX,
+      bounds.maxY - bounds.minY,
+    );
+    ctx.setLineDash([]);
     ctx.restore();
   }
 

@@ -117,7 +117,7 @@ export function CanvasView({
     });
 
     const loop = () => {
-      app.update(canvas.width, canvas.height);
+      app.update();
       app.render(ctx, canvas.width, canvas.height);
 
       frameId = requestAnimationFrame(loop);

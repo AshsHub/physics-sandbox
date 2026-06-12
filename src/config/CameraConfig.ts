@@ -13,7 +13,4 @@ export const CameraConfig = {
     padding: 120,
     maxZoom: 1,
   },
-  culling: {
-    viewportMargin: 1200,
-  },
 } as const;

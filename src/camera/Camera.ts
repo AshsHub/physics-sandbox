@@ -1,6 +1,7 @@
 import { Vector2, type VectorLike } from "../maths/Vector2";
 import { CameraConfig } from "../config/CameraConfig";
 import { Maths } from "../maths/Maths";
+import { SandboxWorldConfig } from "../config/SandboxWorldConfig";
 
 export interface ViewportSize {
   width: number;
@@ -81,6 +82,7 @@ export class Camera {
 
   public pan(delta: VectorLike): void {
     this._offset.add(delta);
+    this._constrainToWorldBounds();
     this._emitChange();
   }
 
@@ -102,12 +104,14 @@ export class Camera {
       screenPosition.y - worldPosition.y * nextZoom,
     );
     this._zoom = nextZoom;
+    this._constrainToWorldBounds();
     this._emitChange();
   }
 
   public setView(offset: VectorLike, zoom: number): void {
     this._offset.set(offset);
     this._zoom = Maths.clamp(zoom, CameraConfig.zoom.min, CameraConfig.zoom.max);
+    this._constrainToWorldBounds();
     this._emitChange();
   }
 
@@ -148,6 +152,7 @@ export class Camera {
     this._viewportSize = {
       ...size,
     };
+    this._constrainToWorldBounds();
     this._emitChange();
   }
 
@@ -259,5 +264,23 @@ export class Camera {
       zoom: this._zoom,
       viewportSize: this.getViewportSize(),
     });
+  }
+
+  private _constrainToWorldBounds(): void {
+    if (this._viewportSize.width <= 0 || this._viewportSize.height <= 0) {
+      return;
+    }
+
+    const { bounds } = SandboxWorldConfig;
+    const viewportCenter = this.getViewportCenterPosition();
+    const constrainedCenter = {
+      x: Maths.clamp(viewportCenter.x, bounds.minX, bounds.maxX),
+      y: Maths.clamp(viewportCenter.y, bounds.minY, bounds.maxY),
+    };
+
+    this._offset.set(
+      this._viewportSize.width / 2 - constrainedCenter.x * this._zoom,
+      this._viewportSize.height / 2 - constrainedCenter.y * this._zoom,
+    );
   }
 }
