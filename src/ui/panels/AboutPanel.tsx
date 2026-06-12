@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useEditorStore } from "../../store/editorStore";
 import { AppButton } from "../common/AppButton";
+import { InfoStack } from "../common/InfoStack";
 import { AppIcon } from "../icons/AppIcon";
 import { Panel } from "./Panel";
 
@@ -54,7 +55,7 @@ const projectStats = [
   "Canvas renderer",
   "Matter.js physics",
   "Command history",
-  "Prefab exporter",
+  "Prefab exporter (Dev Only)",
 ] as const;
 
 type FeatureGroup = (typeof featureGroups)[number];
@@ -98,14 +99,14 @@ export function AboutPanel({ onClose }: AboutPanelProps) {
     <Panel title="About" onClose={onClose}>
       <section className="about-panel">
         <article className="about-card about-intro">
-          <div>
+          <div className="about-intro-heading">
             <span className="about-kicker">Portfolio project</span>
-            <h3 className="about-title">Physics Sandbox</h3>
+            <InfoStack
+              className="about-intro-copy"
+              description="A portfolio project exploring React, canvas rendering, and Matter.js physics as an interactive editor."
+              title="Physics Sandbox"
+            />
           </div>
-          <p>
-            A portfolio project exploring React, canvas rendering, and Matter.js
-            physics as an interactive editor.
-          </p>
 
           <div className="about-chip-list" aria-label="Project stack">
             {projectStats.map((stat) => (
@@ -125,12 +126,16 @@ export function AboutPanel({ onClose }: AboutPanelProps) {
               key={feature.title}
               onClick={() => setSelectedFeature(feature)}
               type="button"
+              variant="ghost"
             >
               <div className="about-feature-heading">
                 <span className="about-feature-label">{feature.label}</span>
-                <h4>{feature.title}</h4>
+                <InfoStack
+                  className="about-feature-copy"
+                  description={feature.text}
+                  title={feature.title}
+                />
               </div>
-              <p>{feature.text}</p>
             </AppButton>
           ))}
         </div>
@@ -149,9 +154,15 @@ export function AboutPanel({ onClose }: AboutPanelProps) {
             onMouseDown={(event) => event.stopPropagation()}
           >
             <div className="about-dialog-header">
-              <div>
+              <div className="about-dialog-heading">
                 <span className="about-kicker">{selectedFeature.label}</span>
-                <h3 id="about-demo-title">{selectedFeature.title}</h3>
+                <InfoStack
+                  className="about-dialog-copy"
+                  description={selectedFeature.text}
+                  title={
+                    <span id="about-demo-title">{selectedFeature.title}</span>
+                  }
+                />
               </div>
 
               <AppButton
@@ -166,8 +177,6 @@ export function AboutPanel({ onClose }: AboutPanelProps) {
                 <AppIcon name="close" />
               </AppButton>
             </div>
-
-            <p>{selectedFeature.text}</p>
 
             <div className="about-dialog-media">
               <img
