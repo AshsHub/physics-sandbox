@@ -75,8 +75,8 @@ export class SandboxEngine implements ISandboxEngine {
     return object;
   }
 
-  public createSnapshot(id: string): ISandboxObjectSnapshot | undefined {
-    return this._objects.createSnapshot(id);
+  public generateSnapshot(id: string): ISandboxObjectSnapshot | undefined {
+    return this._objects.generateSnapshot(id);
   }
 
   public createObjectFromSnapshot(

@@ -7,6 +7,7 @@ import {
   type ISandboxObject,
   type ISandboxObjectSnapshot,
 } from "./SandboxObject";
+import { buildSnapshot } from "./SandboxObjectSnapshotUtils";
 import { SandboxObjectFlags, SandboxObjectType } from "./SandboxObjectType";
 
 export interface CreateSandboxObjectOptions {
@@ -60,24 +61,18 @@ export class SandboxObjectManager {
     return object;
   }
 
-  public createSnapshot(id: string): ISandboxObjectSnapshot | undefined {
+  public generateSnapshot(id: string): ISandboxObjectSnapshot | undefined {
     const object = this._objects.get(id);
 
     if (!object) {
       return;
     }
 
-    return {
-      id: object.id,
-      name: object.name,
-      type: object.type,
-      position: new Vector2(object.body.position.x, object.body.position.y),
+    return buildSnapshot({
+      ...object,
+      position: object.body.position,
       angle: object.body.angle,
-      flags: object.flags,
-      metadata: {
-        ...object.metadata,
-      },
-    };
+    });
   }
 
   public createObjectFromSnapshot(

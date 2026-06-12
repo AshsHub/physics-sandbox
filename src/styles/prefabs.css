@@ -1,0 +1,56 @@
+.prefab-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.prefab-group-title {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+.prefab-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.prefab-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  width: 100%;
+  min-width: 0;
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.prefab-button-name {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text-primary);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.prefab-button-meta {
+  flex: 0 0 auto;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.prefab-export-button {
+  width: 100%;
+  padding: 8px 10px;
+}
+
+.prefab-export-message {
+  color: var(--text-secondary);
+  font-size: 12px;
+}

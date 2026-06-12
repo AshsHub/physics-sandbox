@@ -37,7 +37,12 @@ describe("Commands", () => {
     };
     const engine = createMockSandboxEngine({
       createObject: jest.fn(() => object),
-      getObjectPosition: jest.fn(() => position.clone()),
+      generateSnapshot: jest.fn(() =>
+        createTestSandboxObjectSnapshot("object-1", {
+          name: "Object 1",
+          position,
+        }),
+      ),
     });
     const camera = createMockCamera();
     const commands = new Commands(engine, camera);
@@ -93,7 +98,7 @@ describe("Commands", () => {
 
   it("does not add failed commands to history", () => {
     const engine = createMockSandboxEngine({
-      createSnapshot: jest.fn(() => undefined),
+      generateSnapshot: jest.fn(() => undefined),
     });
     const commands = new Commands(engine, {} as Camera);
 

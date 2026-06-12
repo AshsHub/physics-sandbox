@@ -1,38 +1,38 @@
 import type { ISandboxEngine } from "../engine/ISandboxEngine";
 import { Vector2 } from "../maths/Vector2";
+import type { SandboxPrefab } from "../prefabs/SandboxPrefabs";
 import type { ISandboxObjectSnapshot } from "../sandbox/SandboxObject";
 import { buildSnapshot } from "../sandbox/SandboxObjectSnapshotUtils";
 import { useEditorStore } from "../store/editorStore";
 import type { ICommand, ICommandResult } from "./ICommands";
 
-export interface PasteObjectsCommandOptions {
-  offset: Vector2;
-  snapshots: ISandboxObjectSnapshot[];
+export interface SpawnPrefabCommandOptions {
+  position: Vector2;
+  prefab: SandboxPrefab;
 }
 
-export class PasteObjectsCommand implements ICommand {
+export class SpawnPrefabCommand implements ICommand {
   private readonly _createdSnapshots: ISandboxObjectSnapshot[] = [];
 
   public constructor(
     private readonly _engine: ISandboxEngine,
-    private readonly _options: PasteObjectsCommandOptions,
+    private readonly _options: SpawnPrefabCommandOptions,
   ) {}
 
   public execute(): ICommandResult {
-    if (this._options.snapshots.length === 0) {
+    if (this._options.prefab.objects.length === 0) {
       return {
         success: false,
-        message: "No copied objects were available to paste.",
+        message: "Prefab has no objects to spawn.",
       };
     }
 
     if (this._createdSnapshots.length === 0) {
       this._createdSnapshots.push(
-        ...this._options.snapshots.map((snapshot) =>
+        ...this._options.prefab.objects.map((object) =>
           buildSnapshot({
-            ...snapshot,
-            position: snapshot.position.clone().add(this._options.offset),
-            name: `${snapshot.name} Copy`,
+            ...object,
+            position: this._options.position.clone().add(object.offset),
           }),
         ),
       );
@@ -55,7 +55,7 @@ export class PasteObjectsCommand implements ICommand {
     if (this._createdSnapshots.length === 0) {
       return {
         success: false,
-        message: "Cannot undo paste without created object snapshots.",
+        message: "Cannot undo prefab spawn without created snapshots.",
       };
     }
 

@@ -7,7 +7,7 @@ import {
   type SandboxObjectType,
 } from "../sandbox/SandboxObjectType";
 import { useEditorStore } from "../store/editorStore";
-import { SidebarPanel } from "../ui/panels/SidebarPanel";
+import { SidebarPanel } from "../ui/sidebar/SidebarPanel";
 import {
   ClipboardAction,
   type ClipboardSelectionAction,
@@ -262,6 +262,16 @@ export class InputManager {
     this._keyboard.registerAction(["3"], () => {
       useEditorStore.getState().setInteractionMode(InteractionMode.Camera);
     });
+    this._keyboard.registerAction(
+      ["a"],
+      (mods) => {
+        if (this._hasPrimaryModifier(mods)) {
+          const allIds = this._app.engine.getAllObjects().map((o) => o.id);
+          useEditorStore.getState().setSelection(allIds);
+        }
+      },
+      { preventDefault: true },
+    );
     this._keyboard.registerAction(["space", " "], () => {
       const state = useEditorStore.getState();
       state.setSimulationRunning(!state.isSimulationRunning);

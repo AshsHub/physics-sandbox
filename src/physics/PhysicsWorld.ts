@@ -167,11 +167,12 @@ export class PhysicsWorld {
     this.endDrag();
 
     this._moveToPosition.set(position);
+    const isSimulationRunning = useEditorStore.getState().isSimulationRunning;
 
     for (const body of bodies) {
       this._draggedBodies.push({
         body,
-        mode: body.isStatic ? "exact" : "soft",
+        mode: body.isStatic || !isSimulationRunning ? "exact" : "soft",
         offset: new Vector2(
           body.position.x - position.x,
           body.position.y - position.y,

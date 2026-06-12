@@ -2,6 +2,10 @@ import type { IApplication } from "../application/IApplication";
 import { ClipboardConfig } from "../config/ClipboardConfig";
 import { Vector2 } from "../maths/Vector2";
 import type { ISandboxObjectSnapshot } from "../sandbox/SandboxObject";
+import {
+  cloneSnapshot,
+  cloneSnapshots,
+} from "../sandbox/SandboxObjectSnapshotUtils";
 import { useEditorStore } from "../store/editorStore";
 import {
   ClipboardAction,
@@ -116,36 +120,14 @@ export class ClipboardManager {
     );
   }
 
-  private _cloneSnapshot(
-    snapshot: ISandboxObjectSnapshot,
-  ): ISandboxObjectSnapshot {
-    return {
-      id: snapshot.id,
-      name: snapshot.name,
-      type: snapshot.type,
-      position: snapshot.position.clone(),
-      angle: snapshot.angle,
-      flags: snapshot.flags,
-      metadata: {
-        ...snapshot.metadata,
-      },
-    };
-  }
-
-  private _cloneSnapshots(
-    snapshots: ISandboxObjectSnapshot[],
-  ): ISandboxObjectSnapshot[] {
-    return snapshots.map((snapshot) => this._cloneSnapshot(snapshot));
-  }
-
   private _getSnapshots(ids: string[]): ISandboxObjectSnapshot[] {
     return ids
-      .map((id) => this._app.engine.createSnapshot(id))
+      .map((id) => this._app.engine.generateSnapshot(id))
       .filter(
         (snapshot): snapshot is ISandboxObjectSnapshot =>
           snapshot !== undefined,
       )
-      .map((snapshot) => this._cloneSnapshot(snapshot));
+      .map((snapshot) => cloneSnapshot(snapshot));
   }
 
   private _resolveTargetIds(ids?: string[]): string[] {
@@ -164,7 +146,7 @@ export class ClipboardManager {
       offset: new Vector2(ClipboardConfig.pasteOffset).multiply(
         offsetMultiplier,
       ),
-      snapshots: this._cloneSnapshots(snapshots),
+      snapshots: cloneSnapshots(snapshots),
     });
 
     return true;

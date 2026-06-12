@@ -61,7 +61,7 @@ export function createMockApplication(
       execute: jest.fn(() => ({ success: true })),
     },
     engine: {
-      createSnapshot: jest.fn((id: string) => snapshots[id]),
+      generateSnapshot: jest.fn((id: string) => snapshots[id]),
     },
   } as unknown as IApplication;
 }
@@ -80,7 +80,7 @@ export function createMockSandboxEngine(
     getObjectPosition: jest.fn(),
     createObjectFromSnapshot: jest.fn(),
     destroyObject: jest.fn(),
-    createSnapshot: jest.fn(),
+    generateSnapshot: jest.fn(),
     ...overrides,
   } as unknown as SandboxEngine;
 }

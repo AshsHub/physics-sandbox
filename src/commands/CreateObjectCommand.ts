@@ -34,26 +34,16 @@ export class CreateObjectCommand implements ICommand {
       this._options.type,
       this._options.angle,
     );
-    const position = this._engine.getObjectPosition(object.id);
+    const snapshot = this._engine.generateSnapshot(object.id);
 
-    if (!position) {
+    if (!snapshot) {
       return {
         success: false,
-        message: "Object was created but its position could not be resolved.",
+        message: "Object was created but its snapshot could not be resolved.",
       };
     }
 
-    this._snapshot = {
-      id: object.id,
-      name: object.name,
-      type: object.type,
-      position,
-      angle: object.body.angle,
-      flags: object.flags,
-      metadata: {
-        ...object.metadata,
-      },
-    };
+    this._snapshot = snapshot;
 
     return {
       success: true,

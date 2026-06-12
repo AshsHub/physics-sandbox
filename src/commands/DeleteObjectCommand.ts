@@ -17,7 +17,7 @@ export class DeleteObjectCommand implements ICommand {
   public execute(): ICommandResult {
     if (this._snapshots.length === 0) {
       for (const id of this._options.ids) {
-        const snapshot = this._engine.createSnapshot(id);
+        const snapshot = this._engine.generateSnapshot(id);
 
         if (snapshot) {
           this._snapshots.push(snapshot);

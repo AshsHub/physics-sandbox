@@ -24,7 +24,7 @@ export interface ISandboxEngine {
     angle?: number,
   ): ISandboxObject;
   createObjectFromSnapshot(snapshot: ISandboxObjectSnapshot): ISandboxObject;
-  createSnapshot(id: string): ISandboxObjectSnapshot | undefined;
+  generateSnapshot(id: string): ISandboxObjectSnapshot | undefined;
 
   startDrag(ids: string[], pos: Vector2): void;
   updateDrag(pos: Vector2): void;

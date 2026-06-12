@@ -24,6 +24,7 @@
   flex-direction: column;
   width: 32px;
   overflow: hidden;
+  --sidebar-tab-count: 4;
 }
 
 .sidebar-tab-indicator {
@@ -31,7 +32,7 @@
   top: 0;
   left: 0;
   right: 0;
-  height: calc(100% / 3);
+  height: calc(100% / var(--sidebar-tab-count));
   border-radius: 0;
   background: var(--accent);
   transition: transform 0.18s ease;

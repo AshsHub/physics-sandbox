@@ -8,4 +8,11 @@ export class Maths {
 
     return Number(value.toFixed(decimalPlaces));
   }
+
+  public static roundToDecimalPlaces(
+    value: number,
+    decimalPlaces: number,
+  ): number {
+    return Number(value.toFixed(decimalPlaces));
+  }
 }

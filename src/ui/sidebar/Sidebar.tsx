@@ -3,9 +3,10 @@ import { useEditorStore } from "../../store/editorStore";
 import { AppButton } from "../common/AppButton";
 import { CreatorPanel } from "../panels/CreatorPanel";
 import { InspectorPanel } from "../panels/InspectorPanel";
-import { SidebarPanel } from "../panels/SidebarPanel";
+import { PrefabPanel } from "../panels/PrefabPanel";
 import { SimulationPanel } from "../panels/SimulationPanel";
 import { ThemeControl } from "../ThemeControl";
+import { SidebarPanel } from "./SidebarPanel";
 
 const sidebarTabs = [
   {
@@ -17,6 +18,11 @@ const sidebarTabs = [
     label: "Inspector",
     panel: SidebarPanel.Inspector,
     tooltip: "Inspector",
+  },
+  {
+    label: "Prefabs",
+    panel: SidebarPanel.Prefabs,
+    tooltip: "Prefabs",
   },
   {
     label: "Simulation",
@@ -89,6 +95,9 @@ export function Sidebar({ app, onObjectContextMenu }: SidebarProps) {
               onClose={closePanel}
               onObjectContextMenu={onObjectContextMenu}
             />
+          )}
+          {activePanel === SidebarPanel.Prefabs && (
+            <PrefabPanel app={app} onClose={closePanel} />
           )}
           {activePanel === SidebarPanel.Simulation && (
             <SimulationPanel onClose={closePanel} />

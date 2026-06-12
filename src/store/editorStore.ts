@@ -6,7 +6,7 @@ import { InteractionMode } from "../input/InteractionMode";
 import { GravitySimulationType } from "../physics/SandboxSimulation";
 import { SandboxObjectType } from "../sandbox/SandboxObjectType";
 import { readStoredThemeMode, ThemeMode } from "../theme/Theme";
-import { SidebarPanel } from "../ui/panels/SidebarPanel";
+import { SidebarPanel } from "../ui/sidebar/SidebarPanel";
 
 export interface CameraOffset {
   x: number;

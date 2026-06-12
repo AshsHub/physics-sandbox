@@ -3,7 +3,7 @@ import type { IApplication } from "../../application/IApplication";
 import type { Vector2 } from "../../maths/Vector2";
 import { useEditorStore } from "../../store/editorStore";
 import { AppButton } from "../common/AppButton";
-import { SidebarPanel } from "../panels/SidebarPanel";
+import { SidebarPanel } from "../sidebar/SidebarPanel";
 import { ClipboardContextSubmenu } from "./ClipboardContextSubmenu";
 
 export interface ObjectContextMenuProps {

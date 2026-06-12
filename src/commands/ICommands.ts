@@ -1,6 +1,7 @@
 import type { CreateObjectCommandOptions } from "./CreateObjectCommand";
 import type { DeleteObjectCommandOptions } from "./DeleteObjectCommand";
 import type { PasteObjectsCommandOptions } from "./PasteObjectsCommand";
+import type { SpawnPrefabCommandOptions } from "./SpawnPrefabCommand";
 import type { UpdateObjectPropertiesCommandOptions } from "./UpdateObjectPropertiesCommand";
 
 export interface ICommandBus {
@@ -24,6 +25,7 @@ export interface ICommandMap {
   createObject: CreateObjectCommandOptions;
   deleteObject: DeleteObjectCommandOptions;
   pasteObjects: PasteObjectsCommandOptions;
+  spawnPrefab: SpawnPrefabCommandOptions;
 }
 
 export type CommandAction = "execute" | "undo" | "redo";
