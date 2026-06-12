@@ -33,16 +33,18 @@ export function StatusBar({
       <div className="status-bar-pill">
         <div className="status-bar-group">
           <span className="status-bar-group-label">Objects</span>
-          <span>Static: {staticObjectCount}</span>
-          <span>Dynamic: {dynamicObjectCount}</span>
-          <span>Selected: {selectedCount}</span>
+          <span className="status-bar-value">Static {staticObjectCount}</span>
+          <span className="status-bar-value">
+            Dynamic {dynamicObjectCount}
+          </span>
+          <span className="status-bar-value">Selected {selectedCount}</span>
         </div>
 
         <div className="status-bar-divider" aria-hidden="true" />
 
         <div className="status-bar-group">
           <span className="status-bar-group-label">Modifiers</span>
-          <span>
+          <span className="status-bar-value">
             Gravity: {isGravityReversed ? "Reverse " : ""}
             {activeGravityPreset.label}{" "}
             {activeGravityPreset.gravityMultiplier.toFixed(
@@ -50,7 +52,7 @@ export function StatusBar({
             )}
             g
           </span>
-          <span>
+          <span className="status-bar-value">
             Wind:{" "}
             {windDescriptor.direction
               ? `${windDescriptor.label} ${windDescriptor.direction} ${windDescriptor.strengthPercent.toFixed(
@@ -63,7 +65,7 @@ export function StatusBar({
 
       <div className="status-bar-pill status-bar-fps">
         <span className="status-bar-group-label">FPS</span>
-        <span>{fps}</span>
+        <span className="status-bar-fps-value">{fps}</span>
       </div>
     </footer>
   );

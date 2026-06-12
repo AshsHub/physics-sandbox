@@ -124,7 +124,15 @@ export default function App() {
   return (
     <div className="app">
       <header className="headerbar">
-        <h1 className="headerbar-title">Physics Sandbox</h1>
+        <h1 className="headerbar-title">
+          <span className="headerbar-title-mark" aria-hidden="true" />
+          <span className="headerbar-title-copy">
+            <span className="headerbar-title-name">Physics Sandbox</span>
+            <span className="headerbar-title-meta">
+              React + Canvas + Matter.js
+            </span>
+          </span>
+        </h1>
 
         <StatusBar
           fps={fps}

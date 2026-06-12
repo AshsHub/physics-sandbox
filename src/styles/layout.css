@@ -29,15 +29,67 @@
   align-items: center;
   justify-content: flex-start;
   gap: var(--space-md);
-  min-height: 48px;
+  min-height: 52px;
   padding-right: 360px;
-  background: var(--bg-panel);
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--accent) 9%, transparent),
+      transparent 44%
+    ),
+    var(--bg-panel);
   border-bottom: 1px solid var(--border);
 }
 
 .headerbar-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
   margin: 0;
-  padding: 12px 16px;
-  font-size: 18px;
+  padding: 9px 16px;
   color: var(--text-primary);
+  user-select: none;
+}
+
+.headerbar-title-mark {
+  width: 28px;
+  height: 28px;
+  border: 1px solid color-mix(in srgb, var(--accent) 58%, var(--border));
+  border-radius: 6px;
+  background:
+    radial-gradient(
+      circle at 62% 34%,
+      color-mix(in srgb, var(--text-on-accent) 70%, transparent) 0 2px,
+      transparent 3px
+    ),
+    radial-gradient(
+      circle at 38% 62%,
+      color-mix(in srgb, var(--accent) 78%, transparent) 0 5px,
+      transparent 6px
+    ),
+    color-mix(in srgb, var(--accent) 18%, var(--bg-input));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--text-primary) 7%, transparent),
+    0 6px 16px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.headerbar-title-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.headerbar-title-name {
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.headerbar-title-meta {
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.1;
+  text-transform: uppercase;
 }
