@@ -60,9 +60,16 @@
 
 .chevron-icon {
   display: block;
+  width: 18px;
+  height: 18px;
   line-height: 1;
   transform-origin: center;
   transition: transform 0.2s ease;
+}
+
+.chevron-icon .app-icon {
+  width: 18px;
+  height: 18px;
 }
 
 .inspector-list {
@@ -149,6 +156,7 @@
   font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
+  padding-left: var(--space-xs);
 }
 
 .inspector-section-content {
@@ -270,4 +278,3 @@
   font-size: 12px;
   user-select: none;
 }
-

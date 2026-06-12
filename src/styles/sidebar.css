@@ -112,3 +112,8 @@
   font-weight: 800;
   line-height: 1;
 }
+
+.theme-control .app-icon {
+  width: 22px;
+  height: 22px;
+}

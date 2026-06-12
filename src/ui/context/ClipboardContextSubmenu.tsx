@@ -2,6 +2,7 @@ import type { IApplication } from "../../application/IApplication";
 import { ClipboardAction } from "../../input/ClipboardAction";
 import { useEditorStore } from "../../store/editorStore";
 import { AppButton } from "../common/AppButton";
+import { AppIcon } from "../icons/AppIcon";
 
 export interface ClipboardContextSubmenuProps {
   app: IApplication;
@@ -30,7 +31,7 @@ export function ClipboardContextSubmenu({
     <div className="canvas-context-menu-submenu">
       <AppButton className="canvas-context-menu-submenu-trigger" type="button">
         <span>Clipboard</span>
-        <span aria-hidden="true">&gt;</span>
+        <AppIcon className="context-submenu-icon" name="chevron" />
       </AppButton>
 
       <div className="canvas-context-menu-subpanel clipboard-context-subpanel">

@@ -1,0 +1,55 @@
+.app-icon {
+  display: block;
+  width: 1em;
+  height: 1em;
+  background: currentColor;
+  pointer-events: none;
+}
+
+.shape-icon {
+  width: 60px;
+  height: 60px;
+}
+
+.shape-icon-box {
+  color: #7cce83;
+}
+
+.shape-icon-circle {
+  color: #4f8cff;
+}
+
+.shape-icon-black-hole {
+  color: #2a103f;
+}
+
+.shape-icon-sun {
+  color: #f6c453;
+}
+
+.shape-icon-white-hole {
+  color: #f5f7ff;
+}
+
+.shape-icon-triangle {
+  color: #f2b84b;
+}
+
+.shape-icon-pentagon {
+  color: #c17cff;
+}
+
+.shape-icon-oval {
+  color: #38c8b0;
+}
+
+.shape-icon-platform,
+.shape-icon-wall,
+.shape-icon-ramp-left,
+.shape-icon-ramp-right {
+  color: #686868;
+}
+
+.create-shape-button.selected .shape-icon {
+  color: var(--text-on-accent);
+}

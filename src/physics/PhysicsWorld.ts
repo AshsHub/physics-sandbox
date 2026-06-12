@@ -71,11 +71,17 @@ export class PhysicsWorld {
     }
 
     const body = this._bodyFactory.create(position, type);
+    const spawnAngleOffset =
+      angleMode === "relative"
+        ? (SandboxObjectConfig.bodyGeometry.polygonSpawnAngleOffset[
+            type as keyof typeof SandboxObjectConfig.bodyGeometry.polygonSpawnAngleOffset
+          ] ?? 0)
+        : 0;
 
     if (angleMode === "absolute") {
       Matter.Body.rotate(body, angle - body.angle);
-    } else if (angle !== 0) {
-      Matter.Body.rotate(body, angle);
+    } else if (angle !== 0 || spawnAngleOffset !== 0) {
+      Matter.Body.rotate(body, angle + spawnAngleOffset);
     }
 
     Matter.World.add(this._world, body);
@@ -119,7 +125,8 @@ export class PhysicsWorld {
     );
 
     body.friction = friction;
-    body.frictionStatic = friction * PhysicsConfig.body.frictionStaticMultiplier;
+    body.frictionStatic =
+      friction * PhysicsConfig.body.frictionStaticMultiplier;
     body.restitution = Maths.clamp(
       nextMetadata.bounce,
       SandboxObjectConfig.metadataConstraints.bounce.min,

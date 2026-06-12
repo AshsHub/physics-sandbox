@@ -69,6 +69,10 @@ export const SandboxObjectConfig = {
     sunRadius: 30,
     triangleRadius: 32,
     pentagonRadius: 30,
+    polygonSpawnAngleOffset: {
+      [SandboxObjectType.Triangle]: Math.PI / 2,
+      [SandboxObjectType.Pentagon]: Math.PI / 10,
+    },
     ovalRadius: 30,
     ovalScaleX: 1.45,
     ovalScaleY: 0.75,
@@ -195,15 +199,27 @@ export const SandboxObjectConfig = {
         collisionRole: SandboxObjectCollisionRole.None,
       }),
     },
-    [SandboxObjectType.Ramp]: {
+    [SandboxObjectType.RampLeft]: {
       flags: SandboxObjectFlags.Static,
       metadata: createMetadata({
-        width: 220,
-        height: 28,
+        width: 175,
+        height: 75,
         color: "#686868",
         borderColor: "#a0a0a0",
-        label: "Ramp",
-        description: "Static angled ramp body",
+        label: "Ramp Left",
+        description: "Static right-triangle ramp rising to the right",
+        collisionRole: SandboxObjectCollisionRole.None,
+      }),
+    },
+    [SandboxObjectType.RampRight]: {
+      flags: SandboxObjectFlags.Static,
+      metadata: createMetadata({
+        width: 175,
+        height: 75,
+        color: "#686868",
+        borderColor: "#a0a0a0",
+        label: "Ramp Right",
+        description: "Static right-triangle ramp rising to the left",
         collisionRole: SandboxObjectCollisionRole.None,
       }),
     },

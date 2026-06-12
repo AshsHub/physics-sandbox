@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { AppButton } from "../common/AppButton";
+import { AppIcon } from "../icons/AppIcon";
 
 export interface PanelProps {
   title: string;
@@ -24,7 +25,7 @@ export function Panel({ title, onClose, children }: PanelProps) {
             onClick={onClose}
             type="button"
           >
-            x
+            <AppIcon name="close" />
           </AppButton>
         )}
       </div>

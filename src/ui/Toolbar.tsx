@@ -1,24 +1,33 @@
 import { InteractionMode } from "../input/InteractionMode";
 import { useEditorStore } from "../store/editorStore";
 import { AppButton } from "./common/AppButton";
+import { AppIcon, type AppIconName } from "./icons/AppIcon";
 
 const modes = [
   {
+    icon: "play",
     label: "Play",
     mode: InteractionMode.Play,
-    input: 1,
+    shortcut: 1,
   },
   {
+    icon: "selection",
     label: "Select",
     mode: InteractionMode.Selection,
-    input: 2,
+    shortcut: 2,
   },
   {
+    icon: "camera",
     label: "Camera",
     mode: InteractionMode.Camera,
-    input: 3,
+    shortcut: 3,
   },
-];
+] satisfies {
+  icon: AppIconName;
+  label: string;
+  mode: InteractionMode;
+  shortcut: number;
+}[];
 
 export function Toolbar() {
   const interactionMode = useEditorStore((s) => s.interactionMode);
@@ -31,7 +40,7 @@ export function Toolbar() {
   return (
     <header className="toolbar">
       <div className="interaction-mode-controls" aria-label="Interaction mode">
-        {modes.map(({ label, mode, input }) => (
+        {modes.map(({ icon, label, mode, shortcut }) => (
           <AppButton
             aria-pressed={interactionMode === mode}
             className={
@@ -41,11 +50,11 @@ export function Toolbar() {
             }
             key={mode}
             onClick={() => setInteractionMode(mode)}
-            data-tooltip={`${label} mode (${input})`}
+            data-tooltip={`${label} mode (${shortcut})`}
             data-tooltip-position="bottom"
             type="button"
           >
-            <kbd className="interaction-mode-key">{input}</kbd>
+            <AppIcon className="interaction-mode-icon" name={icon} />
             {label}
           </AppButton>
         ))}
@@ -95,7 +104,7 @@ export function Toolbar() {
           onClick={() => setSimulationRunning(false)}
           type="button"
         >
-          ||
+          <AppIcon name="pause" />
         </AppButton>
 
         <AppButton
@@ -105,7 +114,7 @@ export function Toolbar() {
           onClick={() => setSimulationRunning(true)}
           type="button"
         >
-          {">"}
+          <AppIcon name="play" />
         </AppButton>
       </div>
     </header>

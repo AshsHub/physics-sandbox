@@ -19,7 +19,12 @@
   align-items: center;
   gap: var(--space-sm);
   padding: 6px 10px;
-  min-width: 82px;
+  min-width: 88px;
+}
+
+.interaction-mode-icon {
+  width: 24px;
+  height: 24px;
 }
 
 .interaction-mode-button.selected {
@@ -31,19 +36,6 @@
 .interaction-mode-button.selected:not(:disabled):hover {
   background: var(--accent);
   border-color: var(--accent-border);
-}
-
-.interaction-mode-key {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  border-radius: 2px;
-  background: rgba(0, 0, 0, 0.22);
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 700;
 }
 
 .toolbar-toggle-button {
@@ -79,18 +71,33 @@
 }
 
 .zoom-fit-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
   flex: 0 0 auto;
   padding: 6px 10px;
 }
 
 .zoom-step-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex: 0 0 auto;
   width: 28px;
   height: 28px;
   padding: 0;
-  font-size: 15px;
-  font-weight: 700;
-  line-height: 1;
+}
+
+.simulation-control-button .app-icon,
+.zoom-step-button .app-icon {
+  width: 21px;
+  height: 21px;
+}
+
+.zoom-fit-button .app-icon {
+  width: 24px;
+  height: 24px;
 }
 
 .zoom-control-label {

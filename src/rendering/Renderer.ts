@@ -1,7 +1,6 @@
 import type { ISandboxEngine } from "../engine/ISandboxEngine";
 import type Matter from "matter-js";
 import { Rect } from "../maths/Rect";
-import { PhysicsConfig } from "../config/PhysicsConfig";
 import { RendererConfig } from "../config/RendererConfig";
 import { SandboxObjectConfig } from "../config/SandboxObjectConfig";
 import { SandboxWorldConfig } from "../config/SandboxWorldConfig";
@@ -218,14 +217,14 @@ export class Renderer {
     };
     const metadata = SandboxObjectConfig.defaults[placement.type].metadata;
     const borderStyle = metadata.borderStyle as SandboxObjectBorderStyle;
+    const offset =
+      SandboxObjectConfig.bodyGeometry.polygonSpawnAngleOffset[
+        placement.type as keyof typeof SandboxObjectConfig.bodyGeometry.polygonSpawnAngleOffset
+      ] ?? 0;
 
     ctx.save();
     ctx.translate(worldPosition.x, worldPosition.y);
-    ctx.rotate(
-      placement.type === SandboxObjectType.Ramp
-        ? placement.angle + PhysicsConfig.body.rampAngle
-        : placement.angle,
-    );
+    ctx.rotate(placement.angle + offset);
     ctx.globalAlpha = 0.58;
     ctx.fillStyle = metadata.color;
     ctx.strokeStyle = metadata.borderColor;
@@ -320,10 +319,15 @@ export class Renderer {
           SandboxObjectConfig.bodyGeometry.pentagonRadius,
         );
         return;
+      case SandboxObjectType.RampLeft:
+        this._traceRampPreviewPath(ctx, metadata, "left");
+        return;
+      case SandboxObjectType.RampRight:
+        this._traceRampPreviewPath(ctx, metadata, "right");
+        return;
       case SandboxObjectType.Box:
       case SandboxObjectType.Platform:
       case SandboxObjectType.Wall:
-      case SandboxObjectType.Ramp:
       default:
         ctx.beginPath();
         ctx.rect(
@@ -332,7 +336,28 @@ export class Renderer {
           metadata.width,
           metadata.height,
         );
+        return;
     }
+  }
+
+  private _traceRampPreviewPath(
+    ctx: CanvasRenderingContext2D,
+    metadata: ISandboxObjectMetadata,
+    direction: "left" | "right",
+  ): void {
+    ctx.beginPath();
+
+    if (direction === "right") {
+      ctx.moveTo((metadata.width / 3) * -1, (metadata.height / 3) * -2);
+      ctx.lineTo((metadata.width / 3) * -1, metadata.height / 3);
+      ctx.lineTo((metadata.width / 3) * 2, metadata.height / 3);
+    } else {
+      ctx.moveTo((metadata.width / 3) * -2, metadata.height / 3);
+      ctx.lineTo(metadata.width / 3, metadata.height / 3);
+      ctx.lineTo(metadata.width / 3, (metadata.height / 3) * -2);
+    }
+
+    ctx.closePath();
   }
 
   private _tracePolygonPreviewPath(

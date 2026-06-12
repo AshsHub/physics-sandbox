@@ -67,6 +67,12 @@
   text-align: left;
 }
 
+.context-submenu-icon {
+  width: 21px;
+  height: 21px;
+  transform: rotate(-90deg);
+}
+
 .canvas-context-menu-subpanel {
   position: absolute;
   top: calc(var(--space-sm) * -1);

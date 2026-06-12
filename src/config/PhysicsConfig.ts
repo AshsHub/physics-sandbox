@@ -2,7 +2,6 @@ export const PhysicsConfig = {
   body: {
     frictionStaticMultiplier: 1,
     minimumDynamicMass: 0.1,
-    rampAngle: -Math.PI / 8,
   },
   dragging: {
     dynamicFollowStrength: 0.25,

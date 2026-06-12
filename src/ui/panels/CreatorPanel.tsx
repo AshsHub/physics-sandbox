@@ -11,6 +11,7 @@ import {
   staticShapes,
 } from "../creatorShapes";
 import { AppButton } from "../common/AppButton";
+import { AppIcon } from "../icons/AppIcon";
 import { Panel } from "./Panel";
 
 export interface CreatorPanelProps {
@@ -85,7 +86,10 @@ function CreatorGroup({
             type="button"
           >
             <span className="create-shape-preview" aria-hidden="true">
-              <span className={`shape-preview ${shape.preview}`} />
+              <AppIcon
+                className={`shape-icon shape-icon-${shape.preview}`}
+                name={shape.preview}
+              />
             </span>
             <span className="create-shape-label">{shape.label}</span>
           </AppButton>

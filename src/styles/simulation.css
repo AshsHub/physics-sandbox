@@ -92,6 +92,9 @@
 .simulation-control-button {
   position: relative;
   z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex: 1;
   min-width: 0;
   padding: 0;

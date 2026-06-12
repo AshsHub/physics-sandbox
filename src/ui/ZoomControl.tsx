@@ -2,6 +2,7 @@ import type { IApplication } from "../application/IApplication";
 import { CameraConfig } from "../config/CameraConfig";
 import { useEditorStore } from "../store/editorStore";
 import { AppButton } from "./common/AppButton";
+import { AppIcon } from "./icons/AppIcon";
 
 export interface ZoomControlProps {
   app: IApplication;
@@ -24,7 +25,8 @@ export function ZoomControl({ app }: ZoomControlProps) {
         onClick={() => app.fitView()}
         type="button"
       >
-        Fit View
+        <AppIcon name="fit-view" />
+        <span>Fit View</span>
       </AppButton>
       <span className="zoom-control-label">
         {Math.round(cameraZoom * CameraConfig.zoom.displayPercentScale)}%
@@ -38,7 +40,7 @@ export function ZoomControl({ app }: ZoomControlProps) {
         onClick={() => setZoom(cameraZoom - CameraConfig.zoom.buttonStep)}
         type="button"
       >
-        -
+        <AppIcon name="minus" />
       </AppButton>
       <input
         aria-label="Zoom"
@@ -59,7 +61,7 @@ export function ZoomControl({ app }: ZoomControlProps) {
         onClick={() => setZoom(cameraZoom + CameraConfig.zoom.buttonStep)}
         type="button"
       >
-        +
+        <AppIcon name="plus" />
       </AppButton>
     </div>
   );

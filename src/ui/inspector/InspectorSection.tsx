@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { AppButton } from "../common/AppButton";
+import { AppIcon } from "../icons/AppIcon";
 
 export function InspectorSection({
   children,
@@ -21,16 +22,14 @@ export function InspectorSection({
         type="button"
       >
         <span className="inspector-section-title">{title}</span>
-        <span
-          className="chevron"
-        >
+        <span className="chevron">
           <span
             className="chevron-icon"
             style={{
               transform: isOpen ? "rotate(0deg)" : "rotate(180deg)",
             }}
           >
-            v
+            <AppIcon name="chevron" />
           </span>
         </span>
       </AppButton>

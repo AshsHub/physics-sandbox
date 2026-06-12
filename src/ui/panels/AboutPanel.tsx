@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useEditorStore } from "../../store/editorStore";
 import { AppButton } from "../common/AppButton";
+import { AppIcon } from "../icons/AppIcon";
 import { Panel } from "./Panel";
 
 export interface AboutPanelProps {
@@ -161,7 +162,7 @@ export function AboutPanel({ onClose }: AboutPanelProps) {
                 onClick={() => setSelectedFeature(undefined)}
                 type="button"
               >
-                x
+                <AppIcon name="close" />
               </AppButton>
             </div>
 

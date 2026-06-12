@@ -9,6 +9,7 @@ import {
   staticShapes,
 } from "../creatorShapes";
 import { AppButton } from "../common/AppButton";
+import { AppIcon } from "../icons/AppIcon";
 import { ClipboardContextSubmenu } from "./ClipboardContextSubmenu";
 
 export interface CanvasContextMenuProps {
@@ -74,7 +75,7 @@ export function CanvasContextMenu({
       <div className="canvas-context-menu-submenu">
         <AppButton className="canvas-context-menu-submenu-trigger" type="button">
           <span>Create</span>
-          <span aria-hidden="true">&gt;</span>
+          <AppIcon className="context-submenu-icon" name="chevron" />
         </AppButton>
 
         <div className="canvas-context-menu-subpanel">
@@ -123,7 +124,10 @@ function CanvasContextMenuGroup({
             type="button"
           >
             <span className="create-shape-preview" aria-hidden="true">
-              <span className={`shape-preview ${shape.preview}`} />
+              <AppIcon
+                className={`shape-icon shape-icon-${shape.preview}`}
+                name={shape.preview}
+              />
             </span>
             <span className="create-shape-label">{shape.label}</span>
           </AppButton>

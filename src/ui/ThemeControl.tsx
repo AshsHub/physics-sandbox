@@ -1,6 +1,7 @@
 import { ThemeMode } from "../theme/Theme";
 import { useEditorStore } from "../store/editorStore";
 import { AppButton } from "./common/AppButton";
+import { AppIcon, type AppIconName } from "./icons/AppIcon";
 
 const themeOptions = [
   ThemeMode.System,
@@ -8,11 +9,10 @@ const themeOptions = [
   ThemeMode.Dark,
 ] as const;
 
-// TODO: Replace with Icons
-const themeInitials: Record<ThemeMode, string> = {
-  [ThemeMode.System]: "S",
-  [ThemeMode.Light]: "L",
-  [ThemeMode.Dark]: "D",
+const themeIcons: Record<ThemeMode, AppIconName> = {
+  [ThemeMode.System]: "monitor",
+  [ThemeMode.Light]: "sun",
+  [ThemeMode.Dark]: "moon",
 };
 
 export function ThemeControl() {
@@ -34,7 +34,7 @@ export function ThemeControl() {
       onClick={cycleThemeMode}
       type="button"
     >
-      {themeInitials[themeMode]}
+      <AppIcon name={themeIcons[themeMode]} />
     </AppButton>
   );
 }

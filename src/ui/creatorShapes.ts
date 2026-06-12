@@ -1,9 +1,10 @@
 import { SandboxObjectType } from "../sandbox/SandboxObjectType";
+import type { AppIconName } from "./icons/AppIcon";
 
 export interface CreatorShapeAction {
   label: string;
   type: SandboxObjectType;
-  preview: string;
+  preview: AppIconName;
 }
 
 export const celestialShapes: CreatorShapeAction[] = [
@@ -64,9 +65,14 @@ export const staticShapes: CreatorShapeAction[] = [
     preview: "wall",
   },
   {
-    label: "Ramp",
-    type: SandboxObjectType.Ramp,
-    preview: "ramp",
+    label: "Ramp Left",
+    type: SandboxObjectType.RampLeft,
+    preview: "ramp-left",
+  },
+  {
+    label: "Ramp Right",
+    type: SandboxObjectType.RampRight,
+    preview: "ramp-right",
   },
 ];
 

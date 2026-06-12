@@ -8,6 +8,7 @@ import {
 import { SandboxObjectFlags } from "../../sandbox/SandboxObjectType";
 import { useEditorStore } from "../../store/editorStore";
 import { AppButton } from "../common/AppButton";
+import { AppIcon } from "../icons/AppIcon";
 import { InspectorPhysicsSection } from "./InspectorPhysicsSection";
 import { InspectorReadOnlySection } from "./InspectorReadOnlySection";
 import { InspectorVisualSection } from "./InspectorVisualSection";
@@ -156,7 +157,7 @@ export function InspectorListItem({
               transform: isOpen ? "rotate(0deg)" : "rotate(180deg)",
             }}
           >
-            v
+            <AppIcon name="chevron" />
           </span>
         </AppButton>
       </div>

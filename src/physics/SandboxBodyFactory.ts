@@ -1,5 +1,4 @@
 import Matter from "matter-js";
-import { PhysicsConfig } from "../config/PhysicsConfig";
 import { SandboxObjectConfig } from "../config/SandboxObjectConfig";
 import { Vector2 } from "../maths/Vector2";
 import { SandboxObjectType } from "../sandbox/SandboxObjectType";
@@ -19,13 +18,10 @@ export class SandboxBodyFactory {
       this._createPolygonBody(position, SandboxObjectType.Pentagon, 5),
     [SandboxObjectType.Platform]: (position) =>
       this._createRectangleBody(position, SandboxObjectType.Platform),
-    [SandboxObjectType.Ramp]: (position) => {
-      const body = this._createRectangleBody(position, SandboxObjectType.Ramp);
-
-      Matter.Body.rotate(body, PhysicsConfig.body.rampAngle);
-
-      return body;
-    },
+    [SandboxObjectType.RampLeft]: (position) =>
+      this._createRampBody(position, SandboxObjectType.RampLeft),
+    [SandboxObjectType.RampRight]: (position) =>
+      this._createRampBody(position, SandboxObjectType.RampRight),
     [SandboxObjectType.Sun]: (position) =>
       this._createCircleBody(position, SandboxObjectType.Sun),
     [SandboxObjectType.Triangle]: (position) =>
@@ -81,6 +77,37 @@ export class SandboxBodyFactory {
       position.y,
       metadata.width,
       metadata.height,
+    );
+  }
+
+  private _createRampBody(
+    position: Vector2,
+    type: SandboxObjectType.RampLeft | SandboxObjectType.RampRight,
+  ): Matter.Body {
+    const metadata = SandboxObjectConfig.defaults[type].metadata;
+    const left = position.x - metadata.width / 2;
+    const right = position.x + metadata.width / 2;
+    const top = position.y - metadata.height / 2;
+    const bottom = position.y + metadata.height / 2;
+    const vertices =
+      type === SandboxObjectType.RampRight
+        ? [
+            { x: left, y: top },
+            { x: left, y: bottom },
+            { x: right, y: bottom },
+          ]
+        : [
+            { x: left, y: bottom },
+            { x: right, y: bottom },
+            { x: right, y: top },
+          ];
+
+    return Matter.Bodies.fromVertices(
+      position.x,
+      position.y,
+      [vertices],
+      {},
+      false,
     );
   }
 
