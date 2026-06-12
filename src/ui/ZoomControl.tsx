@@ -30,7 +30,10 @@ export function ZoomControl({ app }: ZoomControlProps) {
         <span>Fit View</span>
       </AppButton>
       <span className="zoom-control-label">
-        {Math.round(cameraZoom * CameraConfig.zoom.displayPercentScale)}%
+        <span className="zoom-control-label-text">Zoom</span>
+        <span className="zoom-control-label-value">
+          {Math.round(cameraZoom * CameraConfig.zoom.displayPercentScale)}%
+        </span>
       </span>
       <AppButton
         aria-label="Zoom out"

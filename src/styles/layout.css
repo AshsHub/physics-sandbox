@@ -54,23 +54,11 @@
 .headerbar-title-mark {
   width: 28px;
   height: 28px;
-  border: 1px solid color-mix(in srgb, var(--accent) 58%, var(--border));
-  border-radius: 6px;
-  background:
-    radial-gradient(
-      circle at 62% 34%,
-      color-mix(in srgb, var(--text-on-accent) 70%, transparent) 0 2px,
-      transparent 3px
-    ),
-    radial-gradient(
-      circle at 38% 62%,
-      color-mix(in srgb, var(--accent) 78%, transparent) 0 5px,
-      transparent 6px
-    ),
-    color-mix(in srgb, var(--accent) 18%, var(--bg-input));
-  box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--text-primary) 7%, transparent),
-    0 6px 16px color-mix(in srgb, var(--accent) 18%, transparent);
+  display: block;
+  flex: 0 0 auto;
+  filter: drop-shadow(
+    0 6px 16px color-mix(in srgb, var(--accent) 18%, transparent)
+  );
 }
 
 .headerbar-title-copy {

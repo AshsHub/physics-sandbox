@@ -125,7 +125,12 @@ export default function App() {
     <div className="app">
       <header className="headerbar">
         <h1 className="headerbar-title">
-          <span className="headerbar-title-mark" aria-hidden="true" />
+          <img
+            alt=""
+            aria-hidden="true"
+            className="headerbar-title-mark"
+            src="/favicon.svg"
+          />
           <span className="headerbar-title-copy">
             <span className="headerbar-title-name">Physics Sandbox</span>
             <span className="headerbar-title-meta">

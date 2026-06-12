@@ -5,30 +5,76 @@
   z-index: 2;
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
+  gap: 6px;
+  padding: 5px;
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--border-strong));
+  border-radius: 6px;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--text-primary) 4%, transparent),
+      transparent
+    ),
+    color-mix(in srgb, var(--bg-panel) 94%, transparent);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--text-primary) 4%, transparent),
+    0 10px 24px color-mix(in srgb, var(--shadow-overlay) 62%, transparent);
   user-select: none;
 }
 
 .interaction-mode-controls {
   display: flex;
-  gap: var(--space-sm);
+  gap: 3px;
+  padding: 2px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--bg-input) 62%, transparent);
 }
 
 .interaction-mode-button {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-sm);
-  padding: 6px 10px;
-  min-width: 88px;
+  gap: 6px;
+  min-width: 70px;
+  padding: 5px 7px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 800;
+  transition:
+    background 0.14s ease,
+    border-color 0.14s ease,
+    box-shadow 0.14s ease,
+    color 0.14s ease;
+}
+
+.interaction-mode-button:not(.selected):not(:disabled):hover {
+  border-color: color-mix(in srgb, var(--accent) 42%, var(--border));
+  background: color-mix(in srgb, var(--accent) 12%, var(--bg-control-hover));
+}
+
+.interaction-mode-button.selected {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--text-on-accent) 22%, transparent),
+    0 6px 14px color-mix(in srgb, var(--accent) 18%, transparent);
 }
 
 .interaction-mode-icon {
-  width: 24px;
-  height: 24px;
+  width: 18px;
+  height: 18px;
 }
 
 .toolbar-toggle-button {
-  padding: 6px 10px;
+  min-height: 30px;
+  padding: 5px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.toolbar-toggle-button:not(.selected):not(:disabled):hover {
+  border-color: color-mix(in srgb, var(--accent) 42%, var(--border));
+  background: color-mix(in srgb, var(--accent) 12%, var(--bg-control-hover));
 }
 
 .zoom-control {
@@ -39,12 +85,20 @@
   display: flex;
   align-items: center;
   gap: var(--space-xs);
-  width: 360px;
-  padding: 6px 8px;
-  border: 1px solid var(--border-strong);
-  border-radius: 4px;
-  background: color-mix(in srgb, var(--bg-panel) 94%, transparent);
-  box-shadow: 0 8px 24px var(--shadow-overlay);
+  width: 382px;
+  padding: 6px;
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--border-strong));
+  border-radius: 6px;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--text-primary) 4%, transparent),
+      transparent
+    ),
+    color-mix(in srgb, var(--bg-panel) 94%, transparent);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--text-primary) 4%, transparent),
+    0 10px 24px color-mix(in srgb, var(--shadow-overlay) 62%, transparent);
   user-select: none;
 }
 
@@ -54,7 +108,12 @@
   justify-content: center;
   gap: var(--space-xs);
   flex: 0 0 auto;
-  padding: 6px 10px;
+  min-height: 32px;
+  padding: 5px 9px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
 }
 
 .zoom-step-button {
@@ -62,9 +121,17 @@
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   padding: 0;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--bg-control) 82%, transparent);
+}
+
+.zoom-step-button:not(:disabled):hover,
+.zoom-fit-button:not(:disabled):hover {
+  border-color: color-mix(in srgb, var(--accent) 58%, var(--border));
+  background: color-mix(in srgb, var(--accent) 14%, var(--bg-control-hover));
 }
 
 .simulation-control-button .app-icon,
@@ -79,16 +146,37 @@
 }
 
 .zoom-control-label {
-  min-width: 42px;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  flex: 0 0 auto;
+  min-height: 32px;
+  padding: 4px 7px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--bg-input) 62%, transparent);
+}
+
+.zoom-control-label-text {
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.zoom-control-label-value {
+  min-width: 38px;
   color: var(--text-primary);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 800;
+  line-height: 1;
   text-align: right;
-  padding-right: var(--space-xs);
 }
 
 .zoom-control-slider {
   flex: 1;
   min-width: 0;
   accent-color: var(--accent);
+  cursor: pointer;
 }
