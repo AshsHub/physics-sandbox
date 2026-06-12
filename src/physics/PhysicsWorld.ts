@@ -265,7 +265,7 @@ export class PhysicsWorld {
       }
     }
 
-    if (isSimulationRunning || this._draggedBodies.length > 0) {
+    if (isSimulationRunning) {
       Matter.Engine.update(
         this._engine,
         PhysicsConfig.simulation.fixedTimeStepMs,
