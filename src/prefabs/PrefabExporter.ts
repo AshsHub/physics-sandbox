@@ -1,14 +1,22 @@
 import { Maths } from "../maths/Maths";
 import type { ISandboxObjectSnapshot } from "../sandbox/SandboxObject";
 import { getSnapshotCenter } from "../sandbox/SandboxObjectSnapshotUtils";
-import type { SandboxPrefab } from "./SandboxPrefabs";
+import type { SerializedSandboxPrefab } from "./SandboxPrefabs";
 
-export function createPrefabJson(
+export function createPrefabSource(
   snapshots: ISandboxObjectSnapshot[],
   prefabName = "Custom Prefab",
 ): string {
+  return JSON.stringify(createSerializedPrefab(snapshots, prefabName), null, 2);
+}
+
+export function createSerializedPrefab(
+  snapshots: ISandboxObjectSnapshot[],
+  prefabName = "Custom Prefab",
+): SerializedSandboxPrefab {
   const center = getSnapshotCenter(snapshots);
-  const sandboxPrefab: SandboxPrefab = {
+
+  return {
     id: "custom-prefab",
     name: prefabName,
     objects: snapshots.map((snapshot) => ({
@@ -23,6 +31,4 @@ export function createPrefabJson(
       },
     })),
   };
-
-  return JSON.stringify(sandboxPrefab, null, 2);
 }

@@ -1,16 +1,10 @@
 import type { IApplication } from "../application/IApplication";
-import { Vector2 } from "../maths/Vector2";
+import { Vector2, type VectorLike } from "../maths/Vector2";
 import { useEditorStore } from "../store/editorStore";
 
 export interface CanvasContextMenuCallbacks {
-  onCanvasContextMenu(
-    position: { x: number; y: number },
-    worldPosition: Vector2,
-  ): void;
-  onObjectContextMenu(
-    objectId: string,
-    position: { x: number; y: number },
-  ): void;
+  onCanvasContextMenu(position: VectorLike, worldPosition: Vector2): void;
+  onObjectContextMenu(objectId: string, position: VectorLike): void;
 }
 
 export class CanvasContextMenuController {

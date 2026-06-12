@@ -1,18 +1,15 @@
 import { SandboxObjectConfig } from "../../config/SandboxObjectConfig";
-import {
-  SandboxObjectFlags,
-  SandboxObjectType,
-} from "../../sandbox/SandboxObjectType";
-import type { SandboxPrefab } from "../SandboxPrefabs";
+import { SandboxObjectFlags } from "../../sandbox/SandboxObjectType";
+import type { SerializedSandboxPrefab } from "../SandboxPrefabs";
 
-export const platformStackPrefab: SandboxPrefab = {
+export const platformStackPrefab: SerializedSandboxPrefab = {
   id: "platform-stack",
   name: "Platform Stack",
   description: "A static platform with three dynamic objects above it.",
   objects: [
     {
       name: "Prefab Platform",
-      type: SandboxObjectType.Platform,
+      type: "Platform",
       offset: {
         x: 0,
         y: 90,
@@ -25,7 +22,7 @@ export const platformStackPrefab: SandboxPrefab = {
     },
     {
       name: "Prefab Box",
-      type: SandboxObjectType.Box,
+      type: "Box",
       offset: {
         x: -54,
         y: 20,
@@ -38,7 +35,7 @@ export const platformStackPrefab: SandboxPrefab = {
     },
     {
       name: "Prefab Circle",
-      type: SandboxObjectType.Circle,
+      type: "Circle",
       offset: {
         x: 0,
         y: -38,
@@ -51,7 +48,7 @@ export const platformStackPrefab: SandboxPrefab = {
     },
     {
       name: "Prefab Triangle",
-      type: SandboxObjectType.Triangle,
+      type: "Triangle",
       offset: {
         x: 58,
         y: 18,

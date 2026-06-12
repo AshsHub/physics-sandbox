@@ -1,5 +1,6 @@
 export const PhysicsConfig = {
   body: {
+    frictionStaticMultiplier: 1,
     minimumDynamicMass: 0.1,
     rampAngle: -Math.PI / 8,
   },

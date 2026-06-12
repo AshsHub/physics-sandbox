@@ -1,4 +1,5 @@
 import type { IApplication } from "../../application/IApplication";
+import type { VectorLike } from "../../maths/Vector2";
 import { useEditorStore } from "../../store/editorStore";
 import { AppButton } from "../common/AppButton";
 import { CreatorPanel } from "../panels/CreatorPanel";
@@ -33,10 +34,7 @@ const sidebarTabs = [
 
 export interface SidebarProps {
   app: IApplication;
-  onObjectContextMenu: (
-    objectId: string,
-    position: { x: number; y: number },
-  ) => void;
+  onObjectContextMenu: (objectId: string, position: VectorLike) => void;
 }
 
 export function Sidebar({ app, onObjectContextMenu }: SidebarProps) {

@@ -1,23 +1,18 @@
-import type { ISandboxObjectMetadata } from "../sandbox/SandboxObject";
-import type {
-  SandboxObjectFlags,
-  SandboxObjectType,
-} from "../sandbox/SandboxObjectType";
+import {
+  SandboxObjectBorderStyle,
+  SandboxObjectRadialForceMode,
+  type ISandboxObjectSnapshot,
+} from "../sandbox/SandboxObject";
+import { SandboxObjectType } from "../sandbox/SandboxObjectType";
+import type { VectorLike } from "../maths/Vector2";
 import { platformStackPrefab } from "./definitions/PlatformStackPrefab";
 
-export interface SandboxPrefabOffset {
-  x: number;
-  y: number;
-}
-
-export interface SandboxPrefabObject {
-  angle: number;
-  flags: SandboxObjectFlags;
-  metadata: ISandboxObjectMetadata;
-  name: string;
-  offset: SandboxPrefabOffset;
-  type: SandboxObjectType;
-}
+export type SandboxPrefabObject = Omit<
+  ISandboxObjectSnapshot,
+  "id" | "position"
+> & {
+  offset: VectorLike;
+};
 
 export interface SandboxPrefab {
   description?: string;
@@ -26,4 +21,73 @@ export interface SandboxPrefab {
   objects: SandboxPrefabObject[];
 }
 
-export const sandboxPrefabs = [platformStackPrefab];
+export type SerializedSandboxObjectMetadata = Omit<
+  ISandboxObjectSnapshot["metadata"],
+  "borderStyle" | "radialForceMode"
+> & {
+  borderStyle: `${SandboxObjectBorderStyle}`;
+  radialForceMode: `${SandboxObjectRadialForceMode}`;
+};
+
+export type SerializedSandboxPrefabObject = Omit<
+  SandboxPrefabObject,
+  "metadata" | "type"
+> & {
+  id?: string;
+  metadata: SerializedSandboxObjectMetadata;
+  position?: VectorLike;
+  type: `${SandboxObjectType}`;
+};
+
+export type SerializedSandboxPrefab = Omit<SandboxPrefab, "objects"> & {
+  objects: SerializedSandboxPrefabObject[];
+};
+
+export function loadSandboxPrefab(
+  serializedPrefab: SerializedSandboxPrefab,
+): SandboxPrefab {
+  return {
+    ...serializedPrefab,
+    objects: serializedPrefab.objects.map(loadSandboxPrefabObject),
+  };
+}
+
+export const sandboxPrefabs = [platformStackPrefab].map(loadSandboxPrefab);
+
+function parseStringEnumValue<T extends Record<string, string>>(
+  enumObject: T,
+  value: string,
+): T[keyof T] {
+  const enumValue = Object.values(enumObject).find(
+    (currentValue) => currentValue === value,
+  );
+
+  if (!enumValue) {
+    throw new Error(`Unknown enum value: ${value}`);
+  }
+
+  return enumValue as T[keyof T];
+}
+
+function loadSandboxPrefabObject(
+  object: SerializedSandboxPrefabObject,
+): SandboxPrefabObject {
+  return {
+    angle: object.angle,
+    flags: object.flags,
+    name: object.name,
+    offset: object.offset,
+    type: parseStringEnumValue(SandboxObjectType, object.type),
+    metadata: {
+      ...object.metadata,
+      borderStyle: parseStringEnumValue(
+        SandboxObjectBorderStyle,
+        object.metadata.borderStyle,
+      ),
+      radialForceMode: parseStringEnumValue(
+        SandboxObjectRadialForceMode,
+        object.metadata.radialForceMode,
+      ),
+    },
+  };
+}

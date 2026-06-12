@@ -1,7 +1,7 @@
 // src/canvas/CanvasView.tsx
 
 import { useEffect, useRef } from "react";
-import { Vector2 } from "../maths/Vector2";
+import { Vector2, type VectorLike } from "../maths/Vector2";
 import type { IApplication } from "../application/IApplication";
 import { CanvasContextMenuController } from "../input/CanvasContextMenuController";
 import { InteractionMode } from "../input/InteractionMode";
@@ -11,14 +11,8 @@ import { MouseButton } from "../config/InputConfig";
 
 export interface CanvasViewProps {
   app: IApplication;
-  onCanvasContextMenu: (
-    position: { x: number; y: number },
-    worldPosition: Vector2,
-  ) => void;
-  onObjectContextMenu: (
-    objectId: string,
-    position: { x: number; y: number },
-  ) => void;
+  onCanvasContextMenu: (position: VectorLike, worldPosition: Vector2) => void;
+  onObjectContextMenu: (objectId: string, position: VectorLike) => void;
 }
 
 export function CanvasView({

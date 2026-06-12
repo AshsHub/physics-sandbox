@@ -34,9 +34,9 @@ type SandboxObjectMetadataOptions = Omit<
   Partial<SandboxObjectMetadataDefaults>;
 
 const defaultPhysics = {
-  mass: 1,
+  mass: 5,
   bounce: 0.5,
-  friction: 0.6,
+  friction: 0.01,
 } as const;
 
 const defaultRadialForce = {

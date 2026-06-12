@@ -7,14 +7,12 @@ import { useEditorStore } from "../../store/editorStore";
 import { AppButton } from "../common/AppButton";
 import { InspectorList } from "../inspector/InspectorList";
 import { Panel } from "./Panel";
+import type { VectorLike } from "../../maths/Vector2";
 
 export interface InspectorPanelProps {
   app: IApplication;
   onClose?: () => void;
-  onObjectContextMenu: (
-    objectId: string,
-    position: { x: number; y: number },
-  ) => void;
+  onObjectContextMenu: (objectId: string, position: VectorLike) => void;
 }
 
 type InspectorFilter = "all" | "dynamic" | "static" | "selected";

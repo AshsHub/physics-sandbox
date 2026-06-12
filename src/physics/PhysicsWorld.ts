@@ -102,15 +102,18 @@ export class PhysicsWorld {
         : 1;
 
     if (widthScale !== 1 || heightScale !== 1) {
-      Matter.Body.scale(body, widthScale, heightScale);
+      this._scaleBodyLocal(body, widthScale, heightScale);
       shouldWakeBody = true;
     }
 
-    body.friction = Maths.clamp(
+    const friction = Maths.clamp(
       nextMetadata.friction,
       SandboxObjectConfig.metadataConstraints.friction.min,
       SandboxObjectConfig.metadataConstraints.friction.max,
     );
+
+    body.friction = friction;
+    body.frictionStatic = friction * PhysicsConfig.body.frictionStaticMultiplier;
     body.restitution = Maths.clamp(
       nextMetadata.bounce,
       SandboxObjectConfig.metadataConstraints.bounce.min,
@@ -414,5 +417,23 @@ export class PhysicsWorld {
 
   private _getDynamicMass(mass: number): number {
     return Math.max(PhysicsConfig.body.minimumDynamicMass, mass);
+  }
+
+  private _scaleBodyLocal(
+    body: Matter.Body,
+    widthScale: number,
+    heightScale: number,
+  ): void {
+    const angle = body.angle;
+
+    if (angle !== 0) {
+      Matter.Body.rotate(body, -angle);
+    }
+
+    Matter.Body.scale(body, widthScale, heightScale);
+
+    if (angle !== 0) {
+      Matter.Body.rotate(body, angle);
+    }
   }
 }

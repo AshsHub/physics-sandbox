@@ -1,4 +1,5 @@
 import type { ICommandBus } from "../../commands/ICommands";
+import type { VectorLike } from "../../maths/Vector2";
 import type { ISandboxObject } from "../../sandbox/SandboxObject";
 import { useEditorStore } from "../../store/editorStore";
 import { InspectorListItem } from "./InspectorListItem";
@@ -7,7 +8,7 @@ export interface InspectorListProps {
   commands: ICommandBus;
   objects: ISandboxObject[];
   selectedIds: Set<string>;
-  onObjectContextMenu: (objectId: string, position: { x: number; y: number }) => void;
+  onObjectContextMenu: (objectId: string, position: VectorLike) => void;
 }
 
 export function InspectorList({
@@ -54,7 +55,10 @@ export function InspectorList({
           onOpenChange={(isOpen) => setInspectorItemOpen(object.id, isOpen)}
           shouldScrollIntoView={inspectorScrollTargetId === object.id}
           onSelect={(event) =>
-            selectObject(object.id, event.ctrlKey || event.metaKey || event.shiftKey)
+            selectObject(
+              object.id,
+              event.ctrlKey || event.metaKey || event.shiftKey,
+            )
           }
           onContextMenu={(event) => {
             event.preventDefault();

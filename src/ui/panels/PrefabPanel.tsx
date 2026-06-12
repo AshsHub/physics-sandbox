@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { IApplication } from "../../application/IApplication";
-import { createPrefabJson } from "../../prefabs/PrefabExporter";
+import { createPrefabSource } from "../../prefabs/PrefabExporter";
 import {
   sandboxPrefabs,
   type SandboxPrefab,
@@ -37,7 +37,7 @@ export function PrefabPanel({ app, onClose }: PrefabPanelProps) {
       return;
     }
 
-    const source = createPrefabJson(snapshots);
+    const source = createPrefabSource(snapshots);
 
     try {
       await navigator.clipboard.writeText(source);
@@ -76,7 +76,7 @@ export function PrefabPanel({ app, onClose }: PrefabPanelProps) {
           <h3 className="prefab-group-title">Developer</h3>
           <AppButton
             className="prefab-export-button"
-            data-tooltip="Copy selected objects as prefab JSON"
+            data-tooltip="Copy selected objects as serialized prefab data"
             data-tooltip-position="right"
             disabled={!canExport}
             onClick={() => void exportSelectedPrefab()}

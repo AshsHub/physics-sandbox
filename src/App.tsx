@@ -3,7 +3,7 @@ import "./App.css";
 import { Application } from "./application/Application";
 import { CanvasView } from "./canvas/CanvasView";
 import { AppConfig } from "./config/AppConfig";
-import { Vector2 } from "./maths/Vector2";
+import { Vector2, type VectorLike } from "./maths/Vector2";
 import { useEditorStore } from "./store/editorStore";
 import { resolveThemeMode, writeStoredThemeMode } from "./theme/Theme";
 import { CanvasContextMenu } from "./ui/context/CanvasContextMenu";
@@ -17,8 +17,8 @@ import { ZoomControl } from "./ui/ZoomControl";
 export default function App() {
   const [app] = useState(() => new Application());
   const [fps, setFps] = useState(0);
-  const [prefersDark, setPrefersDark] = useState(() =>
-    window.matchMedia("(prefers-color-scheme: dark)").matches,
+  const [prefersDark, setPrefersDark] = useState(
+    () => window.matchMedia("(prefers-color-scheme: dark)").matches,
   );
   const [contextMenu, setContextMenu] = useState<
     | {
@@ -100,7 +100,7 @@ export default function App() {
   }, [prefersDark, themeMode]);
 
   const openObjectContextMenu = useCallback(
-    (objectId: string, position: { x: number; y: number }) => {
+    (objectId: string, position: VectorLike) => {
       setContextMenu({
         type: "object",
         objectId,
@@ -115,7 +115,7 @@ export default function App() {
   );
 
   const openCanvasContextMenu = useCallback(
-    (position: { x: number; y: number }, worldPosition: Vector2) => {
+    (position: VectorLike, worldPosition: Vector2) => {
       setContextMenu({
         type: "canvas",
         position: new Vector2(position),
