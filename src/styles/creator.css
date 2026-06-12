@@ -126,13 +126,6 @@
   border-color: #b9fff3;
 }
 
-.shape-preview.ground {
-  width: 42px;
-  height: 10px;
-  background: #505050;
-  border-color: #777777;
-}
-
 .shape-preview.platform {
   width: 36px;
   height: 10px;
