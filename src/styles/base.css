@@ -169,12 +169,14 @@ button:disabled {
   font-weight: 700;
   line-height: 1.2;
   text-overflow: ellipsis;
+  user-select: none;
 }
 
 .info-stack-description {
   min-width: 0;
   color: var(--text-secondary);
   line-height: 1.3;
+  user-select: none;
 }
 
 input[type="checkbox"] {
