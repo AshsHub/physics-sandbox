@@ -5,6 +5,7 @@ import {
 } from "../sandbox/SandboxObject";
 import { SandboxObjectType } from "../sandbox/SandboxObjectType";
 import type { VectorLike } from "../maths/Vector2";
+import { SandboxObjectConfig } from "../config/SandboxObjectConfig";
 import { boulderRunPrefab } from "./definitions/BoulderRunPrefab";
 import { dominoLinePrefab } from "./definitions/DominoLinePrefab";
 import { milkyWayPrefab } from "./definitions/MilkyWayPrefab";
@@ -36,12 +37,13 @@ export type SerializedSandboxObjectMetadata = Omit<
   radialForceMode: `${SandboxObjectRadialForceMode}`;
 };
 
-export type SerializedSandboxPrefabObject = Omit<
-  SandboxPrefabObject,
-  "metadata" | "type"
-> & {
+export type SerializedSandboxPrefabObject = {
+  angle?: number;
+  flags?: SandboxPrefabObject["flags"];
   id?: string;
-  metadata: SerializedSandboxObjectMetadata;
+  metadata?: Partial<SerializedSandboxObjectMetadata>;
+  name: string;
+  offset: VectorLike;
   position?: VectorLike;
   type: `${SandboxObjectType}`;
 };
@@ -88,22 +90,27 @@ function parseStringEnumValue<T extends Record<string, string>>(
 function loadSandboxPrefabObject(
   object: SerializedSandboxPrefabObject,
 ): SandboxPrefabObject {
+  const type = parseStringEnumValue(SandboxObjectType, object.type);
+  const defaultObject = SandboxObjectConfig.defaults[type];
+  const metadata = object.metadata ?? {};
+
   return {
-    angle: object.angle,
-    flags: object.flags,
-    name: object.name,
-    offset: object.offset,
-    type: parseStringEnumValue(SandboxObjectType, object.type),
+    ...object,
+    angle: object.angle ?? 0,
+    flags: object.flags ?? defaultObject.flags,
+    type,
     metadata: {
-      ...object.metadata,
-      borderStyle: parseStringEnumValue(
-        SandboxObjectBorderStyle,
-        object.metadata.borderStyle,
-      ),
-      radialForceMode: parseStringEnumValue(
-        SandboxObjectRadialForceMode,
-        object.metadata.radialForceMode,
-      ),
+      ...defaultObject.metadata,
+      ...metadata,
+      borderStyle: metadata.borderStyle
+        ? parseStringEnumValue(SandboxObjectBorderStyle, metadata.borderStyle)
+        : defaultObject.metadata.borderStyle,
+      radialForceMode: metadata.radialForceMode
+        ? parseStringEnumValue(
+            SandboxObjectRadialForceMode,
+            metadata.radialForceMode,
+          )
+        : defaultObject.metadata.radialForceMode,
     },
   };
 }
