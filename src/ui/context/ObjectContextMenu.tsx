@@ -3,8 +3,10 @@ import type { IApplication } from "../../application/IApplication";
 import type { Vector2 } from "../../maths/Vector2";
 import { useEditorStore } from "../../store/editorStore";
 import { AppButton } from "../common/AppButton";
+import { AppIcon } from "../icons/AppIcon";
 import { SidebarPanel } from "../sidebar/SidebarPanel";
 import { ClipboardContextSubmenu } from "./ClipboardContextSubmenu";
+import { useContextMenuPosition } from "./useContextMenuPosition";
 
 export interface ObjectContextMenuProps {
   app: IApplication;
@@ -22,6 +24,7 @@ export function ObjectContextMenu({
   onClose,
 }: ObjectContextMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null);
+  const menuPosition = useContextMenuPosition(menuRef, position);
   const object = app.engine.getObject(objectId);
   const [draftName, setDraftName] = useState(object?.name ?? "");
   useEditorStore((s) => s.objectRevision);
@@ -94,12 +97,9 @@ export function ObjectContextMenu({
 
   return (
     <div
-      className="object-context-menu"
+      className={`object-context-menu${menuPosition.classNameSuffix}`}
       ref={menuRef}
-      style={{
-        left: position.x,
-        top: position.y,
-      }}
+      style={menuPosition.style}
     >
       <input
         aria-label="Object name"
@@ -126,8 +126,10 @@ export function ObjectContextMenu({
         onClick={revealInInspector}
         onPointerDown={(event) => event.preventDefault()}
         type="button"
+        variant="ghost"
       >
-        Show in Inspector
+        <span>Show in Inspector</span>
+        <AppIcon className="context-menu-action-icon" name="inspector" />
       </AppButton>
 
       <ClipboardContextSubmenu
@@ -137,12 +139,18 @@ export function ObjectContextMenu({
       />
 
       <AppButton
-        className="object-context-menu-action"
+        className="object-context-menu-action destructive"
         onClick={deleteObjects}
         onPointerDown={(event) => event.preventDefault()}
         type="button"
+        variant="ghost"
       >
-        {targetIds.length > 1 ? `Delete ${targetIds.length} objects` : "Delete"}
+        <span>
+          {targetIds.length > 1
+            ? `Delete ${targetIds.length} objects`
+            : "Delete"}
+        </span>
+        <AppIcon className="context-menu-action-icon" name="trash" />
       </AppButton>
     </div>
   );

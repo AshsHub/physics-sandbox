@@ -8,6 +8,7 @@ export type AppIconName =
   | "circle"
   | "close"
   | "fit-view"
+  | "inspector"
   | "minus"
   | "moon"
   | "monitor"
@@ -22,6 +23,7 @@ export type AppIconName =
   | "selection"
   | "sun"
   | "triangle"
+  | "trash"
   | "wall"
   | "white-hole";
 

@@ -11,6 +11,7 @@ import {
 import { AppButton } from "../common/AppButton";
 import { AppIcon } from "../icons/AppIcon";
 import { ClipboardContextSubmenu } from "./ClipboardContextSubmenu";
+import { useContextMenuPosition } from "./useContextMenuPosition";
 
 export interface CanvasContextMenuProps {
   app: IApplication;
@@ -26,6 +27,7 @@ export function CanvasContextMenu({
   onClose,
 }: CanvasContextMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null);
+  const menuPosition = useContextMenuPosition(menuRef, position);
 
   useEffect(() => {
     const handlePointerDown = (event: PointerEvent) => {
@@ -65,15 +67,16 @@ export function CanvasContextMenu({
 
   return (
     <div
-      className="canvas-context-menu"
+      className={`canvas-context-menu${menuPosition.classNameSuffix}`}
       ref={menuRef}
-      style={{
-        left: position.x,
-        top: position.y,
-      }}
+      style={menuPosition.style}
     >
       <div className="canvas-context-menu-submenu">
-        <AppButton className="canvas-context-menu-submenu-trigger" type="button">
+        <AppButton
+          className="canvas-context-menu-submenu-trigger"
+          type="button"
+          variant="ghost"
+        >
           <span>Create</span>
           <AppIcon className="context-submenu-icon" name="chevron" />
         </AppButton>
@@ -122,6 +125,7 @@ function CanvasContextMenuGroup({
             onClick={() => onCreate(shape.type)}
             onPointerDown={(event) => event.preventDefault()}
             type="button"
+            variant="ghost"
           >
             <span className="create-shape-preview" aria-hidden="true">
               <AppIcon

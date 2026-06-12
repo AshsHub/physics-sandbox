@@ -1,47 +1,89 @@
-.object-context-menu {
+.object-context-menu,
+.canvas-context-menu {
   position: fixed;
   z-index: 20;
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
+  gap: var(--space-xs);
   min-width: 190px;
-  padding: var(--space-sm);
-  border: 1px solid var(--border);
+  padding: 5px;
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--border-strong));
   border-radius: 6px;
-  background: var(--bg-panel);
-  box-shadow: 0 12px 32px var(--shadow-overlay);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--text-primary) 4%, transparent),
+      transparent
+    ),
+    color-mix(in srgb, var(--bg-panel) 97%, transparent);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--text-primary) 4%, transparent),
+    0 14px 34px color-mix(in srgb, var(--shadow-overlay) 82%, transparent);
   user-select: none;
 }
 
 .object-context-menu-input {
   min-width: 0;
   padding: 6px 8px;
-  border: 1px solid var(--accent);
-  border-radius: 2px;
-  background: var(--bg-input);
+  border: 1px solid color-mix(in srgb, var(--accent) 48%, var(--border));
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--bg-input) 82%, transparent);
   color: var(--text-primary);
   font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  outline: none;
 }
 
-.object-context-menu-action {
+.object-context-menu-input:focus {
+  border-color: var(--accent-border);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.object-context-menu-action,
+.canvas-context-menu-submenu-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
   width: 100%;
-  padding: 8px 10px;
+  min-width: 0;
+  padding: 6px 8px;
+  border-radius: 4px;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 700;
   text-align: left;
+  transition:
+    background 0.14s ease,
+    border-color 0.14s ease,
+    color 0.14s ease;
+}
+
+.object-context-menu-action:not(:disabled):hover,
+.canvas-context-menu-submenu-trigger:not(:disabled):hover {
+  border-color: color-mix(in srgb, var(--accent) 42%, var(--border));
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+.object-context-menu-action.destructive {
+  color: #ff8f8f;
+}
+
+.object-context-menu-action.destructive:not(:disabled):hover {
+  border-color: color-mix(in srgb, #ff6b6b 58%, var(--border));
+  background: color-mix(in srgb, #ff6b6b 13%, transparent);
+  color: #ffb0b0;
+}
+
+.context-menu-action-icon {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
 }
 
 .canvas-context-menu {
-  position: fixed;
-  z-index: 20;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-  min-width: 170px;
-  padding: var(--space-sm);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  background: var(--bg-panel);
-  box-shadow: 0 12px 32px var(--shadow-overlay);
-  user-select: none;
+  min-width: 176px;
 }
 
 .canvas-context-menu-submenu {
@@ -57,35 +99,46 @@
   height: calc(100% + var(--space-sm) * 2);
 }
 
-.canvas-context-menu-submenu-trigger {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  min-width: 0;
-  padding: 8px 10px;
-  text-align: left;
+.open-left .canvas-context-menu-submenu::after {
+  right: 100%;
+  left: auto;
 }
 
 .context-submenu-icon {
   width: 21px;
   height: 21px;
   transform: rotate(-90deg);
+  color: var(--text-secondary);
 }
 
 .canvas-context-menu-subpanel {
   position: absolute;
-  top: calc(var(--space-sm) * -1);
+  top: var(--context-subpanel-top, -6px);
   left: calc(100% + var(--space-sm));
   display: none;
   flex-direction: column;
-  gap: var(--space-sm);
-  width: 260px;
-  padding: var(--space-sm);
-  border: 1px solid var(--border);
+  gap: var(--space-md);
+  width: 348px;
+  max-height: var(--context-subpanel-max-height, calc(100vh - 16px));
+  padding: 7px;
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--border-strong));
   border-radius: 6px;
-  background: var(--bg-panel);
-  box-shadow: 0 12px 32px var(--shadow-overlay);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--text-primary) 4%, transparent),
+      transparent
+    ),
+    color-mix(in srgb, var(--bg-panel) 98%, transparent);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--text-primary) 4%, transparent),
+    0 14px 34px color-mix(in srgb, var(--shadow-overlay) 82%, transparent);
+  overflow-y: auto;
+}
+
+.open-left .canvas-context-menu-subpanel {
+  right: calc(100% + var(--space-sm));
+  left: auto;
 }
 
 .clipboard-context-subpanel {
@@ -110,14 +163,15 @@
 .canvas-context-menu-group {
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
+  gap: var(--space-xs);
 }
 
 .canvas-context-menu-group-title {
   margin: 0;
+  padding: 0 3px;
   color: var(--text-secondary);
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 800;
   text-transform: uppercase;
 }
 
@@ -128,12 +182,49 @@
 }
 
 .canvas-context-menu-create-button {
-  display: flex;
-  flex-direction: column;
+  position: relative;
+  display: grid;
+  grid-template-rows: 58px minmax(30px, auto);
   align-items: center;
-  justify-content: center;
+  justify-items: center;
   gap: var(--space-xs);
   min-width: 0;
-  min-height: 72px;
-  padding: var(--space-xs);
+  min-height: 98px;
+  padding: 6px 5px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--accent) 7%, transparent),
+      transparent
+    ),
+    color-mix(in srgb, var(--bg-card) 76%, transparent);
+  overflow: hidden;
+}
+
+.canvas-context-menu-create-button:not(:disabled):hover {
+  border-color: color-mix(in srgb, var(--accent) 48%, var(--border));
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--accent) 13%, transparent),
+      transparent
+    ),
+    var(--bg-card-hover);
+}
+
+.canvas-context-menu-create-button .create-shape-preview {
+  align-self: end;
+  width: 50px;
+  height: 50px;
+}
+
+.canvas-context-menu-create-button .create-shape-label {
+  align-self: start;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+  line-height: 1.12;
 }

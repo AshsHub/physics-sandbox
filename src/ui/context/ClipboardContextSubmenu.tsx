@@ -29,7 +29,11 @@ export function ClipboardContextSubmenu({
 
   return (
     <div className="canvas-context-menu-submenu">
-      <AppButton className="canvas-context-menu-submenu-trigger" type="button">
+      <AppButton
+        className="canvas-context-menu-submenu-trigger"
+        type="button"
+        variant="ghost"
+      >
         <span>Clipboard</span>
         <AppIcon className="context-submenu-icon" name="chevron" />
       </AppButton>
@@ -44,6 +48,7 @@ export function ClipboardContextSubmenu({
             )
           }
           onPointerDown={(event) => event.preventDefault()}
+          variant="ghost"
         >
           Copy
         </AppButton>
@@ -56,6 +61,7 @@ export function ClipboardContextSubmenu({
             )
           }
           onPointerDown={(event) => event.preventDefault()}
+          variant="ghost"
         >
           Cut
         </AppButton>
@@ -66,6 +72,7 @@ export function ClipboardContextSubmenu({
             runAction(() => app.executeClipboardAction(ClipboardAction.Paste))
           }
           onPointerDown={(event) => event.preventDefault()}
+          variant="ghost"
         >
           Paste
         </AppButton>
@@ -78,6 +85,7 @@ export function ClipboardContextSubmenu({
             )
           }
           onPointerDown={(event) => event.preventDefault()}
+          variant="ghost"
         >
           Duplicate
         </AppButton>
