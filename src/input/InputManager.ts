@@ -49,6 +49,11 @@ export class InputManager {
   public destroy(): void {
     this._clipboard.destroy();
     this._keyboard.destroy();
+    this.cancelPointerInteraction();
+  }
+
+  public cancelPointerInteraction(): void {
+    this._app.engine.endDrag();
     useEditorStore.getState().setHoveredObject(undefined);
     useEditorStore.getState().setSelectionBox(undefined);
     this._setActivePointerMode(undefined);
@@ -71,6 +76,7 @@ export class InputManager {
   public startObjectPlacement(type: SandboxObjectType): void {
     const state = useEditorStore.getState();
 
+    this.cancelPointerInteraction();
     state.setObjectPlacement(type);
     state.clearSelection();
     state.setHoveredObject(undefined);

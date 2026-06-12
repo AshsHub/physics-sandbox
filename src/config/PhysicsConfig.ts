@@ -6,6 +6,7 @@ export const PhysicsConfig = {
   },
   dragging: {
     dynamicFollowStrength: 0.25,
+    manualRotationLockFrames: 2,
   },
   simulation: {
     fixedTimeStepMs: 1000 / 60,

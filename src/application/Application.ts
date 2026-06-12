@@ -88,6 +88,14 @@ export class Application implements IApplication {
         useEditorStore.getState().bumpObjectRevision();
       }),
     );
+
+    this._unsubscribers.push(
+      useEditorStore.subscribe((state, previousState) => {
+        if (state.interactionMode !== previousState.interactionMode) {
+          this.inputManager.cancelPointerInteraction();
+        }
+      }),
+    );
   }
 
   public fitView(): void {

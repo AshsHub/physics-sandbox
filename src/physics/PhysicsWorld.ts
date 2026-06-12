@@ -23,8 +23,11 @@ import { Maths } from "../maths/Maths";
 
 interface IDraggedBody {
   body: Matter.Body;
+  isRotationLocked: boolean;
   mode: "exact" | "soft";
   offset: Vector2;
+  previousInertia: number;
+  rotationLockFramesRemaining: number;
 }
 
 export class PhysicsWorld {
@@ -175,11 +178,14 @@ export class PhysicsWorld {
     for (const body of bodies) {
       this._draggedBodies.push({
         body,
+        isRotationLocked: false,
         mode: body.isStatic || !isSimulationRunning ? "exact" : "soft",
         offset: new Vector2(
           body.position.x - position.x,
           body.position.y - position.y,
         ),
+        previousInertia: body.inertia,
+        rotationLockFramesRemaining: 0,
       });
     }
   }
@@ -190,19 +196,17 @@ export class PhysicsWorld {
 
   public rotateDragged(angle: number): void {
     for (const drag of this._draggedBodies) {
+      this._lockDragRotation(drag);
       Matter.Body.rotate(drag.body, angle);
-
-      if (drag.mode === "exact") {
-        Matter.Body.setVelocity(drag.body, {
-          x: 0,
-          y: 0,
-        });
-        Matter.Body.setAngularVelocity(drag.body, 0);
-      }
+      Matter.Body.setAngularVelocity(drag.body, 0);
     }
   }
 
   public endDrag(): void {
+    for (const drag of this._draggedBodies) {
+      this._unlockDragRotation(drag);
+    }
+
     this._draggedBodies.length = 0;
   }
 
@@ -244,6 +248,9 @@ export class PhysicsWorld {
       const strength = PhysicsConfig.dragging.dynamicFollowStrength;
 
       for (const drag of this._draggedBodies) {
+        drag.mode =
+          drag.body.isStatic || !isSimulationRunning ? "exact" : "soft";
+
         if (drag.mode === "exact") {
           Matter.Body.setPosition(drag.body, {
             x: this._moveToPosition.x + drag.offset.x,
@@ -253,7 +260,6 @@ export class PhysicsWorld {
             x: 0,
             y: 0,
           });
-          Matter.Body.setAngularVelocity(drag.body, 0);
           continue;
         }
 
@@ -274,6 +280,8 @@ export class PhysicsWorld {
         PhysicsConfig.simulation.fixedTimeStepMs,
       );
     }
+
+    this._updateDragRotationLocks();
 
     return this._getKilledObjectIds(objects);
   }
@@ -434,6 +442,43 @@ export class PhysicsWorld {
 
     if (angle !== 0) {
       Matter.Body.rotate(body, angle);
+    }
+  }
+
+  private _lockDragRotation(drag: IDraggedBody): void {
+    if (!drag.isRotationLocked) {
+      drag.previousInertia = drag.body.inertia;
+      Matter.Body.setInertia(drag.body, Infinity);
+      drag.isRotationLocked = true;
+    }
+
+    drag.rotationLockFramesRemaining =
+      PhysicsConfig.dragging.manualRotationLockFrames;
+  }
+
+  private _unlockDragRotation(drag: IDraggedBody): void {
+    if (!drag.isRotationLocked) {
+      return;
+    }
+
+    Matter.Body.setAngularVelocity(drag.body, 0);
+    Matter.Body.setInertia(drag.body, drag.previousInertia);
+    drag.isRotationLocked = false;
+    drag.rotationLockFramesRemaining = 0;
+  }
+
+  private _updateDragRotationLocks(): void {
+    for (const drag of this._draggedBodies) {
+      if (!drag.isRotationLocked) {
+        continue;
+      }
+
+      Matter.Body.setAngularVelocity(drag.body, 0);
+      drag.rotationLockFramesRemaining -= 1;
+
+      if (drag.rotationLockFramesRemaining <= 0) {
+        this._unlockDragRotation(drag);
+      }
     }
   }
 }
