@@ -1,5 +1,4 @@
-// CreatePanel.tsx
-
+import type { CSSProperties } from "react";
 import type { IApplication } from "../../application/IApplication";
 import { SandboxObjectConfig } from "../../config/SandboxObjectConfig";
 import { SandboxObjectType } from "../../sandbox/SandboxObjectType";
@@ -69,31 +68,38 @@ function CreatorGroup({
       <h3 className="create-group-title">{label}</h3>
 
       <div className="create-shape-grid">
-        {shapes.map((shape) => (
-          <AppButton
-            aria-pressed={activeType === shape.type}
-            className={
-              activeType === shape.type
-                ? "create-shape-button selected"
-                : "create-shape-button"
-            }
-            data-tooltip={
-              SandboxObjectConfig.defaults[shape.type].metadata.description
-            }
-            data-tooltip-position="right"
-            key={shape.type}
-            onClick={() => onCreate(shape.type)}
-            type="button"
-          >
-            <span className="create-shape-preview" aria-hidden="true">
-              <AppIcon
-                className={`shape-icon shape-icon-${shape.preview}`}
-                name={shape.preview}
-              />
-            </span>
-            <span className="create-shape-label">{shape.label}</span>
-          </AppButton>
-        ))}
+        {shapes.map((shape) => {
+          const metadata = SandboxObjectConfig.defaults[shape.type].metadata;
+          const shapeStyle = {
+            ["--create-shape-border-color"]: metadata.borderColor,
+            ["--create-shape-color"]: metadata.color,
+          } as CSSProperties;
+
+          return (
+            <AppButton
+              aria-pressed={activeType === shape.type}
+              className={
+                activeType === shape.type
+                  ? "create-shape-button selected"
+                  : "create-shape-button"
+              }
+              data-tooltip={metadata.description}
+              data-tooltip-position="right"
+              key={shape.type}
+              onClick={() => onCreate(shape.type)}
+              style={shapeStyle}
+              type="button"
+            >
+              <span className="create-shape-preview" aria-hidden="true">
+                <AppIcon
+                  className={`shape-icon shape-icon-${shape.preview}`}
+                  name={shape.preview}
+                />
+              </span>
+              <span className="create-shape-label">{shape.label}</span>
+            </AppButton>
+          );
+        })}
       </div>
     </section>
   );
