@@ -31,6 +31,7 @@ export class PasteObjectsCommand implements ICommand {
         ...this._options.snapshots.map((snapshot) =>
           buildSnapshot({
             ...snapshot,
+            id: undefined,
             position: snapshot.position.clone().add(this._options.offset),
             name: `${snapshot.name} Copy`,
           }),

@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, jest } from "@jest/globals";
 import type { Camera } from "../camera/Camera";
 import { Commands } from "./Commands";
+import { PasteObjectsCommand } from "./PasteObjectsCommand";
 import { Vector2 } from "../maths/Vector2";
 import {
   SandboxObjectFlags,
@@ -123,5 +124,30 @@ describe("Commands", () => {
         success: false,
       },
     ]);
+  });
+
+  it("pastes copied snapshots with fresh ids", () => {
+    const originalSnapshot = createTestSandboxObjectSnapshot("original", {
+      position: new Vector2(10, 20),
+    });
+    const engine = createMockSandboxEngine();
+    const command = new PasteObjectsCommand(engine, {
+      offset: new Vector2(5, 6),
+      snapshots: [originalSnapshot],
+    });
+
+    expect(command.execute()).toEqual({ success: true });
+
+    expect(engine.createObjectFromSnapshot).toHaveBeenCalledTimes(1);
+
+    const pastedSnapshot = (
+      engine.createObjectFromSnapshot as jest.MockedFunction<
+        typeof engine.createObjectFromSnapshot
+      >
+    ).mock.calls[0][0];
+
+    expect(pastedSnapshot.id).not.toBe(originalSnapshot.id);
+    expect(pastedSnapshot.name).toBe("Object ORIGINAL Copy");
+    expect(pastedSnapshot.position).toEqual(new Vector2(15, 26));
   });
 });
