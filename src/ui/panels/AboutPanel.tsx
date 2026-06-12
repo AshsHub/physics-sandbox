@@ -7,39 +7,41 @@ export interface AboutPanelProps {
   onClose?: () => void;
 }
 
+const demoSource = "/demos";
+
 const featureGroups = [
   {
-    gifPath: "/demos/canvas-physics.gif",
+    gifPath: `${demoSource}/canvas-physics.gif`,
     label: "Stack",
     title: "Canvas physics loop",
     text: "React owns the editor shell, while a custom canvas renderer draws Matter.js bodies every frame.",
   },
   {
-    gifPath: "/demos/commands-history.gif",
+    gifPath: `${demoSource}/commands-history.gif`,
     label: "Workflow",
     text: "Create, edit, delete, paste, and prefab actions run through commands with undo and redo support.",
     title: "Command-based editing",
   },
   {
-    gifPath: "/demos/prefab-scenes.gif",
+    gifPath: `${demoSource}/prefab-scenes.gif`,
     label: "Scenes",
     title: "Prefab scenes",
     text: "Reusable sandbox arrangements demonstrate collision chains, force fields, structures, and orbital layouts.",
   },
   {
-    gifPath: "/demos/simulation-modifiers.gif",
+    gifPath: `${demoSource}/simulation-modifiers.gif`,
     label: "World",
     title: "Simulation modifiers",
     text: "Gravity, wind, play state, and object forces can reshape how the world behaves.",
   },
   {
-    gifPath: "/demos/inspector-editing.gif",
+    gifPath: `${demoSource}/inspector-editing.gif`,
     label: "Data",
     title: "Inspector editing",
     text: "Objects expose visual, physics, and read-only metadata for direct editing.",
   },
   {
-    gifPath: "/demos/interaction-tools.gif",
+    gifPath: `${demoSource}/interaction-tools.gif`,
     label: "Tools",
     title: "Interaction tools",
     text: "Selection, context menus, clipboard actions, object stamping, camera controls, and fit view support fast scene work.",
