@@ -3,7 +3,6 @@ import { Vector2 } from "../maths/Vector2";
 import type { SandboxPrefab } from "../prefabs/SandboxPrefabs";
 import type { ISandboxObjectSnapshot } from "../sandbox/SandboxObject";
 import { buildSnapshot } from "../sandbox/SandboxObjectSnapshotUtils";
-import { useEditorStore } from "../store/editorStore";
 import type { ICommand, ICommandResult } from "./ICommands";
 
 export interface SpawnPrefabCommandOptions {
@@ -41,10 +40,6 @@ export class SpawnPrefabCommand implements ICommand {
     for (const snapshot of this._createdSnapshots) {
       this._engine.createObjectFromSnapshot(snapshot);
     }
-
-    useEditorStore
-      .getState()
-      .setSelection(this._createdSnapshots.map((snapshot) => snapshot.id));
 
     return {
       success: true,

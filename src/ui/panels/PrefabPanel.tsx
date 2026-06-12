@@ -21,10 +21,14 @@ export function PrefabPanel({ app, onClose }: PrefabPanelProps) {
   const canExport = selectedIds.size > 0;
 
   const spawnPrefab = (prefab: SandboxPrefab) => {
-    app.commands.execute("spawnPrefab", {
+    const result = app.commands.execute("spawnPrefab", {
       prefab,
       position: app.camera.getViewportCenterPosition(),
     });
+
+    if (result.success) {
+      app.fitView();
+    }
   };
 
   const exportSelectedPrefab = async () => {

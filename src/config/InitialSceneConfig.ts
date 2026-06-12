@@ -6,16 +6,10 @@ interface InitialSceneObjectDefinition {
   type: SandboxObjectType;
 }
 
-export const InitialSceneConfig = {
-  objects: [
-    {
-      position: {
-        x: 0,
-        y: 580,
-      },
-      type: SandboxObjectType.Platform,
-    },
-  ],
-} as const satisfies {
+interface InitialSceneConfiguration {
   objects: readonly InitialSceneObjectDefinition[];
+}
+
+export const InitialSceneConfig: InitialSceneConfiguration = {
+  objects: [],
 };

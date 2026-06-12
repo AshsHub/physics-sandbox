@@ -5,8 +5,8 @@ import { Maths } from "../maths/Maths";
 type TooltipPosition = "bottom" | "left" | "right" | "top";
 
 interface ActiveTooltip {
+  formatted: FormattedTooltipText;
   target: HTMLElement;
-  text: string;
   preferredPosition: TooltipPosition;
   targetRect: DOMRect;
 }
@@ -15,10 +15,19 @@ interface TooltipPlacement {
   left: number;
   top: number;
   position: TooltipPosition;
+  secondaryLeft?: number;
+  secondaryTop?: number;
+}
+
+interface FormattedTooltipText {
+  label: string;
+  secondary?: string;
+  shortcut?: string;
 }
 
 export function TooltipLayer() {
   const tooltipRef = useRef<HTMLDivElement>(null);
+  const tooltipSecondaryRef = useRef<HTMLDivElement>(null);
   const activeTargetRef = useRef<HTMLElement | undefined>(undefined);
   const [activeTooltip, setActiveTooltip] = useState<ActiveTooltip>();
   const [placement, setPlacement] = useState<TooltipPlacement>();
@@ -36,8 +45,8 @@ export function TooltipLayer() {
       activeTargetRef.current = target;
 
       setActiveTooltip({
+        formatted: formatTooltipText(text),
         target,
-        text,
         preferredPosition: getTooltipPosition(target),
         targetRect: target.getBoundingClientRect(),
       });
@@ -136,6 +145,7 @@ export function TooltipLayer() {
         activeTooltip.targetRect,
         tooltipRef.current.getBoundingClientRect(),
         activeTooltip.preferredPosition,
+        tooltipSecondaryRef.current?.getBoundingClientRect(),
       ),
     );
   }, [activeTooltip]);
@@ -156,26 +166,52 @@ export function TooltipLayer() {
         visibility: placement ? "visible" : "hidden",
       }}
     >
-      {formatTooltipText(activeTooltip.text)}
+      <span>{activeTooltip.formatted.label}</span>
+      {activeTooltip.formatted.shortcut && (
+        <kbd className="app-tooltip-key">
+          {activeTooltip.formatted.shortcut}
+        </kbd>
+      )}
+      {activeTooltip.formatted.secondary && (
+        <div
+          className="app-tooltip-secondary"
+          ref={tooltipSecondaryRef}
+          style={{
+            left: placement?.secondaryLeft ?? 0,
+            top: placement?.secondaryTop ?? 0,
+            visibility: placement ? "visible" : "hidden",
+          }}
+        >
+          {activeTooltip.formatted.secondary}
+        </div>
+      )}
     </div>
   );
 }
 
-function formatTooltipText(text: string) {
-  const shortcutMatch = text.match(/^(.*)\s+\(([^)]+)\)$/);
+function formatTooltipText(text: string): FormattedTooltipText {
+  const shortcutMatch = text.match(/\s+\(([^)]+)\)$/);
+  const shortcut = shortcutMatch?.[1];
+  const withoutShortcut = shortcutMatch
+    ? text.slice(0, shortcutMatch.index).trim()
+    : text;
+  const secondaryMatch = withoutShortcut.match(/\s+\[([^\]]+)\]$/);
+  const secondary = secondaryMatch?.[1];
+  const label = secondaryMatch
+    ? withoutShortcut.slice(0, secondaryMatch.index).trim()
+    : withoutShortcut;
 
-  if (!shortcutMatch) {
-    return text;
+  if (!shortcut && !secondary) {
+    return {
+      label: text,
+    };
   }
 
-  const [, label, shortcut] = shortcutMatch;
-
-  return (
-    <>
-      <span>{label}</span>
-      <kbd className="app-tooltip-key">{shortcut}</kbd>
-    </>
-  );
+  return {
+    label,
+    secondary,
+    shortcut,
+  };
 }
 
 function getTooltipTarget(target: EventTarget | null): HTMLElement | undefined {
@@ -207,22 +243,38 @@ function calculateTooltipPlacement(
   targetRect: DOMRect,
   tooltipRect: DOMRect,
   preferredPosition: TooltipPosition,
+  secondaryRect?: DOMRect,
 ): TooltipPlacement {
   const position = choosePosition(targetRect, tooltipRect, preferredPosition);
   const unclamped = getUnclampedPlacement(targetRect, tooltipRect, position);
+  const left = Maths.clamp(
+    unclamped.left,
+    TooltipConfig.viewportPadding,
+    window.innerWidth - tooltipRect.width - TooltipConfig.viewportPadding,
+  );
+  const top = Maths.clamp(
+    unclamped.top,
+    TooltipConfig.viewportPadding,
+    window.innerHeight - tooltipRect.height - TooltipConfig.viewportPadding,
+  );
+  const secondaryPlacement = secondaryRect
+    ? getTooltipSecondaryPlacement(
+        {
+          left,
+          top,
+        },
+        tooltipRect,
+        secondaryRect,
+        position,
+      )
+    : undefined;
 
   return {
-    left: Maths.clamp(
-      unclamped.left,
-      TooltipConfig.viewportPadding,
-      window.innerWidth - tooltipRect.width - TooltipConfig.viewportPadding,
-    ),
-    top: Maths.clamp(
-      unclamped.top,
-      TooltipConfig.viewportPadding,
-      window.innerHeight - tooltipRect.height - TooltipConfig.viewportPadding,
-    ),
+    left,
+    top,
     position,
+    secondaryLeft: secondaryPlacement?.left,
+    secondaryTop: secondaryPlacement?.top,
   };
 }
 
@@ -283,4 +335,51 @@ function getUnclampedPlacement(
         top: targetRect.bottom + TooltipConfig.gap,
       };
   }
+}
+
+function getTooltipSecondaryPlacement(
+  tooltipPosition: { left: number; top: number },
+  tooltipRect: DOMRect,
+  secondaryRect: DOMRect,
+  position: TooltipPosition,
+): { left: number; top: number } {
+  const gap = TooltipConfig.gap;
+  const unclamped = (() => {
+    switch (position) {
+      case "left":
+        return {
+          left: tooltipPosition.left - secondaryRect.width - gap,
+          top: tooltipPosition.top,
+        };
+      case "right":
+        return {
+          left: tooltipPosition.left + tooltipRect.width + gap,
+          top: tooltipPosition.top,
+        };
+      case "top":
+        return {
+          left: tooltipPosition.left,
+          top: tooltipPosition.top - secondaryRect.height - gap,
+        };
+      case "bottom":
+      default:
+        return {
+          left: tooltipPosition.left,
+          top: tooltipPosition.top + tooltipRect.height + gap,
+        };
+    }
+  })();
+
+  return {
+    left: Maths.clamp(
+      unclamped.left,
+      TooltipConfig.viewportPadding,
+      window.innerWidth - secondaryRect.width - TooltipConfig.viewportPadding,
+    ),
+    top: Maths.clamp(
+      unclamped.top,
+      TooltipConfig.viewportPadding,
+      window.innerHeight - secondaryRect.height - TooltipConfig.viewportPadding,
+    ),
+  };
 }

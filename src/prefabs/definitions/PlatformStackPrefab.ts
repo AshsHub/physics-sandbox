@@ -18,6 +18,8 @@ export const platformStackPrefab: SerializedSandboxPrefab = {
       flags: SandboxObjectFlags.Static,
       metadata: {
         ...SandboxObjectConfig.defaults.Platform.metadata,
+        borderStyle: "Solid",
+        radialForceMode: "None",
       },
     },
     {
@@ -31,6 +33,8 @@ export const platformStackPrefab: SerializedSandboxPrefab = {
       flags: SandboxObjectFlags.None,
       metadata: {
         ...SandboxObjectConfig.defaults.Box.metadata,
+        borderStyle: "Solid",
+        radialForceMode: "None",
       },
     },
     {
@@ -44,6 +48,8 @@ export const platformStackPrefab: SerializedSandboxPrefab = {
       flags: SandboxObjectFlags.None,
       metadata: {
         ...SandboxObjectConfig.defaults.Circle.metadata,
+        borderStyle: "Solid",
+        radialForceMode: "None",
       },
     },
     {
@@ -57,6 +63,8 @@ export const platformStackPrefab: SerializedSandboxPrefab = {
       flags: SandboxObjectFlags.None,
       metadata: {
         ...SandboxObjectConfig.defaults.Triangle.metadata,
+        borderStyle: "Solid",
+        radialForceMode: "None",
       },
     },
   ],

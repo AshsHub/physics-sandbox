@@ -5,6 +5,8 @@ import {
 } from "../sandbox/SandboxObject";
 import { SandboxObjectType } from "../sandbox/SandboxObjectType";
 import type { VectorLike } from "../maths/Vector2";
+import { boulderRunPrefab } from "./definitions/BoulderRunPrefab";
+import { milkyWayPrefab } from "./definitions/MilkyWayPrefab";
 import { platformStackPrefab } from "./definitions/PlatformStackPrefab";
 
 export type SandboxPrefabObject = Omit<
@@ -52,7 +54,11 @@ export function loadSandboxPrefab(
   };
 }
 
-export const sandboxPrefabs = [platformStackPrefab].map(loadSandboxPrefab);
+export const sandboxPrefabs = [
+  platformStackPrefab,
+  boulderRunPrefab,
+  milkyWayPrefab,
+].map(loadSandboxPrefab);
 
 function parseStringEnumValue<T extends Record<string, string>>(
   enumObject: T,

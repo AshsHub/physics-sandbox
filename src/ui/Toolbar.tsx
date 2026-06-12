@@ -61,7 +61,7 @@ export function Toolbar() {
         data-tooltip={
           showForceRadius
             ? "Hide force radius overlays (R)"
-            : "Show force radius overlays"
+            : "Show force radius overlays (R)"
         }
         data-tooltip-position="bottom"
         onClick={() => setShowForceRadius(!showForceRadius)}
