@@ -1,4 +1,5 @@
 import { Vector2, type VectorLike } from "../maths/Vector2";
+import { Rect } from "../maths/Rect";
 import type {
   ISandboxObjectMetadata,
   ISandboxObjectSnapshot,
@@ -28,25 +29,11 @@ export function getSnapshotCenter(
     };
   }
 
-  const bounds = snapshots.reduce(
-    (currentBounds, snapshot) => ({
-      minX: Math.min(currentBounds.minX, snapshot.position.x),
-      maxX: Math.max(currentBounds.maxX, snapshot.position.x),
-      minY: Math.min(currentBounds.minY, snapshot.position.y),
-      maxY: Math.max(currentBounds.maxY, snapshot.position.y),
-    }),
-    {
-      minX: Number.POSITIVE_INFINITY,
-      maxX: Number.NEGATIVE_INFINITY,
-      minY: Number.POSITIVE_INFINITY,
-      maxY: Number.NEGATIVE_INFINITY,
-    },
+  const bounds = Rect.fromPoints(
+    snapshots.map((snapshot) => snapshot.position),
   );
 
-  return {
-    x: (bounds.minX + bounds.maxX) / 2,
-    y: (bounds.minY + bounds.maxY) / 2,
-  };
+  return bounds?.center ?? Vector2.zero();
 }
 
 export function buildSnapshot({

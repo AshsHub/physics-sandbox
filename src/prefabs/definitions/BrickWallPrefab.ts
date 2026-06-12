@@ -1,1030 +1,1029 @@
 import type { SerializedSandboxPrefab } from "../SandboxPrefabs";
 
 export const brickWallPrefab: SerializedSandboxPrefab = {
-  id: "brick-wall",
-  name: "Brick Wall",
-  description:
-    "A stacked low-bounce brick wall for demolition, force, and collision testing.",
-  objects: [
+  "id": "brick-wall",
+  "name": "Brick Wall",
+  "description": "A stacked low-bounce brick wall for demolition, force, and collision testing.",
+  "objects": [
     {
-      name: "Brick Wall Base",
-      type: "Platform",
-      offset: {
-        x: -0.5723,
-        y: 247.7749,
+      "name": "Brick Wall Base",
+      "type": "Platform",
+      "offset": {
+        "x": -0.5723,
+        "y": 247.7749
       },
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-      },
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4
+      }
     },
     {
-      name: "Brick 01",
-      type: "Box",
-      offset: {
-        x: -74.4734,
-        y: 217.4302,
+      "name": "Brick 01",
+      "type": "Box",
+      "offset": {
+        "x": -74.4734,
+        "y": 217.4302
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 02",
-      type: "Box",
-      offset: {
-        x: -93.5845,
-        y: 186.3191,
+      "name": "Brick 02",
+      "type": "Box",
+      "offset": {
+        "x": -93.5845,
+        "y": 186.3191
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 35,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 35,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 03",
-      type: "Box",
-      offset: {
-        x: 74.8599,
-        y: 217.8746,
+      "name": "Brick 03",
+      "type": "Box",
+      "offset": {
+        "x": 74.8599,
+        "y": 217.8746
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 04",
-      type: "Box",
-      offset: {
-        x: -37.5844,
-        y: 187.2079,
+      "name": "Brick 04",
+      "type": "Box",
+      "offset": {
+        "x": -37.5844,
+        "y": 187.2079
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 05",
-      type: "Box",
-      offset: {
-        x: 38.4156,
-        y: 186.7635,
+      "name": "Brick 05",
+      "type": "Box",
+      "offset": {
+        "x": 38.4156,
+        "y": 186.7635
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 06",
-      type: "Box",
-      offset: {
-        x: 0.6378,
-        y: 217.4301,
+      "name": "Brick 06",
+      "type": "Box",
+      "offset": {
+        "x": 0.6378,
+        "y": 217.4301
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 07",
-      type: "Box",
-      offset: {
-        x: 94.4155,
-        y: 186.7635,
+      "name": "Brick 07",
+      "type": "Box",
+      "offset": {
+        "x": 94.4155,
+        "y": 186.7635
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 35,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 35,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 08",
-      type: "Box",
-      offset: {
-        x: -74.4734,
-        y: 155.6524,
+      "name": "Brick 08",
+      "type": "Box",
+      "offset": {
+        "x": -74.4734,
+        "y": 155.6524
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 09",
-      type: "Box",
-      offset: {
-        x: -93.5845,
-        y: 124.5413,
+      "name": "Brick 09",
+      "type": "Box",
+      "offset": {
+        "x": -93.5845,
+        "y": 124.5413
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 35,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 35,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 10",
-      type: "Box",
-      offset: {
-        x: 74.8599,
-        y: 156.0969,
+      "name": "Brick 10",
+      "type": "Box",
+      "offset": {
+        "x": 74.8599,
+        "y": 156.0969
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 11",
-      type: "Box",
-      offset: {
-        x: -37.5844,
-        y: 125.4302,
+      "name": "Brick 11",
+      "type": "Box",
+      "offset": {
+        "x": -37.5844,
+        "y": 125.4302
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 12",
-      type: "Box",
-      offset: {
-        x: 38.4156,
-        y: 124.9857,
+      "name": "Brick 12",
+      "type": "Box",
+      "offset": {
+        "x": 38.4156,
+        "y": 124.9857
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 13",
-      type: "Box",
-      offset: {
-        x: 0.6378,
-        y: 155.6524,
+      "name": "Brick 13",
+      "type": "Box",
+      "offset": {
+        "x": 0.6378,
+        "y": 155.6524
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 14",
-      type: "Box",
-      offset: {
-        x: 94.4155,
-        y: 124.9858,
+      "name": "Brick 14",
+      "type": "Box",
+      "offset": {
+        "x": 94.4155,
+        "y": 124.9858
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 35,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 35,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 15",
-      type: "Box",
-      offset: {
-        x: -74.9178,
-        y: 93.4302,
+      "name": "Brick 15",
+      "type": "Box",
+      "offset": {
+        "x": -74.9178,
+        "y": 93.4302
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 16",
-      type: "Box",
-      offset: {
-        x: -94.0289,
-        y: 62.319,
+      "name": "Brick 16",
+      "type": "Box",
+      "offset": {
+        "x": -94.0289,
+        "y": 62.319
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 35,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 35,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 17",
-      type: "Box",
-      offset: {
-        x: 74.4155,
-        y: 93.8746,
+      "name": "Brick 17",
+      "type": "Box",
+      "offset": {
+        "x": 74.4155,
+        "y": 93.8746
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 18",
-      type: "Box",
-      offset: {
-        x: -38.0289,
-        y: 63.2079,
+      "name": "Brick 18",
+      "type": "Box",
+      "offset": {
+        "x": -38.0289,
+        "y": 63.2079
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 19",
-      type: "Box",
-      offset: {
-        x: 37.9711,
-        y: 62.7635,
+      "name": "Brick 19",
+      "type": "Box",
+      "offset": {
+        "x": 37.9711,
+        "y": 62.7635
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 20",
-      type: "Box",
-      offset: {
-        x: 0.1934,
-        y: 93.4301,
+      "name": "Brick 20",
+      "type": "Box",
+      "offset": {
+        "x": 0.1934,
+        "y": 93.4301
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 21",
-      type: "Box",
-      offset: {
-        x: 93.9711,
-        y: 62.7635,
+      "name": "Brick 21",
+      "type": "Box",
+      "offset": {
+        "x": 93.9711,
+        "y": 62.7635
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 35,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 35,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 22",
-      type: "Box",
-      offset: {
-        x: -74.9178,
-        y: 31.6524,
+      "name": "Brick 22",
+      "type": "Box",
+      "offset": {
+        "x": -74.9178,
+        "y": 31.6524
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 23",
-      type: "Box",
-      offset: {
-        x: -94.0289,
-        y: 0.5413,
+      "name": "Brick 23",
+      "type": "Box",
+      "offset": {
+        "x": -94.0289,
+        "y": 0.5413
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 35,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 35,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 24",
-      type: "Box",
-      offset: {
-        x: 74.4155,
-        y: 32.0969,
+      "name": "Brick 24",
+      "type": "Box",
+      "offset": {
+        "x": 74.4155,
+        "y": 32.0969
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 25",
-      type: "Box",
-      offset: {
-        x: -38.0289,
-        y: 1.4302,
+      "name": "Brick 25",
+      "type": "Box",
+      "offset": {
+        "x": -38.0289,
+        "y": 1.4302
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 26",
-      type: "Box",
-      offset: {
-        x: 37.9711,
-        y: 0.9857,
+      "name": "Brick 26",
+      "type": "Box",
+      "offset": {
+        "x": 37.9711,
+        "y": 0.9857
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 27",
-      type: "Box",
-      offset: {
-        x: 0.1934,
-        y: 31.6524,
+      "name": "Brick 27",
+      "type": "Box",
+      "offset": {
+        "x": 0.1934,
+        "y": 31.6524
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 28",
-      type: "Box",
-      offset: {
-        x: 93.9711,
-        y: 0.9857,
+      "name": "Brick 28",
+      "type": "Box",
+      "offset": {
+        "x": 93.9711,
+        "y": 0.9857
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 35,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 35,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 29",
-      type: "Box",
-      offset: {
-        x: -74.8599,
-        y: -30.886,
+      "name": "Brick 29",
+      "type": "Box",
+      "offset": {
+        "x": -74.8599,
+        "y": -30.886
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 30",
-      type: "Box",
-      offset: {
-        x: -93.9711,
-        y: -61.9972,
+      "name": "Brick 30",
+      "type": "Box",
+      "offset": {
+        "x": -93.9711,
+        "y": -61.9972
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 35,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 35,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 31",
-      type: "Box",
-      offset: {
-        x: 74.4734,
-        y: -30.4416,
+      "name": "Brick 31",
+      "type": "Box",
+      "offset": {
+        "x": 74.4734,
+        "y": -30.4416
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 32",
-      type: "Box",
-      offset: {
-        x: -37.971,
-        y: -61.1083,
+      "name": "Brick 32",
+      "type": "Box",
+      "offset": {
+        "x": -37.971,
+        "y": -61.1083
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 33",
-      type: "Box",
-      offset: {
-        x: 38.029,
-        y: -61.5527,
+      "name": "Brick 33",
+      "type": "Box",
+      "offset": {
+        "x": 38.029,
+        "y": -61.5527
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 34",
-      type: "Box",
-      offset: {
-        x: 0.2513,
-        y: -30.8861,
+      "name": "Brick 34",
+      "type": "Box",
+      "offset": {
+        "x": 0.2513,
+        "y": -30.8861
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 35",
-      type: "Box",
-      offset: {
-        x: 94.0289,
-        y: -61.5527,
+      "name": "Brick 35",
+      "type": "Box",
+      "offset": {
+        "x": 94.0289,
+        "y": -61.5527
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 35,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 35,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 36",
-      type: "Box",
-      offset: {
-        x: -74.8599,
-        y: -92.6638,
+      "name": "Brick 36",
+      "type": "Box",
+      "offset": {
+        "x": -74.8599,
+        "y": -92.6638
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 37",
-      type: "Box",
-      offset: {
-        x: -93.9711,
-        y: -123.7749,
+      "name": "Brick 37",
+      "type": "Box",
+      "offset": {
+        "x": -93.9711,
+        "y": -123.7749
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 35,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 35,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 38",
-      type: "Box",
-      offset: {
-        x: 74.4734,
-        y: -92.2193,
+      "name": "Brick 38",
+      "type": "Box",
+      "offset": {
+        "x": 74.4734,
+        "y": -92.2193
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 39",
-      type: "Box",
-      offset: {
-        x: -37.971,
-        y: -122.886,
+      "name": "Brick 39",
+      "type": "Box",
+      "offset": {
+        "x": -37.971,
+        "y": -122.886
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 40",
-      type: "Box",
-      offset: {
-        x: 38.029,
-        y: -123.3305,
+      "name": "Brick 40",
+      "type": "Box",
+      "offset": {
+        "x": 38.029,
+        "y": -123.3305
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 41",
-      type: "Box",
-      offset: {
-        x: 0.2513,
-        y: -92.6638,
+      "name": "Brick 41",
+      "type": "Box",
+      "offset": {
+        "x": 0.2513,
+        "y": -92.6638
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 42",
-      type: "Box",
-      offset: {
-        x: 94.0289,
-        y: -123.3304,
+      "name": "Brick 42",
+      "type": "Box",
+      "offset": {
+        "x": 94.0289,
+        "y": -123.3304
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 35,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 35,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 43",
-      type: "Box",
-      offset: {
-        x: -75.3043,
-        y: -154.886,
+      "name": "Brick 43",
+      "type": "Box",
+      "offset": {
+        "x": -75.3043,
+        "y": -154.886
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 44",
-      type: "Box",
-      offset: {
-        x: -94.4155,
-        y: -185.9972,
+      "name": "Brick 44",
+      "type": "Box",
+      "offset": {
+        "x": -94.4155,
+        "y": -185.9972
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 35,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 35,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 45",
-      type: "Box",
-      offset: {
-        x: 74.0289,
-        y: -154.4416,
+      "name": "Brick 45",
+      "type": "Box",
+      "offset": {
+        "x": 74.0289,
+        "y": -154.4416
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 46",
-      type: "Box",
-      offset: {
-        x: -38.4154,
-        y: -185.1083,
+      "name": "Brick 46",
+      "type": "Box",
+      "offset": {
+        "x": -38.4154,
+        "y": -185.1083
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 47",
-      type: "Box",
-      offset: {
-        x: 37.5846,
-        y: -185.5528,
+      "name": "Brick 47",
+      "type": "Box",
+      "offset": {
+        "x": 37.5846,
+        "y": -185.5528
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 48",
-      type: "Box",
-      offset: {
-        x: -0.1931,
-        y: -154.8861,
+      "name": "Brick 48",
+      "type": "Box",
+      "offset": {
+        "x": -0.1931,
+        "y": -154.8861
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 49",
-      type: "Box",
-      offset: {
-        x: 93.5845,
-        y: -185.5527,
+      "name": "Brick 49",
+      "type": "Box",
+      "offset": {
+        "x": 93.5845,
+        "y": -185.5527
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 35,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 35,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 50",
-      type: "Box",
-      offset: {
-        x: -75.3043,
-        y: -216.6638,
+      "name": "Brick 50",
+      "type": "Box",
+      "offset": {
+        "x": -75.3043,
+        "y": -216.6638
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 51",
-      type: "Box",
-      offset: {
-        x: -94.4155,
-        y: -247.7749,
+      "name": "Brick 51",
+      "type": "Box",
+      "offset": {
+        "x": -94.4155,
+        "y": -247.7749
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 35,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 35,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 52",
-      type: "Box",
-      offset: {
-        x: 74.0289,
-        y: -216.2193,
+      "name": "Brick 52",
+      "type": "Box",
+      "offset": {
+        "x": 74.0289,
+        "y": -216.2193
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 53",
-      type: "Box",
-      offset: {
-        x: -38.4154,
-        y: -246.886,
+      "name": "Brick 53",
+      "type": "Box",
+      "offset": {
+        "x": -38.4154,
+        "y": -246.886
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 54",
-      type: "Box",
-      offset: {
-        x: 37.5846,
-        y: -247.3305,
+      "name": "Brick 54",
+      "type": "Box",
+      "offset": {
+        "x": 37.5846,
+        "y": -247.3305
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 55",
-      type: "Box",
-      offset: {
-        x: -0.1931,
-        y: -216.6638,
+      "name": "Brick 55",
+      "type": "Box",
+      "offset": {
+        "x": -0.1931,
+        "y": -216.6638
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 75,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 75,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
     },
     {
-      name: "Brick 56",
-      type: "Box",
-      offset: {
-        x: 93.5845,
-        y: -247.3305,
+      "name": "Brick 56",
+      "type": "Box",
+      "offset": {
+        "x": 93.5845,
+        "y": -247.3305
       },
-      angle: 0.0016,
-      metadata: {
-        bounce: 0.05,
-        friction: 0.4,
-        mass: 0.1,
-        width: 35,
-        height: 30,
-        color: "#8c4c4c",
-        borderColor: "#3f0000",
-      },
-    },
-  ],
+      "angle": 0.0016,
+      "metadata": {
+        "bounce": 0.05,
+        "friction": 0.4,
+        "mass": 0.1,
+        "width": 35,
+        "height": 30,
+        "color": "#8c4c4c",
+        "borderColor": "#3f0000"
+      }
+    }
+  ]
 };

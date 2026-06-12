@@ -7,6 +7,7 @@ import { useEditorStore } from "../store/editorStore";
 import { EventBus } from "../events/EventBus";
 import { SandboxEngine } from "../engine/SandboxEngine";
 import type { IApplication } from "./IApplication";
+import type { ApplicationFitViewOptions } from "./IApplication";
 import { SandboxObjectFlags } from "../sandbox/SandboxObjectType";
 import {
   ClipboardAction,
@@ -98,13 +99,19 @@ export class Application implements IApplication {
     );
   }
 
-  public fitView(): void {
-    const visibleBounds = this.engine
-      .getAllObjects()
-      .filter((object) => (object.flags & SandboxObjectFlags.Hidden) === 0)
-      .map((object) => object.body.bounds);
+  public fitView(options: ApplicationFitViewOptions = {}): void {
+    const visibleBounds =
+      options.bounds ??
+      this.engine
+        .getAllObjects()
+        .filter((object) => (object.flags & SandboxObjectFlags.Hidden) === 0)
+        .map((object) => object.body.bounds);
 
-    this.camera.fitBoundsFromCollection(visibleBounds);
+    this.camera.fitBounds(visibleBounds, {
+      maxZoom: options.maxZoom,
+      onlyIfLargerThanViewport: options.onlyIfLargerThanViewport,
+      padding: options.padding,
+    });
   }
 
   public update() {

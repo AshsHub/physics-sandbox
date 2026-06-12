@@ -1,6 +1,7 @@
 import type { IApplication } from "../application/IApplication";
 import type Matter from "matter-js";
 import { InputConfig, MouseButton } from "../config/InputConfig";
+import { Rect } from "../maths/Rect";
 import { Vector2 } from "../maths/Vector2";
 import {
   SandboxObjectFlags,
@@ -561,13 +562,13 @@ export class InputManager {
       return;
     }
 
-    const currentWorld = this._screenToWorld(gesture.currentScreen);
-    const bounds = {
-      minX: Math.min(gesture.startWorld.x, currentWorld.x),
-      maxX: Math.max(gesture.startWorld.x, currentWorld.x),
-      minY: Math.min(gesture.startWorld.y, currentWorld.y),
-      maxY: Math.max(gesture.startWorld.y, currentWorld.y),
-    };
+      const currentWorld = this._screenToWorld(gesture.currentScreen);
+      const bounds = new Rect(
+        Math.min(gesture.startWorld.x, currentWorld.x),
+        Math.max(gesture.startWorld.x, currentWorld.x),
+        Math.min(gesture.startWorld.y, currentWorld.y),
+        Math.max(gesture.startWorld.y, currentWorld.y),
+      );
     const selectedIds = new Set(
       gesture.isAdditive ? gesture.initialSelection : [],
     );
@@ -592,19 +593,9 @@ export class InputManager {
 
   private _doesBodyIntersectBounds(
     bodyBounds: Matter.Bounds,
-    selectionBounds: {
-      minX: number;
-      maxX: number;
-      minY: number;
-      maxY: number;
-    },
+    selectionBounds: Rect,
   ): boolean {
-    return (
-      bodyBounds.max.x >= selectionBounds.minX &&
-      bodyBounds.min.x <= selectionBounds.maxX &&
-      bodyBounds.max.y >= selectionBounds.minY &&
-      bodyBounds.min.y <= selectionBounds.maxY
-    );
+    return selectionBounds.intersects(bodyBounds);
   }
 
   private _hasPrimaryModifier(modifiers: KeyModifiers): boolean {

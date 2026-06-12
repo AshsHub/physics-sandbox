@@ -213,10 +213,10 @@ export class SandboxEngine implements ISandboxEngine {
         const bodyBounds = object.body.bounds;
 
         return (
-          bodyBounds.max.x < bounds.minX ||
-          bodyBounds.min.x > bounds.maxX ||
-          bodyBounds.max.y < bounds.minY ||
-          bodyBounds.min.y > bounds.maxY
+          bodyBounds.max.x < bounds.min.x ||
+          bodyBounds.min.x > bounds.max.x ||
+          bodyBounds.max.y < bounds.min.y ||
+          bodyBounds.min.y > bounds.max.y
         );
       })
       .map((object) => object.id);

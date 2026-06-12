@@ -1,6 +1,6 @@
 export const CameraConfig = {
   zoom: {
-    min: 0.2,
+    min: 0.05,
     max: 4,
     initial: 1.5,
     sliderStep: 0.01,

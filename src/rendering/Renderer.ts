@@ -1,5 +1,6 @@
 import type { ISandboxEngine } from "../engine/ISandboxEngine";
 import type Matter from "matter-js";
+import { Rect } from "../maths/Rect";
 import { PhysicsConfig } from "../config/PhysicsConfig";
 import { RendererConfig } from "../config/RendererConfig";
 import { SandboxObjectConfig } from "../config/SandboxObjectConfig";
@@ -66,10 +67,10 @@ export class Renderer {
       worldBounds.gap / cameraZoom,
     ]);
     ctx.strokeRect(
-      bounds.minX,
-      bounds.minY,
-      bounds.maxX - bounds.minX,
-      bounds.maxY - bounds.minY,
+      bounds.min.x,
+      bounds.min.y,
+      bounds.max.x - bounds.min.x,
+      bounds.max.y - bounds.min.y,
     );
     ctx.setLineDash([]);
     ctx.restore();
@@ -131,8 +132,7 @@ export class Renderer {
     const stripeGap = killerIndicator.stripeGap / cameraZoom;
     const stripePadding = killerIndicator.stripePadding / cameraZoom;
     const stripeExtent =
-      Math.hypot(bounds.maxX - bounds.minX, bounds.maxY - bounds.minY) +
-      stripePadding * 2;
+      Math.hypot(bounds.width, bounds.height) + stripePadding * 2;
 
     ctx.save();
     this._traceBodyPath(ctx, entity.body);
@@ -373,18 +373,13 @@ export class Renderer {
     ctx.closePath();
   }
 
-  private _getLocalBodyBounds(body: Matter.Body): {
-    maxX: number;
-    maxY: number;
-    minX: number;
-    minY: number;
-  } {
+  private _getLocalBodyBounds(body: Matter.Body): Rect {
     const cos = Math.cos(-body.angle);
     const sin = Math.sin(-body.angle);
-    let minX = Number.POSITIVE_INFINITY;
-    let maxX = Number.NEGATIVE_INFINITY;
-    let minY = Number.POSITIVE_INFINITY;
-    let maxY = Number.NEGATIVE_INFINITY;
+    let left = Number.POSITIVE_INFINITY;
+    let right = Number.NEGATIVE_INFINITY;
+    let top = Number.POSITIVE_INFINITY;
+    let bottom = Number.NEGATIVE_INFINITY;
 
     for (const vertex of body.vertices) {
       const dx = vertex.x - body.position.x;
@@ -392,13 +387,13 @@ export class Renderer {
       const localX = dx * cos - dy * sin;
       const localY = dx * sin + dy * cos;
 
-      minX = Math.min(minX, localX);
-      maxX = Math.max(maxX, localX);
-      minY = Math.min(minY, localY);
-      maxY = Math.max(maxY, localY);
+      left = Math.min(left, localX);
+      right = Math.max(right, localX);
+      top = Math.min(top, localY);
+      bottom = Math.max(bottom, localY);
     }
 
-    return { maxX, maxY, minX, minY };
+    return new Rect(left, right, top, bottom);
   }
 
   private _getLineDash(

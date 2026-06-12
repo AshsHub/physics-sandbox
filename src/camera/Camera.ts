@@ -2,6 +2,7 @@ import { Vector2, type VectorLike } from "../maths/Vector2";
 import { CameraConfig } from "../config/CameraConfig";
 import { Maths } from "../maths/Maths";
 import { SandboxWorldConfig } from "../config/SandboxWorldConfig";
+import { Rect, type RectLike } from "../maths/Rect";
 
 export interface ViewportSize {
   width: number;
@@ -14,16 +15,10 @@ export interface CameraView {
   viewportSize: ViewportSize;
 }
 
-export interface WorldBounds {
-  minX: number;
-  maxX: number;
-  minY: number;
-  maxY: number;
-}
-
-export interface CameraFitBounds {
-  min: VectorLike;
-  max: VectorLike;
+export interface CameraFitOptions {
+  padding?: number;
+  maxZoom?: number;
+  onlyIfLargerThanViewport?: boolean;
 }
 
 export interface ViewportWorldBounds {
@@ -110,7 +105,11 @@ export class Camera {
 
   public setView(offset: VectorLike, zoom: number): void {
     this._offset.set(offset);
-    this._zoom = Maths.clamp(zoom, CameraConfig.zoom.min, CameraConfig.zoom.max);
+    this._zoom = Maths.clamp(
+      zoom,
+      CameraConfig.zoom.min,
+      CameraConfig.zoom.max,
+    );
     this._constrainToWorldBounds();
     this._emitChange();
   }
@@ -190,30 +189,52 @@ export class Camera {
   }
 
   public fitBounds(
-    bounds: WorldBounds,
-    padding: number = CameraConfig.fitView.padding,
-    maxZoom: number = CameraConfig.fitView.maxZoom,
+    target: RectLike | RectLike[],
+    options: CameraFitOptions = {},
   ): void {
-    if (this._viewportSize.width <= 0 || this._viewportSize.height <= 0) {
+    const rect = Array.isArray(target)
+      ? Rect.fromCollection(target)
+      : new Rect(target);
+
+    if (
+      rect === undefined ||
+      this._viewportSize.width <= 0 ||
+      this._viewportSize.height <= 0
+    ) {
       this.setView(Vector2.zero(), CameraConfig.zoom.initial);
       return;
     }
 
-    const sceneWidth = Math.max(1, bounds.maxX - bounds.minX);
-    const sceneHeight = Math.max(1, bounds.maxY - bounds.minY);
+    const fitToViewOptions = {
+      maxZoom: options.maxZoom ?? CameraConfig.fitView.maxZoom,
+      padding: options.padding ?? CameraConfig.fitView.padding,
+    };
+
+    const sceneWidth = Math.max(1, rect.width);
+    const sceneHeight = Math.max(1, rect.height);
+    const availableWidth =
+      this._viewportSize.width - fitToViewOptions.padding * 2;
+    const availableHeight =
+      this._viewportSize.height - fitToViewOptions.padding * 2;
+
+    if (
+      options.onlyIfLargerThanViewport === true &&
+      sceneWidth * this._zoom <= availableWidth &&
+      sceneHeight * this._zoom <= availableHeight
+    ) {
+      return;
+    }
+
     const zoom = Math.min(
-      (this._viewportSize.width - padding * 2) / sceneWidth,
-      (this._viewportSize.height - padding * 2) / sceneHeight,
-      maxZoom,
+      availableWidth / sceneWidth,
+      availableHeight / sceneHeight,
+      fitToViewOptions.maxZoom,
     );
     const nextZoom =
       Number.isFinite(zoom) && zoom > 0
         ? Maths.clamp(zoom, CameraConfig.zoom.min, CameraConfig.zoom.max)
         : CameraConfig.zoom.initial;
-    const sceneCenter = {
-      x: bounds.minX + sceneWidth / 2,
-      y: bounds.minY + sceneHeight / 2,
-    };
+    const sceneCenter = rect.center;
 
     this.setView(
       new Vector2(
@@ -222,40 +243,6 @@ export class Camera {
       ),
       nextZoom,
     );
-  }
-
-  public fitBoundsFromCollection(
-    boundsCollection: Iterable<CameraFitBounds>,
-    padding: number = CameraConfig.fitView.padding,
-    maxZoom: number = CameraConfig.fitView.maxZoom,
-  ): void {
-    const bounds = [...boundsCollection];
-
-    if (
-      bounds.length === 0 ||
-      this._viewportSize.width <= 0 ||
-      this._viewportSize.height <= 0
-    ) {
-      this.setView(Vector2.zero(), CameraConfig.zoom.initial);
-      return;
-    }
-
-    const sceneBounds = bounds.reduce(
-      (currentBounds, objectBounds) => ({
-        minX: Math.min(currentBounds.minX, objectBounds.min.x),
-        maxX: Math.max(currentBounds.maxX, objectBounds.max.x),
-        minY: Math.min(currentBounds.minY, objectBounds.min.y),
-        maxY: Math.max(currentBounds.maxY, objectBounds.max.y),
-      }),
-      {
-        minX: Number.POSITIVE_INFINITY,
-        maxX: Number.NEGATIVE_INFINITY,
-        minY: Number.POSITIVE_INFINITY,
-        maxY: Number.NEGATIVE_INFINITY,
-      },
-    );
-
-    this.fitBounds(sceneBounds, padding, maxZoom);
   }
 
   private _emitChange(): void {
@@ -271,11 +258,11 @@ export class Camera {
       return;
     }
 
-    const { bounds } = SandboxWorldConfig;
+    const bounds = new Rect(SandboxWorldConfig.bounds);
     const viewportCenter = this.getViewportCenterPosition();
     const constrainedCenter = {
-      x: Maths.clamp(viewportCenter.x, bounds.minX, bounds.maxX),
-      y: Maths.clamp(viewportCenter.y, bounds.minY, bounds.maxY),
+      x: Maths.clamp(viewportCenter.x, bounds.left, bounds.right),
+      y: Maths.clamp(viewportCenter.y, bounds.top, bounds.bottom),
     };
 
     this._offset.set(

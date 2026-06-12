@@ -1,5 +1,7 @@
 import { useState } from "react";
 import type { IApplication } from "../../application/IApplication";
+import { Rect } from "../../maths/Rect";
+import type { Vector2 } from "../../maths/Vector2";
 import { createPrefabSource } from "../../prefabs/PrefabExporter";
 import {
   sandboxPrefabs,
@@ -32,17 +34,23 @@ export function PrefabPanel({ app, onClose }: PrefabPanelProps) {
   };
 
   const spawnPrefab = (prefab: SandboxPrefab) => {
+    const position = app.camera.getViewportCenterPosition();
+
     if (shouldClearSceneOnSpawn) {
       app.engine.destroyAllObjects();
     }
 
     const result = app.commands.execute("spawnPrefab", {
       prefab,
-      position: app.camera.getViewportCenterPosition(),
+      position,
     });
 
     if (result.success) {
-      app.fitView();
+      app.fitView({
+        bounds: getPrefabFitBounds(prefab, position),
+        maxZoom: app.camera.getZoom(),
+        onlyIfLargerThanViewport: true,
+      });
     }
   };
 
@@ -118,4 +126,22 @@ export function PrefabPanel({ app, onClose }: PrefabPanelProps) {
       )}
     </Panel>
   );
+}
+
+function getPrefabFitBounds(
+  prefab: SandboxPrefab,
+  position: Vector2,
+): Rect[] {
+  return prefab.objects.map((object) => {
+    const objectPosition = position.clone().add(object.offset);
+    const width = object.metadata.width;
+    const height = object.metadata.height;
+
+    return new Rect(
+      objectPosition.x - width / 2,
+      objectPosition.x + width / 2,
+      objectPosition.y - height / 2,
+      objectPosition.y + height / 2,
+    );
+  });
 }

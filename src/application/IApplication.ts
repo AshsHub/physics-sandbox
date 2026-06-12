@@ -3,11 +3,19 @@ import type { Camera } from "../camera/Camera";
 import type { IEventBus } from "../events/IEventBus";
 import type { ISandboxEngine } from "../engine/ISandboxEngine";
 import type { ICommandBus } from "../commands/ICommands";
+import type { RectLike } from "../maths/Rect";
 import type {
   ClipboardAction,
   ClipboardSelectionAction,
 } from "../input/ClipboardAction";
 import type { SandboxObjectType } from "../sandbox/SandboxObjectType";
+
+export interface ApplicationFitViewOptions {
+  bounds?: RectLike[];
+  maxZoom?: number;
+  onlyIfLargerThanViewport?: boolean;
+  padding?: number;
+}
 
 export interface IApplication {
   camera: Camera;
@@ -15,7 +23,7 @@ export interface IApplication {
   engine: ISandboxEngine;
   events: IEventBus;
 
-  fitView(): void;
+  fitView(options?: ApplicationFitViewOptions): void;
   update(): void;
   render(ctx: CanvasRenderingContext2D, width: number, height: number): void;
   pointerDown(pos: Vector2, button: number): void;
