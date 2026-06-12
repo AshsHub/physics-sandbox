@@ -49,6 +49,7 @@ export function InspectorPanel({
   const visibleObjects = objects.filter((object) =>
     shouldShowObject(object, filter, selectedIds),
   );
+  const filterCounts = getFilterCounts(objects, selectedIds);
 
   return (
     <Panel title="Inspector" onClose={onClose}>
@@ -65,7 +66,10 @@ export function InspectorPanel({
             onClick={() => setFilter(value)}
             type="button"
           >
-            {label}
+            <span>{label}</span>
+            <span className="inspector-filter-count">
+              {filterCounts[value]}
+            </span>
           </AppButton>
         ))}
       </div>
@@ -84,12 +88,28 @@ export function InspectorPanel({
   );
 }
 
+function getFilterCounts(
+  objects: ISandboxObject[],
+  selectedIds: Set<string>,
+): Record<InspectorFilter, number> {
+  return {
+    all: objects.length,
+    dynamic: objects.filter((object) => !isStaticObject(object)).length,
+    selected: objects.filter((object) => selectedIds.has(object.id)).length,
+    static: objects.filter(isStaticObject).length,
+  };
+}
+
+function isStaticObject(object: ISandboxObject): boolean {
+  return (object.flags & SandboxObjectFlags.Static) !== 0;
+}
+
 function shouldShowObject(
   object: ISandboxObject,
   filter: InspectorFilter,
   selectedIds: Set<string>,
 ): boolean {
-  const isStatic = (object.flags & SandboxObjectFlags.Static) !== 0;
+  const isStatic = isStaticObject(object);
 
   switch (filter) {
     case "dynamic":

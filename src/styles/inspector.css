@@ -3,7 +3,7 @@
   justify-content: space-between;
   align-items: center;
   gap: var(--space-md);
-  min-height: 30px;
+  min-height: 34px;
   cursor: pointer;
   user-select: none;
 }
@@ -12,19 +12,21 @@
   min-width: 0;
   flex: 0 1 auto;
   max-width: calc(100% - 40px);
-  padding: 2px 4px;
+  padding: 3px 5px;
   border: 0;
+  border-radius: 3px;
   background: transparent;
   color: var(--text-primary);
   font: inherit;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
   text-align: left;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .entity-name:hover {
-  background: transparent;
+  background: color-mix(in srgb, var(--text-primary) 6%, transparent);
   text-decoration: underline;
 }
 
@@ -75,42 +77,105 @@
 .inspector-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-sm);
 }
 
 .inspector-filters {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-sm);
+  gap: 3px;
+  overflow: hidden;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-input);
+  user-select: none;
 }
 
 .inspector-filter-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
   min-width: 0;
-  padding: 6px 8px;
+  padding: 7px 8px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.inspector-filter-button:not(:disabled):hover {
+  background: color-mix(in srgb, var(--text-primary) 7%, transparent);
+  color: var(--text-primary);
 }
 
 .inspector-filter-button.selected {
   background: var(--accent);
-  border-color: var(--accent-border);
   color: var(--text-on-accent);
 }
 
+.inspector-filter-button.selected:not(:disabled):hover {
+  background: var(--accent);
+  color: var(--text-on-accent);
+}
+
+.inspector-filter-count {
+  flex: 0 0 auto;
+  min-width: 20px;
+  padding: 2px 5px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--text-primary) 10%, transparent);
+  color: inherit;
+  font-size: 10px;
+  line-height: 1.25;
+  text-align: center;
+}
+
+.inspector-filter-button.selected .inspector-filter-count {
+  background: color-mix(in srgb, var(--text-on-accent) 24%, transparent);
+}
+
 .inspector-list-item {
-  padding: var(--space-sm);
-  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  padding: var(--space-sm) var(--space-sm) var(--space-sm) var(--space-md);
+  border-radius: 6px;
   background: var(--bg-card);
-  border: 1px solid transparent;
+  border: 1px solid var(--border);
   transition:
     background 0.15s ease,
-    border-color 0.15s ease;
+    border-color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.inspector-list-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 3px;
+  background: transparent;
+  transition: background 0.15s ease;
 }
 
 .inspector-list-item:hover {
   background: var(--bg-card-hover);
+  border-color: var(--border-strong);
 }
 
 .inspector-list-item.selected {
-  border-color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 65%, var(--border));
+  background: color-mix(in srgb, var(--accent) 10%, var(--bg-card));
+}
+
+.inspector-list-item.selected::before {
+  background: var(--accent);
 }
 
 .entity-inspector-info {
@@ -132,7 +197,9 @@
 .inspector-section {
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
+  gap: var(--space-xs);
+  padding: var(--space-xs) 0;
+  border-top: 1px solid var(--border);
 }
 
 .inspector-section-header {
@@ -141,13 +208,13 @@
   justify-content: space-between;
   width: 100%;
   min-width: 0;
-  padding: 4px 0;
+  padding: 5px 0;
   border: 0;
   background: transparent;
 }
 
-.inspector-section-header:hover {
-  background: transparent;
+.inspector-section-header:not(:disabled):hover {
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
 }
 
 .inspector-section-title {
@@ -163,6 +230,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
+  padding-bottom: var(--space-xs);
 }
 
 .inspector-field {
@@ -218,10 +286,16 @@
   padding: 0;
   border-color: var(--border);
   border-radius: 0;
-  background: var(--bg-control);
+  background: color-mix(in srgb, var(--accent) 12%, var(--bg-control));
   color: var(--text-primary);
   font-size: 14px;
   line-height: 1;
+}
+
+.inspector-stepper-button:not(:disabled):hover {
+  border-color: color-mix(in srgb, var(--accent) 72%, var(--border));
+  background: color-mix(in srgb, var(--accent) 24%, var(--bg-control-hover));
+  color: var(--text-primary);
 }
 
 .inspector-stepper-button:first-child {
