@@ -10,7 +10,7 @@ import {
 import { appStorage } from "../../storage/AppStorage";
 import { useEditorStore } from "../../store/editorStore";
 import { AppButton } from "../common/AppButton";
-import { PrefabCard } from "../common/PrefabCard";
+import { InfoStack } from "../common/InfoStack";
 import { Panel } from "./Panel";
 
 export interface PrefabPanelProps {
@@ -89,7 +89,7 @@ export function PrefabPanel({ app, onClose }: PrefabPanelProps) {
             onChange={(event) => updateClearSceneOnSpawn(event.target.checked)}
             type="checkbox"
           />
-          <PrefabCard
+          <InfoStack
             className="prefab-toggle-copy"
             description="Remove existing objects before spawning a prefab."
             title="Clear scene"
@@ -107,7 +107,7 @@ export function PrefabPanel({ app, onClose }: PrefabPanelProps) {
               type="button"
               variant="ghost"
             >
-              <PrefabCard
+              <InfoStack
                 className="prefab-button-copy"
                 description={prefab.description}
                 title={prefab.name}
@@ -124,7 +124,7 @@ export function PrefabPanel({ app, onClose }: PrefabPanelProps) {
         <section className="prefab-group">
           <h3 className="prefab-group-title">Developer</h3>
           <div className="prefab-export-card">
-            <PrefabCard
+            <InfoStack
               className="prefab-export-copy"
               description="Copy selected objects as serialized prefab data."
               title="Export selection"

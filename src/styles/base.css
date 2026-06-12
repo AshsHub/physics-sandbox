@@ -155,6 +155,28 @@ button:disabled {
   padding: 0;
 }
 
+.info-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.info-stack-title {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text-primary);
+  font-weight: 700;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+}
+
+.info-stack-description {
+  min-width: 0;
+  color: var(--text-secondary);
+  line-height: 1.3;
+}
+
 input[type="checkbox"] {
   accent-color: var(--accent);
 }

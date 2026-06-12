@@ -6,6 +6,7 @@ import {
 } from "../../physics/SandboxSimulation";
 import { useEditorStore } from "../../store/editorStore";
 import { AppButton } from "../common/AppButton";
+import { InfoStack } from "../common/InfoStack";
 import { Panel } from "./Panel";
 
 export interface SimulationPanelProps {
@@ -33,6 +34,15 @@ export function SimulationPanel({ onClose }: SimulationPanelProps) {
     activeGravitySimulation !== GravitySimulationType.Earth ||
     isGravityReversed;
   const canResetWind = windForce !== SimulationConfig.wind.defaultWindForce;
+  const gravityDirectionLabel = isGravityReversed
+    ? "Upward force"
+    : "Downward force";
+  const windLabel = windDescriptor.direction
+    ? `${windDescriptor.label} ${windDescriptor.direction}`
+    : windDescriptor.label;
+  const windDescription = windDescriptor.direction
+    ? `${windDescriptor.direction} facing force`
+    : "No horizontal force";
 
   return (
     <Panel title="Simulation" onClose={onClose}>
@@ -73,9 +83,11 @@ export function SimulationPanel({ onClose }: SimulationPanelProps) {
         </div>
 
         <div className="simulation-slider-value">
-          <span className="simulation-slider-name">
-            {activeGravityPreset.label}
-          </span>
+          <InfoStack
+            className="simulation-slider-copy"
+            description={gravityDirectionLabel}
+            title={activeGravityPreset.label}
+          />
           <span className="simulation-slider-meta">
             {activeGravityPreset.gravityMultiplier.toFixed(
               SimulationConfig.display.gravityDecimalPlaces,
@@ -123,11 +135,11 @@ export function SimulationPanel({ onClose }: SimulationPanelProps) {
         </div>
 
         <div className="simulation-slider-value">
-          <span className="simulation-slider-name">
-            {windDescriptor.direction
-              ? `${windDescriptor.label} ${windDescriptor.direction}`
-              : windDescriptor.label}
-          </span>
+          <InfoStack
+            className="simulation-slider-copy"
+            description={windDescription}
+            title={windLabel}
+          />
           <span className="simulation-slider-meta">
             {windDescriptor.strengthPercent.toFixed(
               SimulationConfig.display.windDecimalPlaces,

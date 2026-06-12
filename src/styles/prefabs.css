@@ -58,30 +58,8 @@
   font-size: 12px;
 }
 
-.prefab-toggle-copy .prefab-card-description {
+.prefab-toggle-copy .info-stack-description {
   font-size: 11px;
-}
-
-.prefab-card {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-}
-
-.prefab-card-title {
-  min-width: 0;
-  overflow: hidden;
-  color: var(--text-primary);
-  font-weight: 700;
-  line-height: 1.2;
-  text-overflow: ellipsis;
-}
-
-.prefab-card-description {
-  min-width: 0;
-  color: var(--text-secondary);
-  line-height: 1.3;
 }
 
 .prefab-button {
@@ -141,12 +119,12 @@
   gap: 3px;
 }
 
-.prefab-button-copy .prefab-card-title {
+.prefab-button-copy .info-stack-title {
   font-weight: 600;
   white-space: nowrap;
 }
 
-.prefab-button-copy .prefab-card-description {
+.prefab-button-copy .info-stack-description {
   display: -webkit-box;
   overflow: hidden;
   font-size: 11px;
@@ -188,7 +166,7 @@
   font-size: 12px;
 }
 
-.prefab-export-copy .prefab-card-description {
+.prefab-export-copy .info-stack-description {
   font-size: 11px;
 }
 

@@ -1,7 +1,30 @@
 .simulation-group {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--accent) 7%, transparent),
+      transparent 58%
+    ),
+    var(--bg-card);
+  overflow: hidden;
+}
+
+.simulation-group::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: color-mix(in srgb, var(--accent) 70%, transparent);
+  opacity: 0.72;
 }
 
 .simulation-group-title {
@@ -14,6 +37,8 @@
 }
 
 .simulation-control-header {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -28,45 +53,71 @@
 .simulation-reset-button {
   padding: 4px 8px;
   font-size: 12px;
-}
-
-.simulation-slider-value {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-md);
-  padding: 8px 10px;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  background: var(--bg-card);
-  user-select: none;
-}
-
-.simulation-slider-name {
-  min-width: 0;
-  color: var(--text-primary);
-  font-weight: 600;
-  overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.simulation-slider-meta {
-  color: var(--text-secondary);
+.simulation-slider-value {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  min-width: 0;
+  padding: 9px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--bg-input) 70%, transparent);
+  user-select: none;
+}
+
+.simulation-slider-copy {
   font-size: 12px;
+}
+
+.simulation-slider-copy .info-stack-title {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.simulation-slider-copy .info-stack-description {
+  font-size: 11px;
+}
+
+.simulation-slider-meta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  min-width: 48px;
+  min-height: 28px;
+  padding: 4px 8px;
+  border: 1px solid color-mix(in srgb, var(--accent) 42%, var(--border));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 12%, var(--bg-input));
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
 }
 
 .simulation-slider {
+  position: relative;
+  z-index: 1;
   width: 100%;
   accent-color: var(--accent);
+  cursor: pointer;
 }
 
 .simulation-slider-range-labels {
+  position: relative;
+  z-index: 1;
   display: flex;
   justify-content: space-between;
   gap: var(--space-sm);
+  padding: 0 2px;
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: 11px;
   user-select: none;
 }
 
