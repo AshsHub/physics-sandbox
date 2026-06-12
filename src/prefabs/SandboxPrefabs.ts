@@ -9,7 +9,7 @@ import { SandboxObjectConfig } from "../config/SandboxObjectConfig";
 import { boulderRunPrefab } from "./definitions/BoulderRunPrefab";
 import { dominoLinePrefab } from "./definitions/DominoLinePrefab";
 import { milkyWayPrefab } from "./definitions/MilkyWayPrefab";
-import { platformStackPrefab } from "./definitions/PlatformStackPrefab";
+import { basicPrefab } from "./definitions/PlatformStackPrefab";
 import { repulsionChamberPrefab } from "./definitions/RepulsionChamberPrefab";
 import { rubeGoldbergPrefab } from "./definitions/RubeGoldbergPrefab";
 import { solarSandboxPrefab } from "./definitions/SolarSandboxPrefab";
@@ -62,7 +62,7 @@ export function loadSandboxPrefab(
 }
 
 export const sandboxPrefabs = [
-  platformStackPrefab,
+  basicPrefab,
   brickWallPrefab,
   dominoLinePrefab,
   boulderRunPrefab,
