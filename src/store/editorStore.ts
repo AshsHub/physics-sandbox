@@ -29,6 +29,7 @@ export interface IEditorStore {
   dynamicObjectCount: number;
   objectRevision: number;
   isSimulationRunning: boolean;
+  isKeyboardInputSuspended: boolean;
   interactionMode: InteractionMode;
   activePointerMode?: InteractionMode;
   cameraOffset: CameraOffset;
@@ -58,6 +59,7 @@ export interface IEditorStore {
   setObjectCounts(staticCount: number, dynamicCount: number): void;
   bumpObjectRevision(): void;
   setSimulationRunning(isRunning: boolean): void;
+  setKeyboardInputSuspended(isSuspended: boolean): void;
   setGravitySimulation(sim?: GravitySimulationType): void;
   setGravityReversed(isReversed: boolean): void;
   setShowForceRadius(isVisible: boolean): void;
@@ -88,6 +90,7 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
   dynamicObjectCount: 0,
   objectRevision: 0,
   isSimulationRunning: true,
+  isKeyboardInputSuspended: false,
   interactionMode: InteractionMode.Play,
   activePointerMode: undefined,
   cameraOffset: {
@@ -169,6 +172,12 @@ export const useEditorStore = create<IEditorStore>((set, get) => ({
   setSimulationRunning(isRunning: boolean) {
     set({
       isSimulationRunning: isRunning,
+    });
+  },
+
+  setKeyboardInputSuspended(isSuspended: boolean) {
+    set({
+      isKeyboardInputSuspended: isSuspended,
     });
   },
 

@@ -2,6 +2,7 @@ import type { IApplication } from "../../application/IApplication";
 import type { VectorLike } from "../../maths/Vector2";
 import { useEditorStore } from "../../store/editorStore";
 import { AppButton } from "../common/AppButton";
+import { AboutPanel } from "../panels/AboutPanel";
 import { CreatorPanel } from "../panels/CreatorPanel";
 import { InspectorPanel } from "../panels/InspectorPanel";
 import { PrefabPanel } from "../panels/PrefabPanel";
@@ -29,6 +30,11 @@ const sidebarTabs = [
     label: "Simulation",
     panel: SidebarPanel.Simulation,
     tooltip: "Simulation",
+  },
+  {
+    label: "About",
+    panel: SidebarPanel.About,
+    tooltip: "About",
   },
 ] as const;
 
@@ -84,6 +90,9 @@ export function Sidebar({ app, onObjectContextMenu }: SidebarProps) {
 
       {hasActivePanel && (
         <div className="sidebar-content">
+          {activePanel === SidebarPanel.About && (
+            <AboutPanel onClose={closePanel} />
+          )}
           {activePanel === SidebarPanel.Creator && (
             <CreatorPanel app={app} onClose={closePanel} />
           )}

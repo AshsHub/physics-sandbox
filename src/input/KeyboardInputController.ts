@@ -1,3 +1,4 @@
+import { useEditorStore } from "../store/editorStore";
 import { isTypingTarget } from "./InputTarget";
 
 export type KeyboardAction = (
@@ -68,6 +69,10 @@ export class KeyboardInputController {
   }
 
   public keyDown(event: KeyboardEvent): void {
+    if (useEditorStore.getState().isKeyboardInputSuspended) {
+      return;
+    }
+
     if (isTypingTarget(event.target)) {
       return;
     }
