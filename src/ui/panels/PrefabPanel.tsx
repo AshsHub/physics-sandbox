@@ -10,6 +10,7 @@ import {
 import { appStorage } from "../../storage/AppStorage";
 import { useEditorStore } from "../../store/editorStore";
 import { AppButton } from "../common/AppButton";
+import { PrefabCard } from "../common/PrefabCard";
 import { Panel } from "./Panel";
 
 export interface PrefabPanelProps {
@@ -78,13 +79,21 @@ export function PrefabPanel({ app, onClose }: PrefabPanelProps) {
     <Panel title="Prefabs" onClose={onClose}>
       <section className="prefab-group">
         <h3 className="prefab-group-title">Built-in</h3>
-        <label className="prefab-toggle">
+        <label
+          className={
+            shouldClearSceneOnSpawn ? "prefab-toggle selected" : "prefab-toggle"
+          }
+        >
           <input
             checked={shouldClearSceneOnSpawn}
             onChange={(event) => updateClearSceneOnSpawn(event.target.checked)}
             type="checkbox"
           />
-          Clear scene before spawning
+          <PrefabCard
+            className="prefab-toggle-copy"
+            description="Remove existing objects before spawning a prefab."
+            title="Clear scene"
+          />
         </label>
 
         <div className="prefab-list">
@@ -96,10 +105,15 @@ export function PrefabPanel({ app, onClose }: PrefabPanelProps) {
               key={prefab.id}
               onClick={() => spawnPrefab(prefab)}
               type="button"
+              variant="ghost"
             >
-              <span className="prefab-button-name">{prefab.name}</span>
-              <span className="prefab-button-meta">
-                {prefab.objects.length} objects
+              <PrefabCard
+                className="prefab-button-copy"
+                description={prefab.description}
+                title={prefab.name}
+              />
+              <span className="prefab-button-count">
+                {prefab.objects.length}
               </span>
             </AppButton>
           ))}
@@ -109,16 +123,24 @@ export function PrefabPanel({ app, onClose }: PrefabPanelProps) {
       {import.meta.env.DEV && (
         <section className="prefab-group">
           <h3 className="prefab-group-title">Developer</h3>
-          <AppButton
-            className="prefab-export-button"
-            data-tooltip="Copy selected objects as serialized prefab data"
-            data-tooltip-position="right"
-            disabled={!canExport}
-            onClick={() => void exportSelectedPrefab()}
-            type="button"
-          >
-            Export Selected Prefab
-          </AppButton>
+          <div className="prefab-export-card">
+            <PrefabCard
+              className="prefab-export-copy"
+              description="Copy selected objects as serialized prefab data."
+              title="Export selection"
+            />
+            <AppButton
+              className="prefab-export-button"
+              data-tooltip="Copy selected objects as serialized prefab data"
+              data-tooltip-position="right"
+              disabled={!canExport}
+              onClick={() => void exportSelectedPrefab()}
+              type="button"
+              variant="subtle"
+            >
+              Export
+            </AppButton>
+          </div>
           {exportMessage && (
             <div className="prefab-export-message">{exportMessage}</div>
           )}
@@ -128,10 +150,7 @@ export function PrefabPanel({ app, onClose }: PrefabPanelProps) {
   );
 }
 
-function getPrefabFitBounds(
-  prefab: SandboxPrefab,
-  position: Vector2,
-): Rect[] {
+function getPrefabFitBounds(prefab: SandboxPrefab, position: Vector2): Rect[] {
   return prefab.objects.map((object) => {
     const objectPosition = position.clone().add(object.offset);
     const width = object.metadata.width;
