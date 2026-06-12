@@ -30,12 +30,6 @@
   font-size: 12px;
 }
 
-.simulation-reset-button.selected {
-  background: var(--accent);
-  border-color: var(--accent-border);
-  color: var(--text-on-accent);
-}
-
 .simulation-slider-value {
   display: flex;
   align-items: baseline;

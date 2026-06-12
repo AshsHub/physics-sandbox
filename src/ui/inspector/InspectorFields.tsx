@@ -109,6 +109,7 @@ export function EditableNumber({
             inputRef.current?.focus();
           }}
           type="button"
+          variant="subtle"
         >
           -
         </AppButton>
@@ -150,6 +151,7 @@ export function EditableNumber({
             inputRef.current?.focus();
           }}
           type="button"
+          variant="subtle"
         >
           +
         </AppButton>

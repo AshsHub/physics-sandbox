@@ -135,6 +135,7 @@ export function InspectorListItem({
           <AppButton
             className="entity-name"
             type="button"
+            variant="ghost"
             onClick={(event) => {
               event.stopPropagation();
               startEditingName();
@@ -150,6 +151,7 @@ export function InspectorListItem({
           }
           className="chevron"
           type="button"
+          variant="ghost"
         >
           <span
             className="chevron-icon"

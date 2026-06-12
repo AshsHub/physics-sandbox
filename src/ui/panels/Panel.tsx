@@ -24,6 +24,7 @@ export function Panel({ title, onClose, children }: PanelProps) {
             data-tooltip-position="left"
             onClick={onClose}
             type="button"
+            variant="icon"
           >
             <AppIcon name="close" />
           </AppButton>

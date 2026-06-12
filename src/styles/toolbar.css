@@ -27,30 +27,8 @@
   height: 24px;
 }
 
-.interaction-mode-button.selected {
-  background: var(--accent);
-  border-color: var(--accent-border);
-  color: var(--text-on-accent);
-}
-
-.interaction-mode-button.selected:not(:disabled):hover {
-  background: var(--accent);
-  border-color: var(--accent-border);
-}
-
 .toolbar-toggle-button {
   padding: 6px 10px;
-}
-
-.toolbar-toggle-button.selected {
-  background: var(--accent);
-  border-color: var(--accent-border);
-  color: var(--text-on-accent);
-}
-
-.toolbar-toggle-button.selected:not(:disabled):hover {
-  background: var(--accent);
-  border-color: var(--accent-border);
 }
 
 .zoom-control {

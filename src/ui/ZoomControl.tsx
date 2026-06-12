@@ -24,6 +24,7 @@ export function ZoomControl({ app }: ZoomControlProps) {
         data-tooltip-position="top"
         onClick={() => app.fitView()}
         type="button"
+        variant="subtle"
       >
         <AppIcon name="fit-view" />
         <span>Fit View</span>
@@ -39,6 +40,7 @@ export function ZoomControl({ app }: ZoomControlProps) {
         disabled={!canZoomOut}
         onClick={() => setZoom(cameraZoom - CameraConfig.zoom.buttonStep)}
         type="button"
+        variant="icon"
       >
         <AppIcon name="minus" />
       </AppButton>
@@ -60,6 +62,7 @@ export function ZoomControl({ app }: ZoomControlProps) {
         disabled={!canZoomIn}
         onClick={() => setZoom(cameraZoom + CameraConfig.zoom.buttonStep)}
         type="button"
+        variant="icon"
       >
         <AppIcon name="plus" />
       </AppButton>

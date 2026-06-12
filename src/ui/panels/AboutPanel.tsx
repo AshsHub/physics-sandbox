@@ -161,6 +161,7 @@ export function AboutPanel({ onClose }: AboutPanelProps) {
                 data-tooltip-position="left"
                 onClick={() => setSelectedFeature(undefined)}
                 type="button"
+                variant="icon"
               >
                 <AppIcon name="close" />
               </AppButton>

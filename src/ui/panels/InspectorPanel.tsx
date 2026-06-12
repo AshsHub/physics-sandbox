@@ -65,6 +65,7 @@ export function InspectorPanel({
             key={value}
             onClick={() => setFilter(value)}
             type="button"
+            variant={filter === value ? "accent" : "ghost"}
           >
             <span>{label}</span>
             <span className="inspector-filter-count">

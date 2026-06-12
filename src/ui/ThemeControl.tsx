@@ -33,6 +33,7 @@ export function ThemeControl() {
       data-tooltip-position="right"
       onClick={cycleThemeMode}
       type="button"
+      variant="icon"
     >
       <AppIcon name={themeIcons[themeMode]} />
     </AppButton>

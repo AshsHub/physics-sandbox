@@ -109,21 +109,6 @@
   white-space: nowrap;
 }
 
-.inspector-filter-button:not(:disabled):hover {
-  background: color-mix(in srgb, var(--text-primary) 7%, transparent);
-  color: var(--text-primary);
-}
-
-.inspector-filter-button.selected {
-  background: var(--accent);
-  color: var(--text-on-accent);
-}
-
-.inspector-filter-button.selected:not(:disabled):hover {
-  background: var(--accent);
-  color: var(--text-on-accent);
-}
-
 .inspector-filter-count {
   flex: 0 0 auto;
   min-width: 20px;
@@ -284,18 +269,10 @@
   min-width: 0;
   width: 26px;
   padding: 0;
-  border-color: var(--border);
   border-radius: 0;
-  background: color-mix(in srgb, var(--accent) 12%, var(--bg-control));
   color: var(--text-primary);
   font-size: 14px;
   line-height: 1;
-}
-
-.inspector-stepper-button:not(:disabled):hover {
-  border-color: color-mix(in srgb, var(--accent) 72%, var(--border));
-  background: color-mix(in srgb, var(--accent) 24%, var(--bg-control-hover));
-  color: var(--text-primary);
 }
 
 .inspector-stepper-button:first-child {

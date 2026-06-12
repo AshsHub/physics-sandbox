@@ -51,6 +51,7 @@ export function SimulationPanel({ onClose }: SimulationPanelProps) {
               data-tooltip-position="bottom"
               onClick={() => setGravityReversed(!isGravityReversed)}
               type="button"
+              variant={isGravityReversed ? "accent" : "default"}
             >
               Reverse
             </AppButton>
@@ -64,6 +65,7 @@ export function SimulationPanel({ onClose }: SimulationPanelProps) {
                 setGravityReversed(false);
               }}
               type="button"
+              variant="default"
             >
               Reset
             </AppButton>
@@ -114,6 +116,7 @@ export function SimulationPanel({ onClose }: SimulationPanelProps) {
             disabled={!canResetWind}
             onClick={() => setWindForce(SimulationConfig.wind.defaultWindForce)}
             type="button"
+            variant="default"
           >
             Reset
           </AppButton>

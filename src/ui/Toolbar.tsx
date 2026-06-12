@@ -53,6 +53,7 @@ export function Toolbar() {
             data-tooltip={`${label} mode (${shortcut})`}
             data-tooltip-position="bottom"
             type="button"
+            variant={interactionMode === mode ? "accent" : "default"}
           >
             <AppIcon className="interaction-mode-icon" name={icon} />
             {label}
@@ -75,6 +76,7 @@ export function Toolbar() {
         data-tooltip-position="bottom"
         onClick={() => setShowForceRadius(!showForceRadius)}
         type="button"
+        variant={showForceRadius ? "accent" : "default"}
       >
         Force Radius
       </AppButton>
@@ -103,6 +105,7 @@ export function Toolbar() {
           disabled={!isSimulationRunning}
           onClick={() => setSimulationRunning(false)}
           type="button"
+          variant="ghost"
         >
           <AppIcon name="pause" />
         </AppButton>
@@ -113,6 +116,7 @@ export function Toolbar() {
           disabled={isSimulationRunning}
           onClick={() => setSimulationRunning(true)}
           type="button"
+          variant="ghost"
         >
           <AppIcon name="play" />
         </AppButton>

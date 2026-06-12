@@ -20,6 +20,7 @@ export function InspectorSection({
           setIsOpen((current) => !current);
         }}
         type="button"
+        variant="ghost"
       >
         <span className="inspector-section-title">{title}</span>
         <span className="chevron">
