@@ -4,6 +4,7 @@ const APP_STORAGE_KEY = "physics-sandbox-settings";
 
 export interface AppSettings {
   [key: string]: unknown;
+  clearSceneBeforePrefabSpawn?: boolean;
   themeMode?: ThemeMode;
 }
 

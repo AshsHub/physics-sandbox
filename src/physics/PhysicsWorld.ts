@@ -64,6 +64,7 @@ export class PhysicsWorld {
     position: Vector2,
     type: SandboxObjectType = SandboxObjectType.Box,
     angle = 0,
+    angleMode: "absolute" | "relative" = "relative",
   ): Matter.Body {
     if (!this._world) {
       throw new Error("PhysicsWorld not initialized");
@@ -71,7 +72,9 @@ export class PhysicsWorld {
 
     const body = this._bodyFactory.create(position, type);
 
-    if (angle !== 0) {
+    if (angleMode === "absolute") {
+      Matter.Body.rotate(body, angle - body.angle);
+    } else if (angle !== 0) {
       Matter.Body.rotate(body, angle);
     }
 

@@ -6,8 +6,13 @@ import {
 import { SandboxObjectType } from "../sandbox/SandboxObjectType";
 import type { VectorLike } from "../maths/Vector2";
 import { boulderRunPrefab } from "./definitions/BoulderRunPrefab";
+import { dominoLinePrefab } from "./definitions/DominoLinePrefab";
 import { milkyWayPrefab } from "./definitions/MilkyWayPrefab";
 import { platformStackPrefab } from "./definitions/PlatformStackPrefab";
+import { repulsionChamberPrefab } from "./definitions/RepulsionChamberPrefab";
+import { rubeGoldbergPrefab } from "./definitions/RubeGoldbergPrefab";
+import { solarSandboxPrefab } from "./definitions/SolarSandboxPrefab";
+import { brickWallPrefab } from "./definitions/BrickWallPrefab";
 
 export type SandboxPrefabObject = Omit<
   ISandboxObjectSnapshot,
@@ -56,7 +61,12 @@ export function loadSandboxPrefab(
 
 export const sandboxPrefabs = [
   platformStackPrefab,
+  brickWallPrefab,
+  dominoLinePrefab,
   boulderRunPrefab,
+  rubeGoldbergPrefab,
+  repulsionChamberPrefab,
+  solarSandboxPrefab,
   milkyWayPrefab,
 ].map(loadSandboxPrefab);
 

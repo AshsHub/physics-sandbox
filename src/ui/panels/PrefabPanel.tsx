@@ -5,6 +5,7 @@ import {
   sandboxPrefabs,
   type SandboxPrefab,
 } from "../../prefabs/SandboxPrefabs";
+import { appStorage } from "../../storage/AppStorage";
 import { useEditorStore } from "../../store/editorStore";
 import { AppButton } from "../common/AppButton";
 import { Panel } from "./Panel";
@@ -16,11 +17,25 @@ export interface PrefabPanelProps {
 
 export function PrefabPanel({ app, onClose }: PrefabPanelProps) {
   const [exportMessage, setExportMessage] = useState("");
+  const [shouldClearSceneOnSpawn, setShouldClearSceneOnSpawn] = useState(
+    () => appStorage.readSettings().clearSceneBeforePrefabSpawn === true,
+  );
   const selectedIds = useEditorStore((s) => s.selectedIds);
   useEditorStore((s) => s.objectRevision);
   const canExport = selectedIds.size > 0;
 
+  const updateClearSceneOnSpawn = (isEnabled: boolean) => {
+    setShouldClearSceneOnSpawn(isEnabled);
+    appStorage.updateSettings({
+      clearSceneBeforePrefabSpawn: isEnabled,
+    });
+  };
+
   const spawnPrefab = (prefab: SandboxPrefab) => {
+    if (shouldClearSceneOnSpawn) {
+      app.engine.destroyAllObjects();
+    }
+
     const result = app.commands.execute("spawnPrefab", {
       prefab,
       position: app.camera.getViewportCenterPosition(),
@@ -55,6 +70,14 @@ export function PrefabPanel({ app, onClose }: PrefabPanelProps) {
     <Panel title="Prefabs" onClose={onClose}>
       <section className="prefab-group">
         <h3 className="prefab-group-title">Built-in</h3>
+        <label className="prefab-toggle">
+          <input
+            checked={shouldClearSceneOnSpawn}
+            onChange={(event) => updateClearSceneOnSpawn(event.target.checked)}
+            type="checkbox"
+          />
+          Clear scene before spawning
+        </label>
 
         <div className="prefab-list">
           {sandboxPrefabs.map((prefab) => (

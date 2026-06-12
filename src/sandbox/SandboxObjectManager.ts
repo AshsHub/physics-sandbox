@@ -14,6 +14,7 @@ export interface CreateSandboxObjectOptions {
   position: Vector2;
   type: SandboxObjectType;
   angle?: number;
+  angleMode?: "absolute" | "relative";
   flags?: SandboxObjectFlags;
   id?: string;
   name?: string;
@@ -27,10 +28,10 @@ export class SandboxObjectManager {
   public constructor(private readonly _physics: PhysicsWorld) {}
 
   public create(options: CreateSandboxObjectOptions): ISandboxObject {
-    const { angle = 0, position, type, id, name } = options;
+    const { angle = 0, angleMode, position, type, id, name } = options;
     const objectId = id ?? crypto.randomUUID();
 
-    const body = this._physics.createBody(position, type, angle);
+    const body = this._physics.createBody(position, type, angle, angleMode);
     const defaultMetadata = SandboxObjectConfig.defaults[type].metadata;
     const flags = options.flags ?? SandboxObjectConfig.defaults[type].flags;
     const metadata = {
@@ -78,7 +79,10 @@ export class SandboxObjectManager {
   public createObjectFromSnapshot(
     snapshot: ISandboxObjectSnapshot,
   ): ISandboxObject {
-    return this.create(snapshot);
+    return this.create({
+      ...snapshot,
+      angleMode: "absolute",
+    });
   }
 
   public get(id: string): ISandboxObject | undefined {

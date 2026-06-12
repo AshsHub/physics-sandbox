@@ -98,7 +98,7 @@ export const boulderRunPrefab: SerializedSandboxPrefab = {
         borderColor: "#000000",
         label: "Circle",
         description: "Dynamic circular body",
-        collisionRole: 1,
+        collisionRole: 2,
       },
       offset: {
         x: -529.4301,
@@ -230,7 +230,7 @@ export const boulderRunPrefab: SerializedSandboxPrefab = {
         borderColor: "#d6ffd9",
         label: "Box",
         description: "Dynamic rectangular body",
-        collisionRole: 1,
+        collisionRole: 0,
       },
       offset: {
         x: 386.79,
@@ -329,7 +329,7 @@ export const boulderRunPrefab: SerializedSandboxPrefab = {
         borderColor: "#d6ffd9",
         label: "Box",
         description: "Dynamic rectangular body",
-        collisionRole: 1,
+        collisionRole: 0,
       },
       offset: {
         x: 457.1727,
@@ -395,7 +395,7 @@ export const boulderRunPrefab: SerializedSandboxPrefab = {
         borderColor: "#d6ffd9",
         label: "Box",
         description: "Dynamic rectangular body",
-        collisionRole: 1,
+        collisionRole: 0,
       },
       offset: {
         x: 520.8666,

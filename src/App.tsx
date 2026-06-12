@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "./App.css";
 import { Application } from "./application/Application";
 import { CanvasView } from "./canvas/CanvasView";
@@ -33,8 +33,6 @@ export default function App() {
         worldPosition: Vector2;
       }
   >();
-  const hasCenteredInitialScene = useRef(false);
-
   useEffect(() => {
     app.init();
 
@@ -73,8 +71,6 @@ export default function App() {
 
   const selectedCount = useEditorStore((s) => s.selectedIds.size);
   const selectedIds = useEditorStore((s) => s.selectedIds);
-  const objectRevision = useEditorStore((s) => s.objectRevision);
-  const viewportSize = useEditorStore((s) => s.viewportSize);
   const staticObjectCount = useEditorStore((s) => s.staticObjectCount);
   const dynamicObjectCount = useEditorStore((s) => s.dynamicObjectCount);
   const themeMode = useEditorStore((s) => s.themeMode);
@@ -124,24 +120,6 @@ export default function App() {
     },
     [],
   );
-
-  const fitView = useCallback(() => {
-    app.fitView();
-  }, [app]);
-
-  useEffect(() => {
-    if (
-      hasCenteredInitialScene.current ||
-      viewportSize.width <= 0 ||
-      viewportSize.height <= 0 ||
-      app.engine.getAllObjects().length === 0
-    ) {
-      return;
-    }
-
-    fitView();
-    hasCenteredInitialScene.current = true;
-  }, [app, fitView, objectRevision, viewportSize.height, viewportSize.width]);
 
   return (
     <div className="app">

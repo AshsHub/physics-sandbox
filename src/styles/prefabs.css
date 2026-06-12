@@ -19,6 +19,19 @@
   gap: var(--space-sm);
 }
 
+.prefab-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  color: var(--text-secondary);
+  font-size: 12px;
+  user-select: none;
+}
+
+.prefab-toggle input {
+  margin: 0;
+}
+
 .prefab-button {
   display: flex;
   align-items: center;
