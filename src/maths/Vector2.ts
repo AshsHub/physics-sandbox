@@ -216,6 +216,20 @@ export class Vector2 {
     return this;
   }
 
+  public clampLength(maxLength: number): this {
+    if (maxLength <= 0) {
+      return this.clear();
+    }
+
+    const len = this.length();
+
+    if (len > maxLength && len !== 0) {
+      this.multiply(maxLength / len);
+    }
+
+    return this;
+  }
+
   // -------------------------------------------------------------------------
   // Products
   // -------------------------------------------------------------------------

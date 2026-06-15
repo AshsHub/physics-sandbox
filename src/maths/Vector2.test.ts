@@ -38,6 +38,21 @@ describe("Vector2", () => {
     expect(Vector2.zero().normalize().toObject()).toEqual({ x: 0, y: 0 });
   });
 
+  it("clamps vector length without changing shorter vectors", () => {
+    expect(new Vector2(6, 8).clampLength(5).toObject()).toEqual({
+      x: 3,
+      y: 4,
+    });
+    expect(new Vector2(3, 4).clampLength(10).toObject()).toEqual({
+      x: 3,
+      y: 4,
+    });
+    expect(new Vector2(3, 4).clampLength(0).toObject()).toEqual({
+      x: 0,
+      y: 0,
+    });
+  });
+
   it("clones without sharing references", () => {
     const original = new Vector2(1, 2);
     const clone = original.clone().add(3, 4);

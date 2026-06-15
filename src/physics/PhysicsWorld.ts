@@ -42,6 +42,10 @@ export class PhysicsWorld {
 
   public init(): void {
     this._engine = Matter.Engine.create();
+    this._engine.positionIterations =
+      PhysicsConfig.simulation.positionIterations;
+    this._engine.velocityIterations =
+      PhysicsConfig.simulation.velocityIterations;
     this._world = this._engine.world;
   }
 
@@ -216,6 +220,10 @@ export class PhysicsWorld {
   public endDrag(): void {
     for (const drag of this._draggedBodies) {
       this._unlockDragRotation(drag);
+
+      if (drag.mode === "exact") {
+        Matter.Body.setVelocity(drag.body, Vector2.zero().toObject());
+      }
     }
 
     this._draggedBodies.length = 0;
@@ -247,14 +255,6 @@ export class PhysicsWorld {
     this._engine.gravity.y = gravity;
     this._engine.gravity.x = 0;
 
-    if (isSimulationRunning && windForce !== 0) {
-      this._applyWind(windForce);
-    }
-
-    if (isSimulationRunning) {
-      this._applyRadialForces(objects);
-    }
-
     if (this._draggedBodies.length > 0) {
       const strength = PhysicsConfig.dragging.dynamicFollowStrength;
 
@@ -263,14 +263,25 @@ export class PhysicsWorld {
           drag.body.isStatic || !isSimulationRunning ? "exact" : "soft";
 
         if (drag.mode === "exact") {
-          Matter.Body.setPosition(drag.body, {
+          const nextPosition = {
             x: this._moveToPosition.x + drag.offset.x,
             y: this._moveToPosition.y + drag.offset.y,
-          });
-          Matter.Body.setVelocity(drag.body, {
-            x: 0,
-            y: 0,
-          });
+          };
+          const velocity = new Vector2(
+            (nextPosition.x - drag.body.position.x) *
+              PhysicsConfig.dragging.exactVelocityScale,
+            (nextPosition.y - drag.body.position.y) *
+              PhysicsConfig.dragging.exactVelocityScale,
+          ).clampLength(PhysicsConfig.dragging.maxExactVelocity);
+
+          Matter.Body.setPosition(drag.body, nextPosition);
+
+          Matter.Body.setVelocity(
+            drag.body,
+            isSimulationRunning
+              ? velocity.toObject()
+              : Vector2.zero().toObject(),
+          );
           continue;
         }
 
@@ -286,10 +297,7 @@ export class PhysicsWorld {
     }
 
     if (isSimulationRunning) {
-      Matter.Engine.update(
-        this._engine,
-        PhysicsConfig.simulation.fixedTimeStepMs,
-      );
+      this._stepSimulation(objects, windForce);
     }
 
     this._updateDragRotationLocks();
@@ -367,7 +375,10 @@ export class PhysicsWorld {
     }
   }
 
-  private _applyRadialForces(objects: ISandboxObject[]): void {
+  private _applyRadialForces(
+    objects: ISandboxObject[],
+    forceScale: number = 1,
+  ): void {
     const forceSources = objects.filter(
       (object) =>
         (object.flags & SandboxObjectFlags.Hidden) === 0 &&
@@ -410,13 +421,31 @@ export class PhysicsWorld {
         const distance = Math.sqrt(distanceSquared);
         const falloff = 1 - distance / radius;
         const forceMagnitude =
-          strength * target.body.mass * falloff * direction;
+          strength * target.body.mass * falloff * direction * forceScale;
 
         Matter.Body.applyForce(target.body, target.body.position, {
           x: (dx / distance) * forceMagnitude,
           y: (dy / distance) * forceMagnitude,
         });
       }
+    }
+  }
+
+  private _stepSimulation(objects: ISandboxObject[], windForce: number): void {
+    if (!this._engine) {
+      return;
+    }
+
+    const substeps = Math.max(1, PhysicsConfig.simulation.substeps);
+    const delta = PhysicsConfig.simulation.fixedTimeStepMs / substeps;
+
+    for (let step = 0; step < substeps; step++) {
+      if (windForce !== 0) {
+        this._applyWind(windForce * substeps);
+      }
+
+      this._applyRadialForces(objects, substeps);
+      Matter.Engine.update(this._engine, delta);
     }
   }
 
