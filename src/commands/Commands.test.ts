@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { describe, expect, it, jest } from "@jest/globals";
 import type { Camera } from "../camera/Camera";
 import { Commands } from "./Commands";
 import { PasteObjectsCommand } from "./PasteObjectsCommand";
@@ -15,16 +15,6 @@ import {
 } from "../testing/TestDoubles.test-support";
 
 describe("Commands", () => {
-  let consoleInfo: jest.SpiedFunction<typeof console.info>;
-
-  beforeEach(() => {
-    consoleInfo = jest.spyOn(console, "info").mockImplementation(() => {});
-  });
-
-  afterEach(() => {
-    consoleInfo.mockRestore();
-  });
-
   it("executes, undoes, redoes, and logs a successful create command", () => {
     const position = new Vector2(10, 20);
     const object = {

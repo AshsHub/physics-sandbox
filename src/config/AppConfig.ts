@@ -1,4 +1,7 @@
 export const AppConfig = {
+  logging: {
+    enabled: false,
+  },
   objects: {
     maxCount: 500,
   },

@@ -1,5 +1,6 @@
 import { SandboxEngine } from "../engine/SandboxEngine";
 import type { Camera } from "../camera/Camera";
+import { AppLogger } from "../logging/AppLogger";
 import { CreateObjectCommand } from "./CreateObjectCommand";
 import { DeleteObjectCommand } from "./DeleteObjectCommand";
 import { PasteObjectsCommand } from "./PasteObjectsCommand";
@@ -167,7 +168,7 @@ export class Commands implements ICommandBus {
 
     this._log.push(entry);
 
-    console.info(
+    AppLogger.info(
       `[command:${entry.commandId}] ${entry.action} ${entry.command} ${entry.success ? "succeeded" : "failed"}`,
       entry,
     );
