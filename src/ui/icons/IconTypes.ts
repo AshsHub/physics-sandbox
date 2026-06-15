@@ -7,6 +7,7 @@ export type AppIconName =
   | "chevron"
   | "circle"
   | "close"
+  | "ellipsis"
   | "fit-view"
   | "inspector"
   | "lock"

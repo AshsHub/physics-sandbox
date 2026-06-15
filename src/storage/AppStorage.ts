@@ -1,3 +1,4 @@
+import type { SerializedSandboxPrefab } from "../prefabs/SandboxPrefabs";
 import type { ThemeMode } from "../theme/Theme";
 
 const APP_STORAGE_KEY = "physics-sandbox-settings";
@@ -5,6 +6,7 @@ const APP_STORAGE_KEY = "physics-sandbox-settings";
 export interface AppSettings {
   [key: string]: unknown;
   clearSceneBeforePrefabSpawn?: boolean;
+  savedScenes?: SerializedSandboxPrefab[];
   themeMode?: ThemeMode;
 }
 
