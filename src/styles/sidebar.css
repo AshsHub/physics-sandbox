@@ -117,6 +117,7 @@
   border-top: 1px solid var(--border);
 }
 
+.sidebar-footer-button,
 .theme-control {
   display: inline-flex;
   align-items: center;
@@ -133,11 +134,13 @@
   line-height: 1;
 }
 
+.sidebar-footer-button:not(:disabled):hover,
 .theme-control:not(:disabled):hover {
   border-color: color-mix(in srgb, var(--accent) 58%, var(--border));
   background: color-mix(in srgb, var(--accent) 14%, var(--bg-control-hover));
 }
 
+.sidebar-footer-button .app-icon,
 .theme-control .app-icon {
   width: 22px;
   height: 22px;

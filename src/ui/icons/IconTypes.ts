@@ -21,6 +21,7 @@ export type AppIconName =
   | "ramp-left"
   | "ramp-right"
   | "selection"
+  | "shortcuts"
   | "sun"
   | "triangle"
   | "trash"

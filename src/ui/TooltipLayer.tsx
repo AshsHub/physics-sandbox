@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { TooltipConfig } from "../config/TooltipConfig";
 import { Maths } from "../maths/Maths";
+import { ShortcutKey } from "./common/ShortcutKey";
 
 type TooltipPosition = "bottom" | "left" | "right" | "top";
 
@@ -168,9 +169,10 @@ export function TooltipLayer() {
     >
       <span>{activeTooltip.formatted.label}</span>
       {activeTooltip.formatted.shortcut && (
-        <kbd className="app-tooltip-key">
-          {activeTooltip.formatted.shortcut}
-        </kbd>
+        <ShortcutKey
+          className="app-tooltip-key"
+          value={activeTooltip.formatted.shortcut}
+        />
       )}
       {activeTooltip.formatted.secondary && (
         <div

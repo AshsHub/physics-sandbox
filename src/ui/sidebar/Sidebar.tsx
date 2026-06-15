@@ -1,12 +1,15 @@
+import { useState } from "react";
 import type { IApplication } from "../../application/IApplication";
 import type { VectorLike } from "../../maths/Vector2";
 import { useEditorStore } from "../../store/editorStore";
 import { AppButton } from "../common/AppButton";
+import { AppIcon } from "../icons/AppIcon";
 import { AboutPanel } from "../panels/AboutPanel";
 import { CreatorPanel } from "../panels/CreatorPanel";
 import { InspectorPanel } from "../panels/InspectorPanel";
 import { PrefabPanel } from "../panels/PrefabPanel";
 import { SimulationPanel } from "../panels/SimulationPanel";
+import { ShortcutsDialog } from "../ShortcutsDialog";
 import { ThemeControl } from "../ThemeControl";
 import { SidebarPanel } from "./SidebarPanel";
 
@@ -44,6 +47,7 @@ export interface SidebarProps {
 }
 
 export function Sidebar({ app, onObjectContextMenu }: SidebarProps) {
+  const [isShortcutsDialogOpen, setShortcutsDialogOpen] = useState(false);
   const activePanel = useEditorStore((s) => s.activePanel);
   const setActivePanel = useEditorStore((s) => s.setActivePanel);
   const closePanel = () => setActivePanel(undefined);
@@ -84,6 +88,17 @@ export function Sidebar({ app, onObjectContextMenu }: SidebarProps) {
         </div>
 
         <div className="sidebar-footer">
+          <AppButton
+            aria-label="Keyboard shortcuts"
+            className="sidebar-footer-button"
+            data-tooltip="Keyboard shortcuts"
+            data-tooltip-position="right"
+            onClick={() => setShortcutsDialogOpen(true)}
+            type="button"
+            variant="icon"
+          >
+            <AppIcon name="shortcuts" />
+          </AppButton>
           <ThemeControl />
         </div>
       </div>
@@ -110,6 +125,10 @@ export function Sidebar({ app, onObjectContextMenu }: SidebarProps) {
             <SimulationPanel onClose={closePanel} />
           )}
         </div>
+      )}
+
+      {isShortcutsDialogOpen && (
+        <ShortcutsDialog onClose={() => setShortcutsDialogOpen(false)} />
       )}
     </aside>
   );
