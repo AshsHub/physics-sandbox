@@ -98,7 +98,7 @@ export function SimulationPanel({ onClose }: SimulationPanelProps) {
 
         <input
           aria-label="Gravity modifier"
-          className="simulation-slider"
+          className="app-range simulation-slider"
           max={gravitySimulationPresets.length - 1}
           min={0}
           onChange={(event) => {
@@ -150,7 +150,7 @@ export function SimulationPanel({ onClose }: SimulationPanelProps) {
 
         <input
           aria-label="Wind force"
-          className="simulation-slider"
+          className="app-range simulation-slider"
           max={SimulationConfig.wind.maxForce}
           min={SimulationConfig.wind.minForce}
           onChange={(event) => setWindForce(Number(event.currentTarget.value))}

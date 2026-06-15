@@ -13,40 +13,60 @@ const demoSource = "/demos";
 
 const featureGroups = [
   {
-    gifPath: `${demoSource}/canvas-physics.gif`,
+    mediaPath: `${demoSource}/webm/canvas-physics-loop.webm`,
+    detail:
+      "React handles the panels, controls, and state, while the canvas renders the live Matter.js world directly. The result is an editor UI wrapped around a real-time physics scene.",
     label: "Stack",
     title: "Canvas physics loop",
     text: "React owns the editor shell, while a custom canvas renderer draws Matter.js bodies every frame.",
   },
   {
-    gifPath: `${demoSource}/commands-history.gif`,
+    mediaPath: `${demoSource}/webm/command-history.webm`,
+    detail:
+      "Object creation, deletion, metadata edits, clipboard actions, and prefab spawns all flow through the command system. Undo with Ctrl+Z or Command+Z; redo with Ctrl+Y, Ctrl+Shift+Z, or Command+Shift+Z.",
     label: "Workflow",
     text: "Create, edit, delete, paste, and prefab actions run through commands with undo and redo support.",
     title: "Command-based editing",
   },
   {
-    gifPath: `${demoSource}/prefab-scenes.gif`,
+    mediaPath: `${demoSource}/webm/prefab-scenes.webm`,
+    detail:
+      "Prefabs are serialized object groups that drop into the world as a single action. They are useful for building portfolio-ready demos, stress tests, and reusable physics setups without rebuilding scenes by hand.",
     label: "Scenes",
     title: "Prefab scenes",
     text: "Reusable sandbox arrangements demonstrate collision chains, force fields, structures, and orbital layouts.",
   },
   {
-    gifPath: `${demoSource}/simulation-modifiers.gif`,
+    mediaPath: `${demoSource}/webm/simulation-modifiers.webm`,
+    detail:
+      "Gravity uses recognisable planet and star presets, including low gravity, heavy gravity, and reverse gravity. Wind stays fluid, so the same scene can shift from a light sideways drift to a stronger tunnel effect.",
     label: "World",
     title: "Simulation modifiers",
     text: "Gravity, wind, play state, and object forces can reshape how the world behaves.",
   },
   {
-    gifPath: `${demoSource}/inspector-editing.gif`,
+    mediaPath: `${demoSource}/webm/inspector-editing.webm`,
+    detail:
+      "The inspector edits both presentation and physics data: colour, size, mass, bounce, friction, force settings, and more. Changes are committed rather than streamed every frame, so editing stays compatible with command history.",
     label: "Data",
     title: "Inspector editing",
     text: "Objects expose visual, physics, and read-only metadata for direct editing.",
   },
   {
-    gifPath: `${demoSource}/interaction-tools.gif`,
+    mediaPath: `${demoSource}/webm/interaction-tools.webm`,
+    detail:
+      "The sandbox separates selection, movement, camera control, clipboard work, context menus, and stamp placement. That keeps common editor actions quick without turning right-click or keyboard shortcuts into overloaded controls.",
     label: "Tools",
     title: "Interaction tools",
     text: "Selection, context menus, clipboard actions, object stamping, camera controls, and fit view support fast scene work.",
+  },
+  {
+    mediaPath: `${demoSource}/webm/object-forces.webm`,
+    detail:
+      "Any object can become a radial force source. Pull fields behave like local gravity wells, push fields act like repulsors, and the translucent radius makes the invisible influence readable while you build. The radius overlay can be toggled off when you want a cleaner scene.",
+    label: "Forces",
+    title: "Object forces",
+    text: "Push and pull fields can be attached to objects, visualised in-world, and mixed with ordinary collision bodies.",
   },
 ] as const;
 
@@ -179,18 +199,26 @@ export function AboutPanel({ onClose }: AboutPanelProps) {
             </div>
 
             <div className="about-dialog-media">
-              <img
-                alt={`${selectedFeature.title} demo`}
-                src={selectedFeature.gifPath}
+              <video
+                aria-label={`${selectedFeature.title} demo`}
+                autoPlay
+                loop
+                muted
+                playsInline
+                src={selectedFeature.mediaPath}
                 onError={(event) => {
                   event.currentTarget.hidden = true;
                 }}
               />
               <div className="about-dialog-media-placeholder">
-                <span>GIF demo</span>
-                <code>{selectedFeature.gifPath}</code>
+                <span>WebM demo</span>
+                <code>{selectedFeature.mediaPath}</code>
               </div>
             </div>
+
+            {selectedFeature.detail && (
+              <p className="about-dialog-detail">{selectedFeature.detail}</p>
+            )}
           </div>
         </div>
       )}

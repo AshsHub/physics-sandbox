@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "demo:gif": "node scripts/demo/convert-about-media.mjs gif",
+    "demo:webm": "node scripts/demo/convert-about-media.mjs webm",
     "lint": "eslint .",
     "test": "jest --runInBand",
     "preview": "vite preview"

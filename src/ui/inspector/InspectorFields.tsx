@@ -228,7 +228,7 @@ export function EditableSelect<T extends string>({
         {label}
       </label>
       <select
-        className="inspector-field-control"
+        className="app-select inspector-field-control"
         id={inputId}
         value={value}
         onChange={(event) => onCommit(event.currentTarget.value as T)}
@@ -272,7 +272,7 @@ export function EditableOptionSelect<T extends string | number>({
         {label}
       </label>
       <select
-        className="inspector-field-control"
+        className="app-select inspector-field-control"
         id={inputId}
         value={String(value)}
         onChange={(event) => {

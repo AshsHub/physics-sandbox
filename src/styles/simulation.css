@@ -105,8 +105,6 @@
   position: relative;
   z-index: 1;
   width: 100%;
-  accent-color: var(--accent);
-  cursor: pointer;
 }
 
 .simulation-slider-range-labels {

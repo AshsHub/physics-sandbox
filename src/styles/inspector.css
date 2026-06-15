@@ -246,9 +246,6 @@
 
 .inspector-checkbox-control {
   justify-self: start;
-  width: 18px;
-  height: 18px;
-  accent-color: var(--accent);
 }
 
 .inspector-number-control {

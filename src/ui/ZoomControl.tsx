@@ -49,7 +49,7 @@ export function ZoomControl({ app }: ZoomControlProps) {
       </AppButton>
       <input
         aria-label="Zoom"
-        className="zoom-control-slider"
+        className="app-range zoom-control-slider"
         max={CameraConfig.zoom.max}
         min={CameraConfig.zoom.min}
         onChange={(event) => setZoom(Number(event.currentTarget.value))}

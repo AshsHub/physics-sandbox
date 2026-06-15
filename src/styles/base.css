@@ -179,10 +179,6 @@ button:disabled {
   user-select: none;
 }
 
-input[type="checkbox"] {
-  accent-color: var(--accent);
-}
-
 .property {
   padding: 12px;
   border-radius: 6px;

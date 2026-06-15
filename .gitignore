@@ -33,3 +33,6 @@ dist-ssr
 *.log
 
 coverage/
+
+public/demos/*.gif
+public/demos/gif/
