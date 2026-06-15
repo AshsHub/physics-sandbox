@@ -1,22 +1,43 @@
-import type { CSSProperties } from "react";
 import { iconAssets } from "./IconAssets";
-import type { AppIconProps, AppIconName } from "./IconTypes";
+import type { AppIconName, AppIconProps } from "./IconTypes";
 
 export type { AppIconName };
 
-export function AppIcon({ className, name, style, ...props }: AppIconProps) {
+export function AppIcon({
+  name,
+  isMask = false,
+  className,
+  style,
+  ...props
+}: AppIconProps) {
   const iconUrl = iconAssets.get(name) ?? "";
-  const iconStyle = {
-    WebkitMask: `url("${iconUrl}") center / contain no-repeat`,
-    mask: `url("${iconUrl}") center / contain no-repeat`,
-    ...style,
-  } as CSSProperties;
+
+  if (isMask) {
+    return (
+      <span
+        aria-hidden="true"
+        className={className ? `app-icon ${className}` : "app-icon"}
+        style={{
+          backgroundImage: `url("${iconUrl}")`,
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "contain",
+          ...style,
+        }}
+        {...props}
+      />
+    );
+  }
 
   return (
     <span
       aria-hidden="true"
       className={className ? `app-icon ${className}` : "app-icon"}
-      style={iconStyle}
+      style={{
+        WebkitMask: `url("${iconUrl}") center / contain no-repeat`,
+        mask: `url("${iconUrl}") center / contain no-repeat`,
+        ...style,
+      }}
       {...props}
     />
   );

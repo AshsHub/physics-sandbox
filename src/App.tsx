@@ -13,6 +13,7 @@ import { StatusBar } from "./ui/StatusBar";
 import { TooltipLayer } from "./ui/TooltipLayer";
 import { Toolbar } from "./ui/Toolbar";
 import { ZoomControl } from "./ui/ZoomControl";
+import { AppIcon } from "./ui/icons/AppIcon";
 
 export default function App() {
   const [app] = useState(() => new Application());
@@ -125,12 +126,7 @@ export default function App() {
     <div className="app">
       <header className="headerbar">
         <h1 className="headerbar-title">
-          <img
-            alt=""
-            aria-hidden="true"
-            className="headerbar-title-mark"
-            src="/favicon.svg"
-          />
+          <AppIcon name={"logo"} className="headerbar-logo" isMask />
           <span className="headerbar-title-copy">
             <span className="headerbar-title-name">Physics Sandbox</span>
             <span className="headerbar-title-meta">

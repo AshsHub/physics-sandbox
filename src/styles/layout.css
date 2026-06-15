@@ -52,7 +52,7 @@
   user-select: none;
 }
 
-.headerbar-title-mark {
+.headerbar-logo {
   width: 28px;
   height: 28px;
   display: block;
@@ -60,6 +60,7 @@
   filter: drop-shadow(
     0 6px 16px color-mix(in srgb, var(--accent) 18%, transparent)
   );
+  background: none;
 }
 
 .headerbar-title-copy {

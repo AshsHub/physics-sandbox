@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Physics Sandbox">
+  <defs>
+    <linearGradient id="tile" x1="10" y1="6" x2="54" y2="58" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1f2d46" />
+      <stop offset="1" stop-color="#111827" />
+    </linearGradient>
+    <radialGradient id="accentGlow" cx="38%" cy="62%" r="42%">
+      <stop stop-color="#4f8cff" stop-opacity="0.9" />
+      <stop offset="0.68" stop-color="#4f8cff" stop-opacity="0.24" />
+      <stop offset="1" stop-color="#4f8cff" stop-opacity="0" />
+    </radialGradient>
+    <filter id="softShadow" x="-24%" y="-24%" width="148%" height="148%">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#4f8cff" flood-opacity="0.2" />
+    </filter>
+  </defs>
+
+  <rect width="64" height="64" rx="14" fill="#181818" />
+  <rect
+    x="7.5"
+    y="7.5"
+    width="49"
+    height="49"
+    rx="10"
+    fill="url(#tile)"
+    stroke="#4f8cff"
+    stroke-opacity="0.62"
+    filter="url(#softShadow)"
+  />
+  <rect
+    x="9.5"
+    y="9.5"
+    width="45"
+    height="45"
+    rx="8"
+    fill="url(#accentGlow)"
+  />
+  <circle cx="24.5" cy="39.5" r="8.5" fill="#4f8cff" fill-opacity="0.78" />
+  <circle cx="40" cy="22" r="3" fill="#ffffff" fill-opacity="0.72" />
+</svg>

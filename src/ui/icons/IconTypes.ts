@@ -11,6 +11,7 @@ export type AppIconName =
   | "fit-view"
   | "inspector"
   | "lock"
+  | "logo"
   | "minus"
   | "moon"
   | "monitor"
@@ -33,4 +34,5 @@ export type AppIconName =
 
 export interface AppIconProps extends HTMLAttributes<HTMLSpanElement> {
   name: AppIconName;
+  isMask?: boolean;
 }
