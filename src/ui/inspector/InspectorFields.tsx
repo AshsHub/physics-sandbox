@@ -1,6 +1,7 @@
 import { type KeyboardEvent, useId, useRef, useState } from "react";
 import { Maths } from "../../maths/Maths";
 import { AppButton } from "../common/AppButton";
+import { AppIcon } from "../icons/AppIcon";
 
 interface EditableNumberProps {
   disabled?: boolean;
@@ -155,6 +156,191 @@ export function EditableNumber({
         >
           +
         </AppButton>
+      </span>
+    </div>
+  );
+}
+
+interface EditableSizeProps {
+  aspectLocked: boolean;
+  height: number;
+  max?: number;
+  min?: number;
+  step?: number;
+  width: number;
+  onCommit: (value: {
+    aspectLocked: boolean;
+    height: number;
+    width: number;
+  }) => void;
+}
+
+export function EditableSize({
+  aspectLocked,
+  height,
+  max,
+  min,
+  step = 1,
+  width,
+  onCommit,
+}: EditableSizeProps) {
+  const widthInputId = useId();
+  const heightInputId = useId();
+  const [draft, setDraft] = useState({
+    aspectLocked,
+    height: String(height),
+    width: String(width),
+  });
+  const aspectRatio = height !== 0 ? width / height : 1;
+
+  const normalizeValue = (nextValue: number): number =>
+    Maths.roundToStep(
+      Math.min(
+        max ?? Number.POSITIVE_INFINITY,
+        Math.max(min ?? Number.NEGATIVE_INFINITY, nextValue),
+      ),
+      step,
+    );
+
+  const resetDraft = () => {
+    setDraft({
+      aspectLocked,
+      height: String(height),
+      width: String(width),
+    });
+  };
+
+  const commitDraft = () => {
+    const parsedWidth = Number(draft.width);
+    const parsedHeight = Number(draft.height);
+
+    if (!Number.isFinite(parsedWidth) || !Number.isFinite(parsedHeight)) {
+      resetDraft();
+      return;
+    }
+
+    const nextWidth = normalizeValue(parsedWidth);
+    const nextHeight = draft.aspectLocked
+      ? normalizeValue(nextWidth / aspectRatio)
+      : normalizeValue(parsedHeight);
+
+    setDraft({
+      aspectLocked: draft.aspectLocked,
+      height: String(nextHeight),
+      width: String(nextWidth),
+    });
+
+    if (
+      nextWidth !== width ||
+      nextHeight !== height ||
+      draft.aspectLocked !== aspectLocked
+    ) {
+      onCommit({
+        aspectLocked: draft.aspectLocked,
+        height: nextHeight,
+        width: nextWidth,
+      });
+    }
+  };
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      commitDraft();
+      event.currentTarget.blur();
+    }
+
+    if (event.key === "Escape") {
+      resetDraft();
+      event.currentTarget.blur();
+    }
+  };
+  const updateDraftSize = (axis: "height" | "width", value: string) => {
+    const parsedValue = Number(value);
+
+    setDraft((currentDraft) => {
+      if (!currentDraft.aspectLocked || !Number.isFinite(parsedValue)) {
+        return {
+          ...currentDraft,
+          [axis]: value,
+        };
+      }
+
+      return axis === "width"
+        ? {
+            ...currentDraft,
+            height: String(normalizeValue(parsedValue / aspectRatio)),
+            width: value,
+          }
+        : {
+            ...currentDraft,
+            height: value,
+            width: String(normalizeValue(parsedValue * aspectRatio)),
+          };
+    });
+  };
+  const toggleAspectLock = () => {
+    setDraft((currentDraft) => ({
+      ...currentDraft,
+      aspectLocked: !currentDraft.aspectLocked,
+    }));
+  };
+  const renderSizeInput = (
+    axis: "height" | "width",
+    label: string,
+    inputId: string,
+  ) => (
+    <label className="inspector-size-input" htmlFor={inputId}>
+      <span>{label}</span>
+      <input
+        className="inspector-field-control"
+        id={inputId}
+        max={max}
+        min={min}
+        step={step}
+        type="number"
+        value={draft[axis]}
+        onChange={(event) => updateDraftSize(axis, event.target.value)}
+        onKeyDown={handleKeyDown}
+      />
+    </label>
+  );
+  const aspectLockLabel = draft.aspectLocked
+    ? "Unlock aspect ratio"
+    : "Lock aspect ratio";
+
+  return (
+    <div
+      className="inspector-field inspector-size-field"
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) {
+          commitDraft();
+        }
+      }}
+      onClick={(event) => event.stopPropagation()}
+    >
+      <span className="entity-meta-label">Size</span>
+
+      <span className="inspector-size-control">
+        <AppButton
+          aria-label={aspectLockLabel}
+          className={
+            draft.aspectLocked
+              ? "inspector-size-lock selected"
+              : "inspector-size-lock"
+          }
+          data-tooltip={aspectLockLabel}
+          data-tooltip-position="bottom"
+          onClick={toggleAspectLock}
+          type="button"
+          variant="subtle"
+        >
+          <AppIcon name={draft.aspectLocked ? "lock" : "unlock"} />
+        </AppButton>
+
+        <span className="inspector-size-stack">
+          {renderSizeInput("width", "W", widthInputId)}
+          {renderSizeInput("height", "H", heightInputId)}
+        </span>
       </span>
     </div>
   );

@@ -21,6 +21,13 @@ export class CreateObjectCommand implements ICommand {
   ) {}
 
   public execute(): ICommandResult {
+    if (!this._engine.canCreateObjects(1)) {
+      return {
+        success: false,
+        message: "Object limit reached.",
+      };
+    }
+
     if (this._snapshot) {
       this._engine.createObjectFromSnapshot(this._snapshot);
       return {

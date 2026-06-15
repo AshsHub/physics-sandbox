@@ -47,8 +47,15 @@ export class SandboxBodyFactory {
     type: SandboxObjectType,
   ): Matter.Body {
     const metadata = SandboxObjectConfig.defaults[type].metadata;
+    const radius = metadata.width / 2;
 
-    return Matter.Bodies.circle(position.x, position.y, metadata.width / 2);
+    return Matter.Bodies.circle(
+      position.x,
+      position.y,
+      radius,
+      {},
+      this._getCircleSides(radius),
+    );
   }
 
   private _createPolygonBody(
@@ -114,13 +121,16 @@ export class SandboxBodyFactory {
   private _createOvalBody(position: Vector2): Matter.Body {
     const metadata =
       SandboxObjectConfig.defaults[SandboxObjectType.Oval].metadata;
+    const radius =
+      metadata.height / (2 * SandboxObjectConfig.bodyGeometry.ovalScaleY);
     const body = Matter.Bodies.circle(
       position.x,
       position.y,
-      metadata.height / (2 * SandboxObjectConfig.bodyGeometry.ovalScaleY),
+      radius,
       {
         slop: 0.02,
       },
+      this._getCircleSides(radius),
     );
 
     Matter.Body.scale(
@@ -130,5 +140,18 @@ export class SandboxBodyFactory {
     );
 
     return body;
+  }
+
+  private _getCircleSides(radius: number): number {
+    const { circleMaxSides, circleMinSides, circlePixelsPerSide } =
+      SandboxObjectConfig.bodyGeometry;
+
+    return Math.min(
+      circleMaxSides,
+      Math.max(
+        circleMinSides,
+        Math.ceil((Math.PI * 2 * radius) / circlePixelsPerSide),
+      ),
+    );
   }
 }

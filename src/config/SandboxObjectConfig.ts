@@ -16,6 +16,7 @@ interface SandboxObjectDefault {
 
 type SandboxObjectMetadataDefaults = Pick<
   ISandboxObjectMetadata,
+  | "aspectLocked"
   | "bounce"
   | "borderStyle"
   | "borderWidth"
@@ -46,6 +47,7 @@ const defaultRadialForce = {
 } as const;
 
 const defaultMetadata = {
+  aspectLocked: false,
   opacity: 1,
   borderWidth: 1,
   borderStyle: SandboxObjectBorderStyle.Solid,
@@ -65,6 +67,9 @@ function createMetadata(
 export const SandboxObjectConfig = {
   bodyGeometry: {
     blackHoleRadius: 32,
+    circleMaxSides: 96,
+    circleMinSides: 25,
+    circlePixelsPerSide: 8,
     circleRadius: 25,
     sunRadius: 30,
     triangleRadius: 32,
@@ -89,10 +94,12 @@ export const SandboxObjectConfig = {
   },
   metadataConstraints: {
     width: {
+      max: 2000,
       min: 4,
       step: 1,
     },
     height: {
+      max: 2000,
       min: 4,
       step: 1,
     },
@@ -133,6 +140,7 @@ export const SandboxObjectConfig = {
     [SandboxObjectType.BlackHole]: {
       flags: SandboxObjectFlags.Static,
       metadata: createMetadata({
+        aspectLocked: true,
         width: 64,
         height: 64,
         color: "#2a103f",
@@ -148,6 +156,7 @@ export const SandboxObjectConfig = {
     [SandboxObjectType.Sun]: {
       flags: SandboxObjectFlags.Static,
       metadata: createMetadata({
+        aspectLocked: true,
         width: 60,
         height: 60,
         color: "#f6c453",
@@ -163,6 +172,7 @@ export const SandboxObjectConfig = {
     [SandboxObjectType.WhiteHole]: {
       flags: SandboxObjectFlags.Static,
       metadata: createMetadata({
+        aspectLocked: true,
         width: 60,
         height: 60,
         color: "#f5f7ff",
@@ -226,6 +236,7 @@ export const SandboxObjectConfig = {
     [SandboxObjectType.Circle]: {
       flags: SandboxObjectFlags.None,
       metadata: createMetadata({
+        aspectLocked: true,
         width: 50,
         height: 50,
         color: "#4f8cff",

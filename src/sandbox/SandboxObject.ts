@@ -25,6 +25,7 @@ export enum SandboxObjectCollisionRole {
 }
 
 export interface ISandboxObjectMetadata {
+  aspectLocked: boolean;
   width: number;
   height: number;
   color: string;

@@ -10,6 +10,7 @@ export interface ISandboxEngine {
   getObjectPosition(id: string): Vector2 | undefined;
   getObjectFromPosition(vector: Vector2): ISandboxObject | undefined;
   getAllObjects(): ISandboxObject[];
+  canCreateObjects(count: number): boolean;
   destroyObject(id: string | string[]): void;
   destroyAllObjects(): void;
   destroySelectedObjects(): void;

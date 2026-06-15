@@ -226,6 +226,10 @@
   user-select: none;
 }
 
+.inspector-size-field {
+  align-items: start;
+}
+
 .inspector-field-control {
   min-width: 0;
   width: 100%;
@@ -257,6 +261,62 @@
 .inspector-number-control .inspector-field-control {
   border-radius: 0;
   text-align: center;
+}
+
+.inspector-size-control {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+.inspector-size-stack {
+  display: grid;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+
+.inspector-size-input {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  min-width: 0;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.inspector-size-input > span {
+  flex: 0 0 auto;
+  width: 12px;
+  text-align: center;
+}
+
+.inspector-size-input .inspector-field-control {
+  min-width: 0;
+  padding-inline: 6px;
+  text-align: center;
+}
+
+.inspector-size-lock {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.inspector-size-lock .app-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.inspector-size-lock.selected {
+  border-color: color-mix(in srgb, var(--accent) 70%, var(--border));
+  color: var(--accent);
 }
 
 .inspector-stepper-button {

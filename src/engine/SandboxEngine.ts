@@ -1,13 +1,17 @@
 import type { IEventBus } from "../events/IEventBus";
 import type { ISandboxEngine } from "./ISandboxEngine";
 
+import { AppConfig } from "../config/AppConfig";
 import { InitialSceneConfig } from "../config/InitialSceneConfig";
+import { SandboxObjectConfig } from "../config/SandboxObjectConfig";
 import { SandboxWorldConfig } from "../config/SandboxWorldConfig";
+import { Maths } from "../maths/Maths";
 import { Vector2 } from "../maths/Vector2";
 
 import { PhysicsWorld } from "../physics/PhysicsWorld";
 
 import {
+  type ISandboxObjectMetadata,
   type ISandboxObject,
   type ISandboxObjectSnapshot,
 } from "../sandbox/SandboxObject";
@@ -128,11 +132,22 @@ export class SandboxEngine implements ISandboxEngine {
     }
 
     if (property === "metadata") {
+      const nextMetadata = this._normalizeMetadata(
+        value as ISandboxObjectMetadata,
+      );
+
       this._physics.applyMetadataToBody(
         object.body,
         object.metadata,
-        value as ISandboxObject["metadata"],
+        nextMetadata,
       );
+
+      object.metadata = nextMetadata;
+
+      this._events.emit("sandboxObjectChanged", {
+        id,
+      });
+      return;
     }
 
     if (property === "flags") {
@@ -155,6 +170,10 @@ export class SandboxEngine implements ISandboxEngine {
 
   public getAllObjects(): ISandboxObject[] {
     return this._objects.getAll();
+  }
+
+  public canCreateObjects(count: number): boolean {
+    return this._objects.getAll().length + count <= AppConfig.objects.maxCount;
   }
 
   public getObjectPosition(id: string): Vector2 | undefined {
@@ -224,5 +243,27 @@ export class SandboxEngine implements ISandboxEngine {
     if (idsToCull.length > 0) {
       this.destroyObject(idsToCull);
     }
+  }
+
+  private _normalizeMetadata(
+    metadata: ISandboxObjectMetadata,
+  ): ISandboxObjectMetadata {
+    const constraints = SandboxObjectConfig.metadataConstraints;
+    const width = Maths.clamp(
+      metadata.width,
+      constraints.width.min,
+      constraints.width.max,
+    );
+    const height = Maths.clamp(
+      metadata.height,
+      constraints.height.min,
+      constraints.height.max,
+    );
+
+    return {
+      ...metadata,
+      height,
+      width,
+    };
   }
 }

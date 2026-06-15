@@ -26,6 +26,13 @@ export class PasteObjectsCommand implements ICommand {
       };
     }
 
+    if (!this._engine.canCreateObjects(this._options.snapshots.length)) {
+      return {
+        success: false,
+        message: "Object limit reached.",
+      };
+    }
+
     if (this._createdSnapshots.length === 0) {
       this._createdSnapshots.push(
         ...this._options.snapshots.map((snapshot) =>

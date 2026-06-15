@@ -162,7 +162,7 @@ export class Renderer {
     ctx.globalAlpha = metadata.opacity;
     ctx.fillStyle = metadata.color;
 
-    this._traceBodyPath(ctx, entity.body);
+    this._traceSandboxObjectPath(ctx, entity);
     ctx.fill();
 
     if (
@@ -172,9 +172,9 @@ export class Renderer {
       const visibleBorderWidth = metadata.borderWidth;
 
       ctx.save();
-      this._traceBodyPath(ctx, entity.body);
+      this._traceSandboxObjectPath(ctx, entity);
       ctx.clip();
-      this._traceBodyPath(ctx, entity.body);
+      this._traceSandboxObjectPath(ctx, entity);
       ctx.strokeStyle = selectedIds.has(entity.id)
         ? "orange"
         : metadata.borderColor;
@@ -207,7 +207,7 @@ export class Renderer {
       Math.hypot(bounds.width, bounds.height) + stripePadding * 2;
 
     ctx.save();
-    this._traceBodyPath(ctx, entity.body);
+    this._traceSandboxObjectPath(ctx, entity);
     ctx.clip();
     ctx.translate(entity.body.position.x, entity.body.position.y);
     ctx.rotate(entity.body.angle + killerIndicator.stripeAngleRadians);
@@ -469,6 +469,37 @@ export class Renderer {
     }
 
     ctx.closePath();
+  }
+
+  private _traceSandboxObjectPath(
+    ctx: CanvasRenderingContext2D,
+    entity: ISandboxObject,
+  ): void {
+    if (this._isSmoothRoundedType(entity.type)) {
+      ctx.beginPath();
+      ctx.ellipse(
+        entity.body.position.x,
+        entity.body.position.y,
+        entity.metadata.width / 2,
+        entity.metadata.height / 2,
+        entity.body.angle,
+        0,
+        Math.PI * 2,
+      );
+      return;
+    }
+
+    this._traceBodyPath(ctx, entity.body);
+  }
+
+  private _isSmoothRoundedType(type: SandboxObjectType): boolean {
+    return (
+      type === SandboxObjectType.BlackHole ||
+      type === SandboxObjectType.Circle ||
+      type === SandboxObjectType.Oval ||
+      type === SandboxObjectType.Sun ||
+      type === SandboxObjectType.WhiteHole
+    );
   }
 
   private _getLocalBodyBounds(body: Matter.Body): Rect {

@@ -16,6 +16,7 @@ import {
 } from "../sandbox/SandboxObjectType";
 
 export const testSandboxObjectMetadata: ISandboxObjectMetadata = {
+  aspectLocked: false,
   width: 100,
   height: 50,
   color: "#ffffff",
@@ -76,6 +77,7 @@ export function createMockSandboxEngine(
   overrides: Partial<Record<keyof SandboxEngine, unknown>> = {},
 ): SandboxEngine {
   return {
+    canCreateObjects: jest.fn(() => true),
     createObject: jest.fn(),
     getObjectPosition: jest.fn(),
     createObjectFromSnapshot: jest.fn(),

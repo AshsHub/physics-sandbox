@@ -26,6 +26,13 @@ export class SpawnPrefabCommand implements ICommand {
       };
     }
 
+    if (!this._engine.canCreateObjects(this._options.prefab.objects.length)) {
+      return {
+        success: false,
+        message: "Object limit reached.",
+      };
+    }
+
     if (this._createdSnapshots.length === 0) {
       this._createdSnapshots.push(
         ...this._options.prefab.objects.map((object) =>

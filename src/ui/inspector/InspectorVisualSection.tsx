@@ -3,7 +3,12 @@ import {
   SandboxObjectBorderStyle,
   type ISandboxObjectMetadata,
 } from "../../sandbox/SandboxObject";
-import { EditableColor, EditableNumber, EditableSelect } from "./InspectorFields";
+import {
+  EditableColor,
+  EditableNumber,
+  EditableSelect,
+  EditableSize,
+} from "./InspectorFields";
 import { InspectorSection } from "./InspectorSection";
 
 export interface InspectorVisualSectionProps {
@@ -19,21 +24,15 @@ export function InspectorVisualSection({
 
   return (
     <InspectorSection title="Visual">
-      <EditableNumber
-        key={`width:${metadata.width}`}
-        label="Width"
+      <EditableSize
+        aspectLocked={metadata.aspectLocked}
+        height={metadata.height}
+        key={`size:${metadata.width}:${metadata.height}:${metadata.aspectLocked}`}
+        max={constraints.width.max}
         min={constraints.width.min}
         step={constraints.width.step}
-        value={metadata.width}
-        onCommit={(width) => onUpdateMetadata({ width })}
-      />
-      <EditableNumber
-        key={`height:${metadata.height}`}
-        label="Height"
-        min={constraints.height.min}
-        step={constraints.height.step}
-        value={metadata.height}
-        onCommit={(height) => onUpdateMetadata({ height })}
+        width={metadata.width}
+        onCommit={(size) => onUpdateMetadata(size)}
       />
       <EditableColor
         key={`color:${metadata.color}`}
