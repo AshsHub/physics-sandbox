@@ -1,4 +1,4 @@
-import { useId, useRef, useState } from "react";
+import { type KeyboardEvent, useId, useRef, useState } from "react";
 import { Maths } from "../../maths/Maths";
 import { AppButton } from "../common/AppButton";
 
@@ -170,9 +170,23 @@ export function EditableColor({ label, value, onCommit }: EditableColorProps) {
   const inputId = useId();
   const [draft, setDraft] = useState(value);
 
-  const commit = () => {
-    if (draft !== value) {
-      onCommit(draft);
+  const commit = (nextValue: string = draft) => {
+    setDraft(nextValue);
+
+    if (nextValue !== value) {
+      onCommit(nextValue);
+    }
+  };
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      commit(event.currentTarget.value);
+      event.currentTarget.blur();
+    }
+
+    if (event.key === "Escape") {
+      setDraft(value);
+      event.currentTarget.blur();
     }
   };
 
@@ -190,14 +204,16 @@ export function EditableColor({ label, value, onCommit }: EditableColorProps) {
           id={inputId}
           type="color"
           value={draft}
-          onBlur={commit}
+          onBlur={() => commit()}
           onChange={(event) => setDraft(event.target.value)}
+          onKeyDown={handleKeyDown}
         />
         <input
           className="inspector-field-control"
           value={draft}
-          onBlur={commit}
+          onBlur={() => commit()}
           onChange={(event) => setDraft(event.target.value)}
+          onKeyDown={handleKeyDown}
         />
       </span>
     </div>

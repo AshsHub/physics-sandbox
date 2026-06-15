@@ -101,6 +101,18 @@ button:disabled {
   pointer-events: none;
 }
 
+input,
+textarea {
+  user-select: text;
+}
+
+input[type="checkbox"],
+input[type="color"],
+input[type="range"],
+select {
+  user-select: none;
+}
+
 .app-button {
   padding: 10px 14px;
   border: 1px solid var(--border-strong);
