@@ -4,6 +4,7 @@ import Matter from "matter-js";
 
 import { PhysicsConfig } from "../config/PhysicsConfig";
 import { SandboxObjectConfig } from "../config/SandboxObjectConfig";
+import { SandboxWorldConfig } from "../config/SandboxWorldConfig";
 import { SimulationConfig } from "../config/SimulationConfig";
 import { Vector2 } from "../maths/Vector2";
 import {
@@ -263,10 +264,14 @@ export class PhysicsWorld {
           drag.body.isStatic || !isSimulationRunning ? "exact" : "soft";
 
         if (drag.mode === "exact") {
-          const nextPosition = {
+          const targetPosition = {
             x: this._moveToPosition.x + drag.offset.x,
             y: this._moveToPosition.y + drag.offset.y,
           };
+          const nextPosition = this._getConstrainedDragPosition(
+            drag.body,
+            targetPosition,
+          );
           const velocity = new Vector2(
             (nextPosition.x - drag.body.position.x) *
               PhysicsConfig.dragging.exactVelocityScale,
@@ -274,7 +279,7 @@ export class PhysicsWorld {
               PhysicsConfig.dragging.exactVelocityScale,
           ).clampLength(PhysicsConfig.dragging.maxExactVelocity);
 
-          Matter.Body.setPosition(drag.body, nextPosition);
+          Matter.Body.setPosition(drag.body, nextPosition.toObject());
 
           Matter.Body.setVelocity(
             drag.body,
@@ -303,6 +308,62 @@ export class PhysicsWorld {
     this._updateDragRotationLocks();
 
     return this._getKilledObjectIds(objects);
+  }
+
+  private _getConstrainedDragPosition(
+    body: Matter.Body,
+    targetPosition: Matter.Vector,
+  ): Vector2 {
+    const delta = new Vector2(targetPosition).subtract(body.position);
+
+    return new Vector2(body.position).add(
+      this._getConstrainedDragDeltaX(body, delta.x),
+      this._getConstrainedDragDeltaY(body, delta.y),
+    );
+  }
+
+  private _getConstrainedDragDeltaX(body: Matter.Body, deltaX: number): number {
+    const { bounds } = SandboxWorldConfig;
+
+    if (deltaX < 0) {
+      if (body.bounds.min.x < bounds.min.x) {
+        return 0;
+      }
+
+      return Math.max(deltaX, bounds.min.x - body.bounds.min.x);
+    }
+
+    if (deltaX > 0) {
+      if (body.bounds.max.x > bounds.max.x) {
+        return 0;
+      }
+
+      return Math.min(deltaX, bounds.max.x - body.bounds.max.x);
+    }
+
+    return 0;
+  }
+
+  private _getConstrainedDragDeltaY(body: Matter.Body, deltaY: number): number {
+    const { bounds } = SandboxWorldConfig;
+
+    if (deltaY < 0) {
+      if (body.bounds.min.y < bounds.min.y) {
+        return 0;
+      }
+
+      return Math.max(deltaY, bounds.min.y - body.bounds.min.y);
+    }
+
+    if (deltaY > 0) {
+      if (body.bounds.max.y > bounds.max.y) {
+        return 0;
+      }
+
+      return Math.min(deltaY, bounds.max.y - body.bounds.max.y);
+    }
+
+    return 0;
   }
 
   private _getKilledObjectIds(objects: ISandboxObject[]): string[] {

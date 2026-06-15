@@ -17,114 +17,48 @@ const shortcutGroups: ShortcutGroups[] = [
   {
     title: "Modes",
     items: [
-      {
-        keys: ["1"],
-        label: "Move objects",
-      },
-      {
-        keys: ["2"],
-        label: "Selection mode",
-      },
-      {
-        keys: ["3"],
-        label: "Camera mode",
-      },
-      {
-        keys: ["Middle Mouse"],
-        label: "Temporary camera pan",
-      },
+      { keys: ["1"], label: "Move objects" },
+      { keys: ["2"], label: "Selection mode" },
+      { keys: ["3"], label: "Camera mode" },
+      { keys: ["Middle Mouse"], label: "Temporary camera pan" },
     ],
   },
   {
     title: "Scene",
     items: [
-      {
-        keys: ["Space"],
-        label: "Play or pause simulation",
-      },
-      {
-        keys: ["F"],
-        label: "Fit objects to view",
-      },
-      {
-        keys: ["R"],
-        label: "Show or hide force radius",
-      },
-      {
-        keys: ["I"],
-        label: "Open Inspector and toggle selected items",
-      },
+      { keys: ["Space"], label: "Play or pause simulation" },
+      { keys: ["F"], label: "Fit objects to view" },
+      { keys: ["R"], label: "Show or hide force radius" },
+      { keys: ["I"], label: "Open Inspector and toggle selected items" },
     ],
   },
   {
     title: "Selection and Clipboard",
     items: [
-      {
-        keys: ["Ctrl/Cmd", "A"],
-        label: "Select every object",
-      },
-      {
-        keys: ["Ctrl/Cmd", "C"],
-        label: "Copy selected objects",
-      },
-      {
-        keys: ["Ctrl/Cmd", "X"],
-        label: "Cut selected objects",
-      },
-      {
-        keys: ["Ctrl/Cmd", "V"],
-        label: "Paste copied objects",
-      },
-      {
-        keys: ["Ctrl/Cmd", "D"],
-        label: "Duplicate selected objects",
-      },
+      { keys: ["Ctrl / Cmd", "A"], label: "Select every object" },
+      { keys: ["Ctrl / Cmd", "C"], label: "Copy selected objects" },
+      { keys: ["Ctrl / Cmd", "X"], label: "Cut selected objects" },
+      { keys: ["Ctrl / Cmd", "V"], label: "Paste copied objects" },
+      { keys: ["Ctrl / Cmd", "D"], label: "Duplicate selected objects" },
     ],
   },
   {
     title: "Placement and Camera",
     items: [
-      {
-        keys: ["Q"],
-        label: "Rotate held object or stamp preview left",
-      },
-      {
-        keys: ["E"],
-        label: "Rotate held object or stamp preview right",
-      },
-      {
-        keys: ["-"],
-        label: "Zoom out",
-      },
-      {
-        keys: ["+"],
-        label: "Zoom in",
-      },
-      {
-        keys: ["Escape"],
-        label: "Cancel stamp placement or close dialogs",
-      },
+      { keys: ["Q"], label: "Rotate held object or stamp preview left" },
+      { keys: ["E"], label: "Rotate held object or stamp preview right" },
+      { keys: ["-"], label: "Zoom out" },
+      { keys: ["+"], label: "Zoom in" },
+      { keys: ["Escape"], label: "Cancel stamp placement or close dialogs" },
     ],
   },
   {
     title: "Editing",
     items: [
-      {
-        keys: ["Ctrl/Cmd", "Z"],
-        label: "Undo command",
-      },
-      {
-        keys: ["Ctrl/Cmd", "Shift", "Z"],
-        label: "Redo command",
-      },
-      {
-        keys: ["Ctrl/Cmd", "Y"],
-        label: "Redo command",
-      },
-      {
-        keys: ["Delete", "Backspace"],
-        label: "Delete selected objects",
-      },
+      { keys: ["Ctrl / Cmd", "Z"], label: "Undo command" },
+      { keys: ["Ctrl / Cmd", "Shift", "Z"], label: "Redo command" },
+      { keys: ["Ctrl / Cmd", "Y"], label: "Redo command" },
+      { keys: ["Delete / Backspace"], label: "Delete selected objects" },
     ],
   },
 ];

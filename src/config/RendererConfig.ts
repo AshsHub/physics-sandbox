@@ -1,4 +1,7 @@
 export const RendererConfig = {
+  culling: {
+    screenMargin: 96,
+  },
   worldBounds: {
     color: "#ff4d4d",
     dash: 28,

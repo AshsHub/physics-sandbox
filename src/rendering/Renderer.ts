@@ -29,6 +29,12 @@ export class Renderer {
     const cameraOffset = editorState.cameraOffset;
     const cameraZoom = editorState.cameraZoom;
     const selectedIds = editorState.selectedIds;
+    const viewportBounds = this._getViewportBounds(
+      width,
+      height,
+      cameraOffset,
+      cameraZoom,
+    );
 
     ctx.save();
     ctx.translate(cameraOffset.x, cameraOffset.y);
@@ -38,17 +44,84 @@ export class Renderer {
 
     if (editorState.showForceRadius) {
       for (const object of objects) {
-        this._drawForceRadius(ctx, object, cameraZoom);
+        if (this._isForceRadiusVisible(object, viewportBounds)) {
+          this._drawForceRadius(ctx, object, cameraZoom);
+        }
       }
     }
 
     for (const object of objects) {
-      this._drawSandboxObject(ctx, object, selectedIds, cameraZoom);
+      if (this._isObjectVisible(object, viewportBounds)) {
+        this._drawSandboxObject(ctx, object, selectedIds, cameraZoom);
+      }
     }
 
     this._drawObjectPlacementPreview(ctx, editorState, cameraZoom);
 
     ctx.restore();
+  }
+
+  private _isObjectVisible(
+    entity: ISandboxObject,
+    viewportBounds: Rect,
+  ): boolean {
+    if (entity.flags & SandboxObjectFlags.Hidden) {
+      return false;
+    }
+
+    const bodyBounds = new Rect(entity.body.bounds);
+
+    if (
+      bodyBounds.width >= viewportBounds.width ||
+      bodyBounds.height >= viewportBounds.height
+    ) {
+      return true;
+    }
+
+    return viewportBounds.intersects(bodyBounds);
+  }
+
+  private _getViewportBounds(
+    width: number,
+    height: number,
+    cameraOffset: { x: number; y: number },
+    cameraZoom: number,
+  ): Rect {
+    const margin = RendererConfig.culling.screenMargin / cameraZoom;
+
+    return new Rect(
+      -cameraOffset.x / cameraZoom - margin,
+      (width - cameraOffset.x) / cameraZoom + margin,
+      -cameraOffset.y / cameraZoom - margin,
+      (height - cameraOffset.y) / cameraZoom + margin,
+    );
+  }
+
+  private _isForceRadiusVisible(
+    entity: ISandboxObject,
+    viewportBounds: Rect,
+  ): boolean {
+    if (entity.flags & SandboxObjectFlags.Hidden) {
+      return false;
+    }
+
+    const { radialForceMode, radialForceRadius } = entity.metadata;
+
+    if (
+      radialForceMode === SandboxObjectRadialForceMode.None ||
+      radialForceRadius <= 0
+    ) {
+      return false;
+    }
+
+    return viewportBounds.intersects(
+      new Rect(
+        entity.body.position.x - radialForceRadius,
+        entity.body.position.x + radialForceRadius,
+        entity.body.position.y - radialForceRadius,
+        entity.body.position.y + radialForceRadius,
+      ),
+    );
   }
 
   private _drawWorldBounds(
