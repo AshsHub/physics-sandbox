@@ -167,8 +167,9 @@ export class PhysicsWorld {
     }
 
     const bodies = Matter.Composite.allBodies(this._world);
+    const pickedBodies = Matter.Query.point(bodies, { x, y });
 
-    return Matter.Query.point(bodies, { x, y })[0];
+    return pickedBodies[pickedBodies.length - 1];
   }
 
   public getBodies(): Matter.Body[] {
