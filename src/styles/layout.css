@@ -20,7 +20,7 @@
   flex: 1;
   justify-content: center;
   align-items: center;
-  background: var(--bg-app);
+  background: var(--background);
   overflow: hidden;
 }
 
@@ -32,14 +32,8 @@
   gap: var(--space-md);
   min-height: 52px;
   padding-right: 360px;
-  background:
-    linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--accent) 9%, transparent),
-      transparent 44%
-    ),
-    var(--bg-panel);
-  border-bottom: 1px solid var(--border);
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border-strong);
 }
 
 .headerbar-title {
@@ -57,9 +51,7 @@
   height: 28px;
   display: block;
   flex: 0 0 auto;
-  filter: drop-shadow(
-    0 6px 16px color-mix(in srgb, var(--accent) 18%, transparent)
-  );
+  filter: none;
   background: none;
 }
 

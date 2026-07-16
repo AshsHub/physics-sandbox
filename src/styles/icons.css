@@ -49,7 +49,3 @@
 .shape-icon-ramp-right {
   color: #686868;
 }
-
-.create-shape-button.selected .shape-icon {
-  color: var(--text-on-accent);
-}

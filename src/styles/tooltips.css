@@ -10,7 +10,7 @@
   border: 1px solid var(--border-strong);
   border-radius: 4px;
   background: var(--bg-input);
-  box-shadow: 0 8px 24px var(--shadow-overlay);
+  box-shadow: var(--elevation-sm);
   color: var(--text-primary);
   font-size: 12px;
   font-weight: 500;
@@ -34,10 +34,10 @@
   z-index: 101;
   max-width: 220px;
   padding: 6px 8px;
-  border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--border-strong));
+  border: 1px solid var(--accent);
   border-radius: 4px;
   background: color-mix(in srgb, var(--accent) 12%, var(--bg-input));
-  box-shadow: 0 8px 24px var(--shadow-overlay);
+  box-shadow: var(--elevation-sm);
   color: var(--text-primary);
   font-size: 12px;
   font-weight: 600;

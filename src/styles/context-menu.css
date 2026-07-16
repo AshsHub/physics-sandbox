@@ -7,27 +7,19 @@
   gap: var(--space-xs);
   min-width: 190px;
   padding: 5px;
-  border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--border-strong));
+  border: 1px solid var(--border-strong);
   border-radius: 6px;
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--text-primary) 4%, transparent),
-      transparent
-    ),
-    color-mix(in srgb, var(--bg-panel) 97%, transparent);
-  box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--text-primary) 4%, transparent),
-    0 14px 34px color-mix(in srgb, var(--shadow-overlay) 82%, transparent);
+  background: var(--bg-panel);
+  box-shadow: var(--elevation-md);
   user-select: none;
 }
 
 .object-context-menu-input {
   min-width: 0;
   padding: 6px 8px;
-  border: 1px solid color-mix(in srgb, var(--accent) 48%, var(--border));
+  border: 1px solid var(--border-strong);
   border-radius: 4px;
-  background: color-mix(in srgb, var(--bg-input) 82%, transparent);
+  background: var(--bg-input);
   color: var(--text-primary);
   font: inherit;
   font-size: 13px;
@@ -37,7 +29,7 @@
 
 .object-context-menu-input:focus {
   border-color: var(--accent-border);
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 18%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 22%, transparent);
 }
 
 .object-context-menu-action,
@@ -62,18 +54,18 @@
 
 .object-context-menu-action:not(:disabled):hover,
 .canvas-context-menu-submenu-trigger:not(:disabled):hover {
-  border-color: color-mix(in srgb, var(--accent) 42%, var(--border));
-  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border-color: var(--border-strong);
+  background: var(--bg-control);
 }
 
 .object-context-menu-action.destructive {
-  color: #ff8f8f;
+  color: var(--danger);
 }
 
 .object-context-menu-action.destructive:not(:disabled):hover {
-  border-color: color-mix(in srgb, #ff6b6b 58%, var(--border));
-  background: color-mix(in srgb, #ff6b6b 13%, transparent);
-  color: #ffb0b0;
+  border-color: color-mix(in srgb, var(--danger) 58%, var(--border));
+  background: color-mix(in srgb, var(--danger) 13%, transparent);
+  color: var(--danger);
 }
 
 .context-menu-action-icon {
@@ -121,18 +113,10 @@
   width: 348px;
   max-height: var(--context-subpanel-max-height, calc(100vh - 16px));
   padding: 7px;
-  border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--border-strong));
+  border: 1px solid var(--border-strong);
   border-radius: 6px;
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--text-primary) 4%, transparent),
-      transparent
-    ),
-    color-mix(in srgb, var(--bg-panel) 98%, transparent);
-  box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--text-primary) 4%, transparent),
-    0 14px 34px color-mix(in srgb, var(--shadow-overlay) 82%, transparent);
+  background: var(--bg-panel);
+  box-shadow: var(--elevation-md);
   overflow-y: auto;
 }
 
@@ -193,25 +177,13 @@
   padding: 6px 5px;
   border: 1px solid var(--border);
   border-radius: 6px;
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--accent) 7%, transparent),
-      transparent
-    ),
-    color-mix(in srgb, var(--bg-card) 76%, transparent);
+  background: var(--bg-card);
   overflow: hidden;
 }
 
 .canvas-context-menu-create-button:not(:disabled):hover {
-  border-color: color-mix(in srgb, var(--accent) 48%, var(--border));
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--accent) 13%, transparent),
-      transparent
-    ),
-    var(--bg-card-hover);
+  border-color: var(--border-strong);
+  background: var(--bg-card-hover);
 }
 
 .canvas-context-menu-create-button .create-shape-preview {

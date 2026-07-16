@@ -7,18 +7,10 @@
   align-items: center;
   gap: 6px;
   padding: 5px;
-  border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--border-strong));
+  border: 1px solid var(--border-strong);
   border-radius: 6px;
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--text-primary) 4%, transparent),
-      transparent
-    ),
-    color-mix(in srgb, var(--bg-panel) 94%, transparent);
-  box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--text-primary) 4%, transparent),
-    0 10px 24px color-mix(in srgb, var(--shadow-overlay) 62%, transparent);
+  background: var(--bg-panel);
+  box-shadow: var(--elevation-md);
   user-select: none;
 }
 
@@ -28,7 +20,7 @@
   padding: 2px;
   border: 1px solid var(--border);
   border-radius: 6px;
-  background: color-mix(in srgb, var(--bg-input) 62%, transparent);
+  background: var(--bg-input);
 }
 
 .interaction-mode-button {
@@ -48,14 +40,16 @@
 }
 
 .interaction-mode-button:not(.selected):not(:disabled):hover {
-  border-color: color-mix(in srgb, var(--accent) 42%, var(--border));
-  background: color-mix(in srgb, var(--accent) 12%, var(--bg-control-hover));
+  border-color: var(--border-strong);
+  background: var(--bg-control-hover);
+  box-shadow: var(--elevation-sm);
 }
 
 .interaction-mode-button.selected {
-  box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--text-on-accent) 22%, transparent),
-    0 6px 14px color-mix(in srgb, var(--accent) 18%, transparent);
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, var(--bg-control));
+  color: var(--text-primary);
+  box-shadow: inset 3px 0 0 var(--accent);
 }
 
 .interaction-mode-icon {
@@ -73,8 +67,16 @@
 }
 
 .toolbar-toggle-button:not(.selected):not(:disabled):hover {
-  border-color: color-mix(in srgb, var(--accent) 42%, var(--border));
-  background: color-mix(in srgb, var(--accent) 12%, var(--bg-control-hover));
+  border-color: var(--border-strong);
+  background: var(--bg-control-hover);
+  box-shadow: var(--elevation-sm);
+}
+
+.toolbar-toggle-button.selected {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, var(--bg-control));
+  color: var(--text-primary);
+  box-shadow: inset 3px 0 0 var(--accent);
 }
 
 .zoom-control {
@@ -87,18 +89,10 @@
   gap: var(--space-xs);
   width: 382px;
   padding: 6px;
-  border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--border-strong));
+  border: 1px solid var(--border-strong);
   border-radius: 6px;
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--text-primary) 4%, transparent),
-      transparent
-    ),
-    color-mix(in srgb, var(--bg-panel) 94%, transparent);
-  box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--text-primary) 4%, transparent),
-    0 10px 24px color-mix(in srgb, var(--shadow-overlay) 62%, transparent);
+  background: var(--bg-panel);
+  box-shadow: var(--elevation-md);
   user-select: none;
 }
 
@@ -125,13 +119,13 @@
   height: 32px;
   padding: 0;
   border-radius: 4px;
-  background: color-mix(in srgb, var(--bg-control) 82%, transparent);
+  background: var(--bg-control);
 }
 
 .zoom-step-button:not(:disabled):hover,
 .zoom-fit-button:not(:disabled):hover {
-  border-color: color-mix(in srgb, var(--accent) 58%, var(--border));
-  background: color-mix(in srgb, var(--accent) 14%, var(--bg-control-hover));
+  border-color: var(--border-strong);
+  background: var(--bg-control-hover);
 }
 
 .simulation-control-button .app-icon,
@@ -154,7 +148,7 @@
   padding: 4px 7px;
   border: 1px solid var(--border);
   border-radius: 4px;
-  background: color-mix(in srgb, var(--bg-input) 62%, transparent);
+  background: var(--bg-input);
 }
 
 .zoom-control-label-text {

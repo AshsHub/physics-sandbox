@@ -22,60 +22,98 @@ h6 {
   --space-lg: 16px;
   --space-xl: 24px;
 
-  --accent: #4f8cff;
-  --accent-border: #6a9fff;
-  --accent-soft: rgba(79, 140, 255, 0.16);
+  --background: #202124;
+  --surface: #2b2d31;
+  --surface-elevated: #393c41;
+  --surface-hover: #464a50;
 
-  --bg-body: #1f1f1f;
-  --bg-app: #181818;
-  --bg-panel: #222222;
-  --bg-card: #2f2f2f;
-  --bg-card-hover: #3a3a3a;
-  --bg-control: #3a3a3a;
-  --bg-control-hover: #424242;
-  --bg-input: #1f1f1f;
-  --bg-status: #2b2b2b;
-  --bg-scrollbar-track: #252525;
-  --bg-scrollbar-thumb: #555555;
-  --bg-scrollbar-thumb-hover: #666666;
+  --foreground: #eef0f2;
+  --muted: #a8aeb5;
 
-  --border: #3a3a3a;
-  --border-strong: #444444;
-  --shadow-overlay: rgba(0, 0, 0, 0.35);
+  --line: rgba(255, 255, 255, 0.07);
+  --line-strong: rgba(255, 255, 255, 0.13);
 
-  --text-primary: #f5f5f5;
-  --text-secondary: #9a9a9a;
+  --accent: #4f91d9;
+  --accent-hover: #68a5e6;
+
+  --success: #76a06d;
+  --warning: #d3a156;
+  --danger: #d06a61;
+
+  --modal-backdrop: rgba(0, 0, 0, 0.5);
+  --elevation-sm: 0 2px 10px rgba(0, 0, 0, 0.2);
+  --elevation-md: 0 10px 28px rgba(0, 0, 0, 0.28);
+  --elevation-modal: 0 24px 56px rgba(0, 0, 0, 0.4);
+
+  --accent-border: var(--accent);
+  --accent-soft: color-mix(in srgb, var(--accent) 14%, transparent);
+  --bg-body: var(--background);
+  --bg-app: var(--background);
+  --bg-panel: var(--surface);
+  --bg-card: var(--surface-elevated);
+  --bg-card-hover: var(--surface-hover);
+  --bg-control: var(--surface-elevated);
+  --bg-control-hover: var(--surface-hover);
+  --bg-input: var(--background);
+  --bg-status: var(--surface);
+  --bg-scrollbar-track: var(--surface);
+  --bg-scrollbar-thumb: color-mix(in srgb, var(--muted) 38%, transparent);
+  --bg-scrollbar-thumb-hover: color-mix(in srgb, var(--muted) 52%, transparent);
+  --border: var(--line);
+  --border-strong: var(--line-strong);
+  --shadow-overlay: var(--modal-backdrop);
+  --text-primary: var(--foreground);
+  --text-secondary: var(--muted);
   --text-on-accent: #ffffff;
-  --text-on-control: #ffffff;
+  --text-on-control: var(--foreground);
   color-scheme: dark;
 }
 
 :root[data-theme="light"] {
-  --accent: #2f6feb;
-  --accent-border: #5f8ff1;
-  --accent-soft: rgba(47, 111, 235, 0.14);
+  --background: #e9eef4;
+  --surface: #f7f9fc;
+  --surface-elevated: #ffffff;
+  --surface-hover: #eef3f8;
 
-  --bg-body: #eef1f5;
-  --bg-app: #f6f7f9;
-  --bg-panel: #ffffff;
-  --bg-card: #f1f4f8;
-  --bg-card-hover: #e7edf6;
-  --bg-control: #ffffff;
-  --bg-control-hover: #f3f5f8;
-  --bg-input: #ffffff;
-  --bg-status: #e2e8f0;
-  --bg-scrollbar-track: #e6ebf2;
-  --bg-scrollbar-thumb: #b6c0cf;
-  --bg-scrollbar-thumb-hover: #98a5b8;
+  --foreground: #232831;
+  --muted: #687382;
 
-  --border: #cbd3df;
-  --border-strong: #aeb8c8;
-  --shadow-overlay: rgba(20, 30, 45, 0.16);
+  --line: #d5dde8;
+  --line-strong: #c3ccd8;
 
-  --text-primary: #161a22;
-  --text-secondary: #5d6878;
+  --accent: #4f91d9;
+  --accent-hover: #397ec8;
+
+  --success: #6f9a63;
+  --warning: #c28b3f;
+  --danger: #c25d56;
+
+  --modal-backdrop: rgba(30, 40, 55, 0.2);
+  --elevation-sm: 0 2px 8px rgba(35, 40, 49, 0.1);
+  --elevation-md: 0 10px 26px rgba(35, 40, 49, 0.16);
+  --elevation-modal: 0 22px 54px rgba(35, 40, 49, 0.24);
+
+  --accent-border: var(--accent);
+  --accent-soft: color-mix(in srgb, var(--accent) 14%, transparent);
+  --bg-body: var(--background);
+  --bg-app: var(--background);
+  --bg-panel: var(--surface);
+  --bg-card: var(--surface-elevated);
+  --bg-card-hover: var(--surface-hover);
+  --bg-control: var(--surface);
+  --bg-control-hover: var(--surface-hover);
+  --bg-input: var(--surface);
+  --bg-status: var(--surface-elevated);
+  --bg-scrollbar-track: var(--surface-elevated);
+  --bg-scrollbar-thumb: color-mix(in srgb, var(--muted) 38%, transparent);
+  --bg-scrollbar-thumb-hover: color-mix(in srgb, var(--muted) 52%, transparent);
+  --border: var(--line);
+  --border-strong: var(--line-strong);
+  --shadow-overlay: var(--modal-backdrop);
+  --text-primary: var(--foreground);
+  --text-secondary: var(--muted);
   --text-on-accent: #ffffff;
-  --text-on-control: #161a22;
+  --text-on-control: var(--foreground);
   color-scheme: light;
 }
 
@@ -131,12 +169,12 @@ select {
 }
 
 .app-button-subtle {
-  background: color-mix(in srgb, var(--accent) 12%, var(--bg-control));
+  background: var(--bg-control);
 }
 
 .app-button-subtle:not(:disabled):hover {
-  border-color: color-mix(in srgb, var(--accent) 72%, var(--border));
-  background: color-mix(in srgb, var(--accent) 24%, var(--bg-control-hover));
+  border-color: var(--border-strong);
+  background: var(--bg-control-hover);
 }
 
 .app-button-ghost {
@@ -146,7 +184,7 @@ select {
 }
 
 .app-button-ghost:not(:disabled):hover {
-  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  background: var(--bg-control);
 }
 
 .app-button-accent {
@@ -156,8 +194,8 @@ select {
 }
 
 .app-button-accent:not(:disabled):hover {
-  background: var(--accent);
-  border-color: var(--accent-border);
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
 }
 
 .app-button-icon {
@@ -197,23 +235,16 @@ select {
   justify-content: center;
   min-width: 24px;
   padding: 3px 6px;
-  border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border));
+  border: 1px solid var(--border-strong);
   border-radius: 4px;
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--text-primary) 7%, transparent),
-      transparent
-    ),
-    var(--bg-input);
+  background: var(--bg-input);
   color: var(--text-primary);
   font: inherit;
   font-size: 11px;
   font-weight: 800;
   line-height: 1.2;
   text-align: center;
-  box-shadow: inset 0 -1px 0
-    color-mix(in srgb, var(--text-primary) 10%, transparent);
+  box-shadow: inset 0 -1px 0 var(--border);
   user-select: none;
 }
 

@@ -105,6 +105,7 @@ export function Toolbar() {
         />
 
         <AppButton
+          aria-label="Pause simulation"
           aria-pressed={!isSimulationRunning}
           className="simulation-control-button"
           disabled={!isSimulationRunning}
@@ -116,6 +117,7 @@ export function Toolbar() {
         </AppButton>
 
         <AppButton
+          aria-label="Play simulation"
           aria-pressed={isSimulationRunning}
           className="simulation-control-button"
           disabled={isSimulationRunning}

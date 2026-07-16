@@ -30,25 +30,29 @@
   padding: 10px;
   border: 1px solid var(--border);
   border-radius: 6px;
-  background: color-mix(in srgb, var(--bg-card) 76%, transparent);
+  background: var(--bg-card);
   color: var(--text-primary);
   cursor: pointer;
   transition:
     background 0.16s ease,
     border-color 0.16s ease,
-    box-shadow 0.16s ease;
+    box-shadow 0.16s ease,
+    color 0.16s ease;
   user-select: none;
 }
 
 .prefab-toggle:hover {
-  border-color: color-mix(in srgb, var(--accent) 44%, var(--border));
-  background: color-mix(in srgb, var(--accent) 8%, var(--bg-card));
+  border-color: var(--border-strong);
+  background: var(--bg-card-hover);
+  box-shadow: var(--elevation-sm);
 }
 
 .prefab-toggle.selected {
-  border-color: color-mix(in srgb, var(--accent) 62%, var(--border));
+  border-color: var(--accent);
   background: color-mix(in srgb, var(--accent) 12%, var(--bg-card));
-  box-shadow: inset 3px 0 0 var(--accent);
+  box-shadow:
+    inset 3px 0 0 var(--accent),
+    var(--elevation-sm);
 }
 
 .prefab-toggle input {
@@ -77,19 +81,14 @@
   padding: 11px 36px 20px 12px;
   border: 1px solid var(--border);
   border-radius: 6px;
-  background:
-    linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--accent) 9%, transparent),
-      transparent 34%
-    ),
-    var(--bg-card);
+  background: var(--bg-card);
   text-align: left;
   transition:
     background 0.16s ease,
     border-color 0.16s ease,
     box-shadow 0.16s ease,
-    transform 0.16s ease;
+    color 0.16s ease;
+  box-shadow: var(--elevation-sm);
 }
 
 .prefab-button::before {
@@ -100,21 +99,14 @@
   left: 0;
   width: 3px;
   border-radius: 0 999px 999px 0;
-  background: color-mix(in srgb, var(--accent) 72%, transparent);
-  opacity: 0.72;
+  background: var(--accent);
+  opacity: 0;
 }
 
 .prefab-button:not(:disabled):hover {
-  border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
-  background:
-    linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--accent) 15%, transparent),
-      transparent 42%
-    ),
-    var(--bg-card-hover);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 18%, transparent);
-  transform: translateY(-1px);
+  border-color: var(--border-strong);
+  background: var(--bg-card-hover);
+  box-shadow: var(--elevation-md);
 }
 
 .prefab-button-copy {
@@ -146,9 +138,9 @@
   min-width: 22px;
   min-height: 18px;
   padding: 2px 6px;
-  border: 1px solid color-mix(in srgb, var(--accent) 38%, var(--border));
+  border: 1px solid var(--border);
   border-radius: 4px;
-  background: color-mix(in srgb, var(--accent) 12%, var(--bg-input));
+  background: var(--bg-input);
   color: var(--text-primary);
   font-size: 10px;
   font-weight: 800;
@@ -174,8 +166,8 @@
   width: 24px;
   height: 24px;
   padding: 0;
-  border-color: color-mix(in srgb, var(--text-primary) 12%, transparent);
-  background: color-mix(in srgb, var(--bg-input) 78%, transparent);
+  border-color: var(--border);
+  background: var(--bg-input);
   color: var(--text-secondary);
   font-size: 14px;
   font-weight: 800;
@@ -188,18 +180,18 @@
 }
 
 .saved-scene-action-button:not(:disabled):hover {
-  border-color: color-mix(in srgb, var(--accent) 52%, var(--border));
-  background: color-mix(in srgb, var(--accent) 14%, var(--bg-input));
+  border-color: var(--border-strong);
+  background: var(--bg-control-hover);
   color: var(--text-primary);
 }
 
 .saved-scene-action-button.destructive {
-  color: #ff7373;
+  color: var(--danger);
 }
 
 .saved-scene-action-button.destructive:not(:disabled):hover {
-  border-color: color-mix(in srgb, #ff6666 52%, var(--border));
-  background: color-mix(in srgb, #ff6666 16%, var(--bg-input));
+  border-color: color-mix(in srgb, var(--danger) 56%, var(--border));
+  background: color-mix(in srgb, var(--danger) 14%, var(--bg-input));
   color: var(--text-primary);
 }
 
@@ -213,17 +205,17 @@
   gap: var(--space-sm);
   min-width: 170px;
   padding: 10px;
-  border: 1px solid color-mix(in srgb, #ff6666 36%, var(--border));
+  border: 1px solid color-mix(in srgb, var(--danger) 38%, var(--border));
   border-radius: 6px;
-  background: color-mix(in srgb, var(--bg-panel) 94%, transparent);
+  background: var(--bg-panel);
   color: var(--text-primary);
-  box-shadow: 0 12px 30px var(--shadow-overlay);
+  box-shadow: var(--elevation-md);
   font-size: 12px;
 }
 
 .saved-scene-menu {
   min-width: 210px;
-  border-color: color-mix(in srgb, var(--accent) 34%, var(--border));
+  border-color: var(--border-strong);
 }
 
 .saved-scene-rename-field {
@@ -290,7 +282,7 @@
   padding: 8px 10px;
   border: 1px solid var(--border);
   border-radius: 6px;
-  background: color-mix(in srgb, var(--bg-input) 74%, transparent);
+  background: var(--bg-input);
   color: var(--text-secondary);
   font-size: 12px;
   line-height: 1.35;
