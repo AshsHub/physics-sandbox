@@ -147,8 +147,11 @@ export function InspectorListItem({
 
         <AppButton
           aria-label={
-            isOpen ? "Collapse inspector item" : "Expand inspector item"
+            isOpen
+              ? `Collapse ${entity.name} inspector item`
+              : `Expand ${entity.name} inspector item`
           }
+          aria-expanded={isOpen}
           className="chevron"
           type="button"
           variant="ghost"

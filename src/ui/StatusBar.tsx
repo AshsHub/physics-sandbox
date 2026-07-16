@@ -2,6 +2,7 @@ import {
   getGravitySimulationPreset,
   getWindDescriptor,
 } from "../physics/SandboxSimulation";
+import { AppConfig } from "../config/AppConfig";
 import { SimulationConfig } from "../config/SimulationConfig";
 import { useEditorStore } from "../store/editorStore";
 
@@ -66,6 +67,13 @@ export function StatusBar({
       <div className="status-bar-pill status-bar-fps">
         <span className="status-bar-group-label">FPS</span>
         <span className="status-bar-fps-value">{fps}</span>
+      </div>
+
+      <div className="status-bar-pill status-bar-copyright">
+        <span>
+          Copyright {AppConfig.portfolio.copyrightYear}{" "}
+          {AppConfig.portfolio.copyrightOwner}
+        </span>
       </div>
     </footer>
   );

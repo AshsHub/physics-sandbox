@@ -97,8 +97,10 @@ export function ObjectContextMenu({
 
   return (
     <div
+      aria-label={`${object.name} actions`}
       className={`object-context-menu${menuPosition.classNameSuffix}`}
       ref={menuRef}
+      role="dialog"
       style={menuPosition.style}
     >
       <input

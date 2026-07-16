@@ -279,7 +279,11 @@ export function PrefabPanel({ app, onClose }: PrefabPanelProps) {
                 </AppButton>
 
                 {openSceneMenuId === scene.id && (
-                  <div className="saved-scene-menu">
+                  <div
+                    aria-label={`${scene.name} saved scene actions`}
+                    className="saved-scene-menu"
+                    role="dialog"
+                  >
                     <label className="saved-scene-rename-field">
                       <span>Name</span>
                       <input
@@ -308,7 +312,11 @@ export function PrefabPanel({ app, onClose }: PrefabPanelProps) {
                 )}
 
                 {deleteTargetId === scene.id && (
-                  <div className="saved-scene-confirmation">
+                  <div
+                    aria-label={`Confirm deleting ${scene.name}`}
+                    className="saved-scene-confirmation"
+                    role="alertdialog"
+                  >
                     <span>Delete this scene?</span>
                     <div className="saved-scene-confirmation-actions">
                       <AppButton

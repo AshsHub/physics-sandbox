@@ -17,7 +17,7 @@ export function ZoomControl({ app }: ZoomControlProps) {
   };
 
   return (
-    <div className="zoom-control" aria-label="Zoom controls">
+    <div className="zoom-control" aria-label="Zoom controls" role="group">
       <AppButton
         className="zoom-fit-button"
         data-tooltip="Fit objects to view (F)"

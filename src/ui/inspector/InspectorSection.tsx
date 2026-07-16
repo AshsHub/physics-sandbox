@@ -14,6 +14,7 @@ export function InspectorSection({
   return (
     <section className="inspector-section">
       <AppButton
+        aria-expanded={isOpen}
         className="inspector-section-header"
         onClick={(event) => {
           event.stopPropagation();

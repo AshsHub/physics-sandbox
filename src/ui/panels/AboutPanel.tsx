@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useEditorStore } from "../../store/editorStore";
 import { AppButton } from "../common/AppButton";
 import { InfoStack } from "../common/InfoStack";
+import { isDialogActivationKey, trapDialogFocus } from "../dialogKeyboard";
 import { AppIcon } from "../icons/AppIcon";
 import { Panel } from "./Panel";
 
@@ -82,6 +83,7 @@ type FeatureGroup = (typeof featureGroups)[number];
 
 export function AboutPanel({ onClose }: AboutPanelProps) {
   const [selectedFeature, setSelectedFeature] = useState<FeatureGroup>();
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!selectedFeature) {
@@ -93,14 +95,28 @@ export function AboutPanel({ onClose }: AboutPanelProps) {
 
     useEditorStore.getState().setKeyboardInputSuspended(true);
     useEditorStore.getState().setSimulationRunning(false);
+    dialogRef.current?.focus();
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      event.preventDefault();
-      event.stopPropagation();
-
       if (event.key === "Escape") {
+        event.stopPropagation();
+        event.preventDefault();
         setSelectedFeature(undefined);
+        return;
       }
+
+      if (event.key === "Tab") {
+        event.stopPropagation();
+        trapDialogFocus(event, dialogRef.current);
+        return;
+      }
+
+      if (isDialogActivationKey(event)) {
+        return;
+      }
+
+      event.stopPropagation();
+      event.preventDefault();
     };
 
     window.addEventListener("keydown", handleKeyDown, true);
@@ -170,7 +186,9 @@ export function AboutPanel({ onClose }: AboutPanelProps) {
           onMouseDown={() => setSelectedFeature(undefined)}
         >
           <div
+            ref={dialogRef}
             className="about-dialog"
+            tabIndex={-1}
             onMouseDown={(event) => event.stopPropagation()}
           >
             <div className="about-dialog-header">

@@ -1,7 +1,8 @@
-import { Fragment, useEffect } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import { useEditorStore } from "../store/editorStore";
 import { AppButton } from "./common/AppButton";
 import { ShortcutKey } from "./common/ShortcutKey";
+import { isDialogActivationKey, trapDialogFocus } from "./dialogKeyboard";
 import { AppIcon } from "./icons/AppIcon";
 
 export interface ShortcutsDialogProps {
@@ -64,16 +65,32 @@ const shortcutGroups: ShortcutGroups[] = [
 ];
 
 export function ShortcutsDialog({ onClose }: ShortcutsDialogProps) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     useEditorStore.getState().setKeyboardInputSuspended(true);
+    dialogRef.current?.focus();
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      event.preventDefault();
-      event.stopPropagation();
-
       if (event.key === "Escape") {
+        event.stopPropagation();
+        event.preventDefault();
         onClose();
+        return;
       }
+
+      if (event.key === "Tab") {
+        event.stopPropagation();
+        trapDialogFocus(event, dialogRef.current);
+        return;
+      }
+
+      if (isDialogActivationKey(event)) {
+        return;
+      }
+
+      event.stopPropagation();
+      event.preventDefault();
     };
 
     window.addEventListener("keydown", handleKeyDown, true);
@@ -93,7 +110,9 @@ export function ShortcutsDialog({ onClose }: ShortcutsDialogProps) {
       onMouseDown={onClose}
     >
       <div
+        ref={dialogRef}
         className="shortcuts-dialog"
+        tabIndex={-1}
         onMouseDown={(event) => event.stopPropagation()}
       >
         <header className="shortcuts-dialog-header">

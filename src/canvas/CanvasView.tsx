@@ -153,7 +153,10 @@ export function CanvasView({
   return (
     <div className="canvas-stage">
       <canvas
+        aria-describedby="canvas-accessibility-description"
+        aria-label="Interactive physics sandbox canvas"
         ref={canvasRef}
+        role="img"
         style={{
           cursor: getCanvasCursor(
             interactionMode,
@@ -165,7 +168,17 @@ export function CanvasView({
           width: "100%",
           height: "100%",
         }}
-      />
+      >
+        Interactive physics sandbox canvas. Use the surrounding toolbar,
+        creator, inspector, prefabs, simulation, zoom, and shortcut controls to
+        operate the scene.
+      </canvas>
+
+      <p className="sr-only" id="canvas-accessibility-description">
+        The canvas displays the physics world. Most editor actions are available
+        through labelled controls around the canvas, and keyboard shortcuts are
+        listed in the shortcuts dialog.
+      </p>
 
       {selectionBox && <SelectionBoxOverlay selectionBox={selectionBox} />}
     </div>

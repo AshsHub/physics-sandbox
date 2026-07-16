@@ -67,8 +67,10 @@ export function CanvasContextMenu({
 
   return (
     <div
+      aria-label="Canvas actions"
       className={`canvas-context-menu${menuPosition.classNameSuffix}`}
       ref={menuRef}
+      role="dialog"
       style={menuPosition.style}
     >
       <div className="canvas-context-menu-submenu">

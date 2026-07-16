@@ -39,7 +39,11 @@ export function Toolbar() {
 
   return (
     <header className="toolbar">
-      <div className="interaction-mode-controls" aria-label="Interaction mode">
+      <div
+        className="interaction-mode-controls"
+        aria-label="Interaction mode"
+        role="group"
+      >
         {modes.map(({ icon, label, mode, shortcut }) => (
           <AppButton
             aria-pressed={interactionMode === mode}
@@ -90,6 +94,7 @@ export function Toolbar() {
             : "Play simulation (Space)"
         }
         data-tooltip-position="bottom"
+        role="group"
       >
         <span
           className={

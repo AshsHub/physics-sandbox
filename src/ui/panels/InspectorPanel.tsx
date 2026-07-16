@@ -53,7 +53,7 @@ export function InspectorPanel({
 
   return (
     <Panel title="Inspector" onClose={onClose}>
-      <div className="inspector-filters" aria-label="Object filters">
+      <div className="inspector-filters" aria-label="Object filters" role="group">
         {filters.map(({ label, value }) => (
           <AppButton
             aria-pressed={filter === value}

@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useRef, useState, type KeyboardEvent } from "react";
 import type { IApplication } from "../../application/IApplication";
 import type { VectorLike } from "../../maths/Vector2";
 import { useEditorStore } from "../../store/editorStore";
 import { AppButton } from "../common/AppButton";
+import { getFocusableElements } from "../focusUtils";
 import { AppIcon } from "../icons/AppIcon";
 import { AboutPanel } from "../panels/AboutPanel";
 import { CreatorPanel } from "../panels/CreatorPanel";
@@ -47,6 +48,8 @@ export interface SidebarProps {
 }
 
 export function Sidebar({ app, onObjectContextMenu }: SidebarProps) {
+  const sidebarRef = useRef<HTMLElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const [isShortcutsDialogOpen, setShortcutsDialogOpen] = useState(false);
   const activePanel = useEditorStore((s) => s.activePanel);
   const setActivePanel = useEditorStore((s) => s.setActivePanel);
@@ -55,11 +58,88 @@ export function Sidebar({ app, onObjectContextMenu }: SidebarProps) {
   const activeTabIndex = sidebarTabs.findIndex(
     ({ panel }) => panel === activePanel,
   );
+  const focusSidebarTab = (index: number) => {
+    const sidebarTab = sidebarRef.current?.querySelector<HTMLButtonElement>(
+      `[data-sidebar-tab-index="${index}"]`,
+    );
+
+    sidebarTab?.focus();
+  };
+
+  const focusNextSidebarTab = () => {
+    if (activeTabIndex < 0) {
+      return;
+    }
+
+    focusSidebarTab((activeTabIndex + 1) % sidebarTabs.length);
+  };
+
+  const focusFirstPanelControl = () => {
+    const contentElement = contentRef.current;
+
+    if (!contentElement) {
+      focusNextSidebarTab();
+      return;
+    }
+
+    const [firstFocusableElement] = getFocusableElements(contentElement);
+
+    if (!firstFocusableElement) {
+      focusNextSidebarTab();
+      return;
+    }
+
+    firstFocusableElement.focus();
+  };
+
+  const handleSidebarTabKeyDown = (
+    event: KeyboardEvent<HTMLButtonElement>,
+    panel: SidebarPanel,
+  ) => {
+    if (event.key !== "Tab" || event.shiftKey || activePanel !== panel) {
+      return;
+    }
+
+    event.preventDefault();
+    focusFirstPanelControl();
+  };
+
+  const handlePanelKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key !== "Tab") {
+      return;
+    }
+
+    const contentElement = contentRef.current;
+
+    if (!contentElement) {
+      return;
+    }
+
+    const focusableElements = getFocusableElements(contentElement);
+    const firstFocusableElement = focusableElements[0];
+    const lastFocusableElement =
+      focusableElements[focusableElements.length - 1];
+
+    if (event.shiftKey && document.activeElement === firstFocusableElement) {
+      event.preventDefault();
+      focusSidebarTab(activeTabIndex);
+      return;
+    }
+
+    if (!event.shiftKey && document.activeElement === lastFocusableElement) {
+      event.preventDefault();
+      focusNextSidebarTab();
+    }
+  };
 
   return (
-    <aside className={hasActivePanel ? "sidebar" : "sidebar collapsed"}>
+    <aside
+      aria-label="Editor panels"
+      className={hasActivePanel ? "sidebar" : "sidebar collapsed"}
+      ref={sidebarRef}
+    >
       <div className="sidebar-nav">
-        <div className="sidebar-tabs">
+        <div className="sidebar-tabs" role="group" aria-label="Editor panels">
           {activeTabIndex >= 0 && (
             <span
               className="sidebar-tab-indicator"
@@ -69,8 +149,9 @@ export function Sidebar({ app, onObjectContextMenu }: SidebarProps) {
             />
           )}
 
-          {sidebarTabs.map(({ label, panel, tooltip }) => (
+          {sidebarTabs.map(({ label, panel, tooltip }, index) => (
             <AppButton
+              aria-pressed={activePanel === panel}
               className={
                 activePanel === panel
                   ? "sidebar-button selected"
@@ -78,7 +159,9 @@ export function Sidebar({ app, onObjectContextMenu }: SidebarProps) {
               }
               data-tooltip={tooltip}
               data-tooltip-position="right"
+              data-sidebar-tab-index={index}
               key={panel}
+              onKeyDown={(event) => handleSidebarTabKeyDown(event, panel)}
               onClick={() => setActivePanel(panel)}
               type="button"
             >
@@ -104,7 +187,11 @@ export function Sidebar({ app, onObjectContextMenu }: SidebarProps) {
       </div>
 
       {hasActivePanel && (
-        <div className="sidebar-content">
+        <div
+          className="sidebar-content"
+          ref={contentRef}
+          onKeyDown={handlePanelKeyDown}
+        >
           {activePanel === SidebarPanel.About && (
             <AboutPanel onClose={closePanel} />
           )}
