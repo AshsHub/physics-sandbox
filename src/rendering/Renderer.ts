@@ -40,6 +40,7 @@ export class Renderer {
     ctx.translate(cameraOffset.x, cameraOffset.y);
     ctx.scale(cameraZoom, cameraZoom);
 
+    this._drawGrid(ctx, viewportBounds, cameraZoom);
     this._drawWorldBounds(ctx, cameraZoom);
 
     if (editorState.showForceRadius) {
@@ -79,6 +80,117 @@ export class Renderer {
     }
 
     return viewportBounds.intersects(bodyBounds);
+  }
+
+  private _drawGrid(
+    ctx: CanvasRenderingContext2D,
+    viewportBounds: Rect,
+    cameraZoom: number,
+  ): void {
+    const { grid } = RendererConfig;
+
+    if (!grid.enabled || grid.opacity <= 0) {
+      return;
+    }
+
+    const minorSpacing = this._getVisibleGridSpacing(cameraZoom);
+    const majorSpacing = minorSpacing * grid.majorLineInterval;
+    const styles = getComputedStyle(ctx.canvas);
+    const minorColor = styles.getPropertyValue("--canvas-grid-minor").trim();
+    const majorColor = styles.getPropertyValue("--canvas-grid-major").trim();
+
+    ctx.save();
+    ctx.globalAlpha = grid.opacity;
+    ctx.lineCap = "butt";
+
+    this._drawGridLines(
+      ctx,
+      viewportBounds,
+      minorSpacing,
+      0.5 / cameraZoom,
+      minorColor,
+      1 / cameraZoom,
+      grid.majorGridEnabled ? majorSpacing : undefined,
+    );
+
+    if (grid.majorGridEnabled) {
+      this._drawGridLines(
+        ctx,
+        viewportBounds,
+        majorSpacing,
+        0.5 / cameraZoom,
+        majorColor,
+        1 / cameraZoom,
+      );
+    }
+
+    ctx.restore();
+  }
+
+  private _drawGridLines(
+    ctx: CanvasRenderingContext2D,
+    viewportBounds: Rect,
+    spacing: number,
+    alignmentOffset: number,
+    color: string,
+    lineWidth: number,
+    skippedInterval?: number,
+  ): void {
+    const left = Math.floor(viewportBounds.left / spacing) * spacing;
+    const right = Math.ceil(viewportBounds.right / spacing) * spacing;
+    const top = Math.floor(viewportBounds.top / spacing) * spacing;
+    const bottom = Math.ceil(viewportBounds.bottom / spacing) * spacing;
+
+    ctx.beginPath();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = lineWidth;
+
+    for (let x = left; x <= right; x += spacing) {
+      if (skippedInterval && this._isGridMajorLine(x, skippedInterval)) {
+        continue;
+      }
+
+      const alignedX = x + alignmentOffset;
+
+      ctx.moveTo(alignedX, top);
+      ctx.lineTo(alignedX, bottom);
+    }
+
+    for (let y = top; y <= bottom; y += spacing) {
+      if (skippedInterval && this._isGridMajorLine(y, skippedInterval)) {
+        continue;
+      }
+
+      const alignedY = y + alignmentOffset;
+
+      ctx.moveTo(left, alignedY);
+      ctx.lineTo(right, alignedY);
+    }
+
+    ctx.stroke();
+  }
+
+  private _getVisibleGridSpacing(cameraZoom: number): number {
+    const { grid } = RendererConfig;
+    let spacing = grid.spacing;
+    let screenSpacing = spacing * cameraZoom;
+
+    while (screenSpacing < grid.minScreenSpacing) {
+      spacing *= 2;
+      screenSpacing *= 2;
+    }
+
+    while (screenSpacing > grid.maxScreenSpacing && spacing > grid.spacing) {
+      spacing /= 2;
+      screenSpacing /= 2;
+    }
+
+    return spacing;
+  }
+
+  private _isGridMajorLine(value: number, majorSpacing: number): boolean {
+    return Math.abs(value / majorSpacing - Math.round(value / majorSpacing)) <
+      0.0001;
   }
 
   private _getViewportBounds(

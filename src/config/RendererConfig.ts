@@ -2,6 +2,16 @@ export const RendererConfig = {
   culling: {
     screenMargin: 96,
   },
+  grid: {
+    enabled: true,
+    majorGridEnabled: true,
+    snapToGrid: false,
+    opacity: 1,
+    spacing: 40,
+    majorLineInterval: 5,
+    minScreenSpacing: 18,
+    maxScreenSpacing: 84,
+  },
   worldBounds: {
     color: "#ff4d4d",
     dash: 28,
